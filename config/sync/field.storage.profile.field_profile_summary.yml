@@ -1,0 +1,26 @@
+uuid: 9d311a2c-0624-436a-a179-4b4ea7d44999
+langcode: en
+status: true
+dependencies:
+  module:
+    - profile
+  enforced:
+    module:
+      - social_profile
+_core:
+  default_config_hash: pNkTWTv0fHJjC10bkBq43LguxRC1zafadt1R-d1eWsA
+id: profile.field_profile_summary
+field_name: field_profile_summary
+entity_type: profile
+type: string
+settings:
+  max_length: 140
+  is_ascii: false
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

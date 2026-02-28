@@ -1,0 +1,23 @@
+uuid: d3747955-f41c-4477-bb14-8b871ddbda3d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_message_destination
+    - message.template.member_added_by_event_organiser
+  module:
+    - options
+_core:
+  default_config_hash: QipQTDTsIKlL5vrSZ9qpksKxbD-sDxoted6OIPl4Xp4
+id: message.member_added_by_event_organiser.field_message_destination
+field_name: field_message_destination
+entity_type: message
+bundle: member_added_by_event_organiser
+label: field_message_destination
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

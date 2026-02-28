@@ -1,0 +1,23 @@
+uuid: 35787531-d089-4e39-a2e6-dd1edec07863
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_content_visibility
+    - node.type.topic
+  module:
+    - entity_access_by_field
+_core:
+  default_config_hash: DdSn1raBVSShaDshJEezM-9paipvfjYh-6FYK-XJmXA
+id: node.topic.field_content_visibility
+field_name: field_content_visibility
+entity_type: node
+bundle: topic
+label: Visibility
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: entity_access_field

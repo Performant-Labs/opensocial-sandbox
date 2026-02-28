@@ -1,0 +1,25 @@
+uuid: 527c44b3-5400-4bbf-81bf-f8f1c609828f
+langcode: en
+status: true
+dependencies:
+  module:
+    - file
+    - social_font
+_core:
+  default_config_hash: trQQyQgHIQSpRpiS9n2DGY5j1Z_PYDWBKdmiwvYywqk
+id: font.field_fonts
+field_name: field_fonts
+entity_type: font
+type: file
+settings:
+  display_field: false
+  display_default: false
+  uri_scheme: public
+  target_type: file
+module: file
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

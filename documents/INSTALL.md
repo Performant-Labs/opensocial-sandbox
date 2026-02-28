@@ -85,13 +85,21 @@ This runs Drupal's site installation using Open Social's `social` install profil
 
 > **Expected warnings during install**: Solr-related warnings are normal — Open Social ships `search_api_solr` but no Solr server is configured. These are non-blocking and can be ignored.
 
-### 6. Rebuild caches
+### 6. Import configuration
+
+```bash
+ddev drush config:import -y
+```
+
+This imports the exported site configuration from `config/sync/`, applying all settings, content types, views, blocks, and module configuration committed to the repository.
+
+### 7. Rebuild caches
 
 ```bash
 ddev drush cache:rebuild
 ```
 
-### 7. Open the site
+### 8. Open the site
 
 ```bash
 ddev launch
@@ -155,5 +163,6 @@ ddev drush site:install social \
   --account-pass=admin \
   --site-name="Open Social" \
   -y
+ddev drush config:import -y
 ddev drush cache:rebuild
 ```

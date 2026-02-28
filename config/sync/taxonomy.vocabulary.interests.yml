@@ -1,0 +1,11 @@
+uuid: a94beb72-325b-4501-b539-d9c911eb6bd7
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: 0oDKR41_MvDHVtKzJwxUv877N6E6vHBi5_yCMu7Vo8s
+name: Interests
+vid: interests
+description: 'A users interests for their profile.'
+weight: 0
+new_revision: false

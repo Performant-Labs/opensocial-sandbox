@@ -1,0 +1,24 @@
+uuid: 9c737d61-1df3-4930-8133-26abeb6e53a2
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+  enforced:
+    module:
+      - social_group_request
+_core:
+  default_config_hash: LptC1ePFfiIrrJN8QMqQZxQY_0zi0AnXCLIsY5ZFH4U
+id: group_content.field_grequest_reason
+field_name: field_grequest_reason
+entity_type: group_content
+type: string_long
+settings:
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,31 @@
+uuid: 3f5238d5-bff0-4dd2-b34d-f6f7dd367b3e
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.search_content
+  module:
+    - system
+    - views
+  theme:
+    - socialblue
+_core:
+  default_config_hash: QRo3tGvHr084jZ0ZUS31X0Z9_VJcHRdtVG0B6IxLllQ
+id: socialblue_exposed_form_search_content_page_sidebar
+theme: socialblue
+region: complementary_top
+weight: 3
+provider: null
+plugin: 'views_exposed_filter_block:search_content-page'
+settings:
+  id: 'views_exposed_filter_block:search_content-page'
+  label: ''
+  label_display: visible
+  provider: views
+  views_label: 'Sort and Filter'
+visibility:
+  request_path:
+    id: request_path
+    pages: "/search/content\r\n/search/content/*"
+    negate: false
+    context_mapping: {  }

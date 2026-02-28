@@ -1,0 +1,13 @@
+uuid: 41bc79f4-3c1e-4ca6-a980-be0c1ab6c42c
+langcode: en
+status: true
+dependencies:
+  module:
+    - profile
+_core:
+  default_config_hash: B0Y4S1DEVz3FrF9XpfD2khNdG0IFOnNomL9FLrFusDk
+id: profile.medium_teaser
+label: 'Medium Teaser'
+description: ''
+targetEntityType: profile
+cache: true

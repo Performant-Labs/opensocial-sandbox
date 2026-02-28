@@ -1,0 +1,23 @@
+uuid: 6fb12781-de16-4fe8-9659-edee6f9c6c47
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+  enforced:
+    module:
+      - social_group_flexible_group
+_core:
+  default_config_hash: I9_i1EGNSTez8FL1WWHOJjbtwJkLdj_3niNIwVijUX0
+id: group.field_group_posts_enabled
+field_name: field_group_posts_enabled
+entity_type: group
+type: boolean
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,20 @@
+uuid: 5f35ef12-06ee-4fc0-9644-6b0fc9a84973
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.flexible_group
+    - node.type.topic
+  module:
+    - gnode
+    - node
+    - social_group_flexible_group
+_core:
+  default_config_hash: NdqEQFRAz_vLVQbQZ-bats8yKYlmokAmmoJuhywMeNg
+id: flexible_group-group_node-topic
+group_type: flexible_group
+content_plugin: 'group_node:topic'
+plugin_config:
+  group_cardinality: 1
+  entity_cardinality: 1
+  use_creation_wizard: false

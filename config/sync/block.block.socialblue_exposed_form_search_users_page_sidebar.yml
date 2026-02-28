@@ -1,0 +1,31 @@
+uuid: e6335133-0b19-4f15-9c0b-75765b595568
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.search_users
+  module:
+    - system
+    - views
+  theme:
+    - socialblue
+_core:
+  default_config_hash: uenMjym2h_uiKBmwJ9SfUzc5ayms6ucjJQVya-YiZY8
+id: socialblue_exposed_form_search_users_page_sidebar
+theme: socialblue
+region: complementary_top
+weight: 4
+provider: null
+plugin: 'views_exposed_filter_block:search_users-page'
+settings:
+  id: 'views_exposed_filter_block:search_users-page'
+  label: ''
+  label_display: visible
+  provider: views
+  views_label: Filter
+visibility:
+  request_path:
+    id: request_path
+    pages: "/search/users\r\n/search/users/*"
+    negate: false
+    context_mapping: {  }

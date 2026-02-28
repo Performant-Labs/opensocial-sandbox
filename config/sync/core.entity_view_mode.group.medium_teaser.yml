@@ -1,0 +1,13 @@
+uuid: d278dc39-e0d2-4d99-bf44-4c4b1d5ab8d4
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+_core:
+  default_config_hash: G2tm7j-ef9MFjD2FF_ZZKrKI12yIs5R_HxQ6NYYfuwI
+id: group.medium_teaser
+label: 'Medium teaser'
+description: ''
+targetEntityType: group
+cache: true

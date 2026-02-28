@@ -1,0 +1,25 @@
+uuid: 3d519574-0a43-4784-8eda-4dc065f84308
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - socialbase
+_core:
+  default_config_hash: 38SP4Ez8nO0AVi0dkEYnWt2dFniIz1nylQ2YELfHbq0
+id: sitebranding
+theme: socialbase
+region: header
+weight: 3
+provider: null
+plugin: system_branding_block
+settings:
+  id: system_branding_block
+  label: 'Site branding'
+  label_display: '0'
+  provider: system
+  use_site_logo: true
+  use_site_name: true
+  use_site_slogan: false
+visibility: {  }

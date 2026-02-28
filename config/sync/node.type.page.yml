@@ -1,0 +1,21 @@
+uuid: 37c6b4e6-9f18-401f-bd4f-9c8987ba3c88
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - footer
+      - main
+    parent: 'main:'
+_core:
+  default_config_hash: kvBUGH2YBhS3a5azEAvNdCDDoWKyP2PgG2bJieXCccU
+name: Page
+type: page
+description: "Use pages for your static content, such as an 'About us' page."
+help: null
+new_revision: false
+preview_mode: 1
+display_submitted: false
