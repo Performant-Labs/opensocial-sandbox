@@ -12,9 +12,9 @@ The project explores how Open Social's groups, discussions, events, and wiki pag
 ## Installation
 
 ```bash
-# Clone the repository
-git clone https://github.com/Performant-Labs/opensocial-sandbox.git
-cd opensocial-sandbox
+# Clone the repository (the directory name must match the DDEV project name)
+git clone https://github.com/Performant-Labs/opensocial-sandbox.git pl-opensocial
+cd pl-opensocial
 
 # Start DDEV
 ddev start
@@ -27,17 +27,19 @@ mkdir -p private
 
 # Install the site
 ddev drush site:install social \
-  --db-url=mysql://root:root@db:3306/social \
   --account-name=admin \
   --account-pass=admin \
   --site-name="Open Social" \
   -y
 
+# Run post-install steps (UUID sync, entity cleanup, config:import, cache:rebuild)
+ddev post-install
+
 # Open the site
 ddev launch
 ```
 
-Log in at `https://opensocial-sandbox.ddev.site` with username `admin` and password `admin`.
+Log in at `https://pl-opensocial.ddev.site` with username `admin` and password `admin`.
 
 For full details including daily workflow commands and known issues, see [documents/INSTALL.md](documents/INSTALL.md).
 

@@ -21,6 +21,7 @@
     ],
     "require": {
         "composer/installers": "^2.0",
+        "cweagans/composer-patches": "^1.7",
         "drupal/core-composer-scaffold": "^10.6",
         "drupal/core-project-message": "^10.6",
         "drupal/core-recommended": "^10.6",
@@ -51,6 +52,11 @@
     },
     "extra": {
         "enable-patching": true,
+        "patches": {
+            "goalgorilla/open_social": {
+                "Fix MentionsFilter uninitialized typed property on PHP 8": "patches/mentions-filter-php8-fix.patch"
+            }
+        },
         "drupal-scaffold": {
             "locations": {
                 "web-root": "web/"

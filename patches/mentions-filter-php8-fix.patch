@@ -1,0 +1,9 @@
+--- a/modules/custom/mentions/src/Plugin/Filter/MentionsFilter.php
++++ b/modules/custom/mentions/src/Plugin/Filter/MentionsFilter.php
+@@ -89,7 +89,7 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
+    *
+    * @var string|null
+    */
+-  private ?string $textFormat;
++  private ?string $textFormat = null;
+ 

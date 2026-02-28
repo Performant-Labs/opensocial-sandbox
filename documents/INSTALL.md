@@ -25,6 +25,8 @@ git clone <repo-url> pl-opensocial
 cd pl-opensocial
 ```
 
+> The second argument (`pl-opensocial`) sets the target directory name. If you clone into a differently named directory you **must** edit `.ddev/config.yaml` and change the `name:` field to match, otherwise DDEV will use the old project's hostname and database.
+
 ### 2. Start DDEV
 
 ```bash
@@ -67,7 +69,6 @@ Open Social requires this to be present before installation will proceed.
 
 ```bash
 ddev drush site:install social \
-  --db-url=mysql://root:root@db:3306/social \
   --account-name=admin \
   --account-pass=admin \
   --site-name="Open Social" \
@@ -85,21 +86,22 @@ This runs Drupal's site installation using Open Social's `social` install profil
 
 > **Expected warnings during install**: Solr-related warnings are normal — Open Social ships `search_api_solr` but no Solr server is configured. These are non-blocking and can be ignored.
 
-### 6. Import configuration
+### 6. Run post-install steps
 
 ```bash
-ddev drush config:import -y
+ddev post-install
 ```
 
-This imports the exported site configuration from `config/sync/`, applying all settings, content types, views, blocks, and module configuration committed to the repository.
+This custom DDEV command (`.ddev/commands/web/post-install`) handles several compatibility issues between Open Social's `site:install` and the exported config/sync:
 
-### 7. Rebuild caches
+- Sets the site UUID to match the one in `config/sync/system.site.yml`
+- Removes seed entities (taxonomy terms, profile, crop, block_content) created by `site:install` that would block config import
+- Pre-creates two field storages (`field_activity_entity`, `field_grequest_message`) that are not installed by `site:install` but are required by the config
+- Fixes UUID mismatches for config entities (block_content types, language entity) to avoid destructive delete+recreate operations during import
+- Runs `drush config:import` (twice, to handle config dependency ordering)
+- Runs `drush cache:rebuild`
 
-```bash
-ddev drush cache:rebuild
-```
-
-### 8. Open the site
+### 7. Open the site
 
 ```bash
 ddev launch
@@ -150,6 +152,10 @@ If `ddev composer create-project` or similar commands fail with a "directory is 
 rm -f .DS_Store
 ```
 
+### MentionsFilter PHP 8 compatibility patch
+
+Open Social's `mentions` module declares a typed property (`$textFormat`) without initialising it to `null`, which throws a fatal error in PHP 8.x when the property is accessed before `setTextFormat()` is called. A one-line patch is applied automatically by `composer install` via `patches/mentions-filter-php8-fix.patch`.
+
 ---
 
 ## Re-installing from scratch
@@ -158,11 +164,9 @@ To wipe the database and start over without re-running `composer install`:
 
 ```bash
 ddev drush site:install social \
-  --db-url=mysql://root:root@db:3306/social \
   --account-name=admin \
   --account-pass=admin \
   --site-name="Open Social" \
   -y
-ddev drush config:import -y
-ddev drush cache:rebuild
+ddev post-install
 ```
