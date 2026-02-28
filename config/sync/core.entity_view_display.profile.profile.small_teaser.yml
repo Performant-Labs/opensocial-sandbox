@@ -36,29 +36,29 @@ mode: small_teaser
 content:
   field_profile_function:
     type: string
-    weight: 1
-    region: content
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
+    weight: 1
+    region: content
   field_profile_image:
     type: image
-    weight: 0
     label: hidden
     settings:
-      image_style: social_medium
       image_link: ''
+      image_style: social_medium
     third_party_settings: {  }
+    weight: 0
     region: content
   field_profile_organization:
     type: string
-    weight: 2
-    region: content
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
+    weight: 2
+    region: content
 hidden:
   affiliation_owned_count: true
   field_enable_other_affiliations: true

@@ -28,16 +28,12 @@ SET FOREIGN_KEY_CHECKS=1;
 
 drush sql:query "
 SET FOREIGN_KEY_CHECKS=0;
-TRUNCATE TABLE profile;
-TRUNCATE TABLE profile_revision;
+TRUNCATE TABLE menu_link_content;
+TRUNCATE TABLE menu_link_content_data;
+TRUNCATE TABLE menu_link_content_field_revision;
+TRUNCATE TABLE menu_link_content_revision;
 SET FOREIGN_KEY_CHECKS=1;
 "
-# Also truncate all profile field tables dynamically
-drush sql:query "
-SET FOREIGN_KEY_CHECKS=0;
-$(drush sql:query "SHOW TABLES LIKE 'profile\_%'" 2>/dev/null | while IFS= read -r tbl; do echo "TRUNCATE TABLE \`$tbl\`;"; done)
-SET FOREIGN_KEY_CHECKS=1;
-" 2>/dev/null || true
 
 drush sql:query "
 SET FOREIGN_KEY_CHECKS=0;
@@ -55,14 +51,22 @@ TRUNCATE TABLE block_content_field_data;
 TRUNCATE TABLE block_content_field_revision;
 TRUNCATE TABLE block_content_revision;
 SET FOREIGN_KEY_CHECKS=1;
-"
-# Also truncate block_content field tables dynamically
+" 2>/dev/null || true
+# Also truncate block_content field tables
+for tbl in $(drush sql:query "SHOW TABLES LIKE 'block_content%'" 2>/dev/null); do
+  drush sql:query "TRUNCATE TABLE \`$tbl\`;" 2>/dev/null || true
+done
+
 drush sql:query "
 SET FOREIGN_KEY_CHECKS=0;
-$(drush sql:query "SHOW TABLES LIKE 'block_content\_\_\_%'" 2>/dev/null | while IFS= read -r tbl; do echo "TRUNCATE TABLE \`$tbl\`;"; done)
-$(drush sql:query "SHOW TABLES LIKE 'block_content\_revision\_\_\_%'" 2>/dev/null | while IFS= read -r tbl; do echo "TRUNCATE TABLE \`$tbl\`;"; done)
+TRUNCATE TABLE profile;
+TRUNCATE TABLE profile_revision;
 SET FOREIGN_KEY_CHECKS=1;
 " 2>/dev/null || true
+# Also truncate profile field tables
+for tbl in $(drush sql:query "SHOW TABLES LIKE 'profile%'" 2>/dev/null); do
+  drush sql:query "TRUNCATE TABLE \`$tbl\`;" 2>/dev/null || true
+done
 
 drush sql:query "
 SET FOREIGN_KEY_CHECKS=0;
@@ -71,21 +75,7 @@ TRUNCATE TABLE search_api_task;
 SET FOREIGN_KEY_CHECKS=1;
 "
 
-echo "==> Pre-creating field storages not installed by site:install ..."
-drush php:eval "
-\$missing = ['field.storage.activity.field_activity_entity', 'field.storage.group_content.field_grequest_message'];
-foreach (\$missing as \$name) {
-  if (!\Drupal::config(\$name)->isNew()) { echo 'Already exists: ' . \$name . PHP_EOL; continue; }
-  \$file = '/var/www/html/config/sync/' . \$name . '.yml';
-  if (!file_exists(\$file)) { echo 'Skipping (not in sync): ' . \$name . PHP_EOL; continue; }
-  \$data = \Drupal\Core\Serialization\Yaml::decode(file_get_contents(\$file));
-  unset(\$data['uuid'], \$data['_core']);
-  \Drupal\field\Entity\FieldStorageConfig::create(\$data)->save();
-  echo 'Created: ' . \$name . PHP_EOL;
-}
-"
-
-echo "==> Fixing UUID mismatches for block_content types and language entity ..."
+echo "==> Fixing UUID mismatches for config entities created by site:install ..."
 drush php:eval "
 \$configs = [
   'block_content.type.basic',
@@ -105,14 +95,39 @@ foreach (\$configs as \$name) {
 }
 "
 
-echo "==> Importing configuration (first pass) ..."
-drush cache:rebuild
-drush config:import -y || true
+echo "==> Importing configuration (retrying until clean) ..."
+MAX_PASSES=8
+for i in $(seq 1 $MAX_PASSES); do
+  echo "--- Pass $i ---"
 
-echo "==> Importing configuration (second pass to catch ordering issues) ..."
-drush config:import -y || true
+  # Pre-create field storages that site:install does not install.
+  # Must run before each pass because a crash rolls back their config entries.
+  drush php:eval "
+  \$missing = ['field.storage.activity.field_activity_entity', 'field.storage.group_content.field_grequest_message'];
+  foreach (\$missing as \$name) {
+    \$file = '/var/www/html/config/sync/' . \$name . '.yml';
+    if (!file_exists(\$file)) { echo 'Skipping (not in sync): ' . \$name . PHP_EOL; continue; }
+    if (!\Drupal::config(\$name)->isNew()) { echo 'Already present: ' . \$name . PHP_EOL; continue; }
+    \$data = \Drupal\Core\Serialization\Yaml::decode(file_get_contents(\$file));
+    unset(\$data['uuid'], \$data['_core']);
+    \Drupal\field\Entity\FieldStorageConfig::create(\$data)->save();
+    echo 'Pre-created: ' . \$name . PHP_EOL;
+  }
+  " 2>&1 | grep -v '^\[warning\]'
 
-echo "==> Rebuilding caches ..."
+  drush cache:rebuild > /dev/null 2>&1
+
+  if drush config:import -y 2>&1; then
+    echo "Config import succeeded on pass $i."
+    break
+  fi
+
+  if [ "$i" -eq "$MAX_PASSES" ]; then
+    echo "WARNING: config:import still failing after $MAX_PASSES passes. Check output above."
+  fi
+done
+
+echo "==> Final cache rebuild ..."
 drush cache:rebuild
 
 echo ""

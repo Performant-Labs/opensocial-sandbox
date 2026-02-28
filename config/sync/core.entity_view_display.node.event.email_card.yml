@@ -38,37 +38,37 @@ mode: email_card
 content:
   field_event_address:
     type: address_plain
-    weight: 1
     label: hidden
     settings: {  }
     third_party_settings: {  }
+    weight: 1
     region: content
   field_event_addtocal:
-    weight: 3
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 3
+    region: content
   field_event_date:
     type: datetime_default
-    weight: 2
-    region: content
     label: hidden
     settings:
-      format_type: medium
       timezone_override: ''
+      format_type: medium
     third_party_settings: {  }
+    weight: 2
+    region: content
   field_event_location:
     type: string
-    weight: 0
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
+    weight: 0
     region: content
   flag_follow_content:
-    weight: 10
     settings: {  }
     third_party_settings: {  }
+    weight: 10
     region: content
 hidden:
   body: true

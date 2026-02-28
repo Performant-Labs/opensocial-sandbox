@@ -36,12 +36,12 @@ mode: table
 content:
   field_profile_image:
     type: image
-    weight: 0
     label: hidden
     settings:
-      image_style: social_medium
       image_link: ''
+      image_style: social_medium
     third_party_settings: {  }
+    weight: 0
     region: content
 hidden:
   affiliation_owned_count: true

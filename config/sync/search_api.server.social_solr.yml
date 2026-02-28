@@ -32,6 +32,11 @@ name: 'Social SOLR'
 description: ''
 backend: search_api_solr
 backend_config:
+  retrieve_data: false
+  highlight_data: false
+  site_hash: false
+  server_prefix: ''
+  domain: generic
   connector: standard
   connector_config:
     scheme: http
@@ -43,16 +48,16 @@ backend_config:
     index_timeout: 5
     optimize_timeout: 10
     finalize_timeout: 30
-    commit_within: 1000
     solr_version: ''
     http_method: AUTO
+    commit_within: 1000
     jmx: false
     solr_install_dir: /opt/solr
-  disabled_field_types: {  }
-  retrieve_data: false
-  highlight_data: false
-  skip_schema_check: false
-  server_prefix: ''
-  domain: generic
   optimize: false
-  site_hash: false
+  fallback_multiple: false
+  disabled_field_types: {  }
+  rows: 10
+  index_single_documents_fallback_count: 10
+  index_empty_text_fields: false
+  suppress_missing_languages: false
+  skip_schema_check: false

@@ -8,6 +8,9 @@ dependencies:
     - activity_logger
 third_party_settings:
   activity_logger:
+    activity_bundle_entities:
+      node-event: node-event
+    activity_action: create_entitiy_action
     activity_context: community_activity_context
     activity_destinations:
       notifications: notifications
@@ -16,9 +19,6 @@ third_party_settings:
       stream_home: stream_home
       stream_profile: stream_profile
     activity_create_direct: false
-    activity_action: create_entitiy_action
-    activity_bundle_entities:
-      node-event: node-event
     email_subject: ''
 _core:
   default_config_hash: G5w2O5ktAYomVDh2408akSJw_MoF2cO8AKfFsbR99_c
@@ -27,8 +27,8 @@ label: 'Create event'
 description: 'A user created an event in the community'
 text:
   -
-    format: full_html
     value: '<p><a href="[message:revision_author:url:absolute]" translate="no">[message:revision_author:display-name]</a> created an event</p>'
+    format: full_html
 settings:
   'token options':
     clear: false

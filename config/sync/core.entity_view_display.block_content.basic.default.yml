@@ -18,8 +18,6 @@ mode: default
 content:
   field_basic_link:
     type: link
-    weight: 1
-    region: content
     label: hidden
     settings:
       trim_length: 80
@@ -28,13 +26,15 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
+    weight: 1
+    region: content
   field_text_block:
     type: text_default
-    weight: 0
-    region: content
     label: hidden
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   langcode: true
   search_api_excerpt: true

@@ -77,4 +77,25 @@ settings:
   redirect:
     handler: 'default:redirect'
     handler_settings: {  }
+  event_enrollment:
+    handler: 'default:event_enrollment'
+    handler_settings: {  }
+  flagging:
+    handler: 'default:flagging'
+    handler_settings: {  }
+  paragraph:
+    handler: 'default:paragraph'
+    handler_settings: {  }
+  post:
+    handler: 'default:post'
+    handler_settings: {  }
+  search_api_task:
+    handler: 'default:search_api_task'
+    handler_settings: {  }
+  vote:
+    handler: 'default:vote'
+    handler_settings: {  }
+  vote_result:
+    handler: 'default:vote_result'
+    handler_settings: {  }
 field_type: dynamic_entity_reference

@@ -24,19 +24,19 @@ mode: small_teaser
 content:
   field_page_image:
     type: image
-    weight: 4
-    region: content
     label: hidden
     settings:
-      image_style: social_medium
       image_link: content
+      image_style: social_medium
     third_party_settings:
       lazy:
-        lazy_image: 0
+        lazy_image: '0'
+    weight: 4
+    region: content
   links:
-    weight: 100
     settings: {  }
     third_party_settings: {  }
+    weight: 100
     region: content
 hidden:
   body: true

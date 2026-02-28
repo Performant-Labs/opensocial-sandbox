@@ -12,15 +12,15 @@ third_party_settings:
     group_information:
       children:
         - account
+      label: 'Account information'
       parent_name: ''
       weight: 0
-      label: 'Account information'
       format_type: fieldset
       format_settings:
         label: 'Account information'
-        required_fields: true
-        id: ''
         classes: ''
+        id: ''
+        required_fields: true
     group_privacy:
       children: {  }
       label: Privacy
@@ -29,23 +29,23 @@ third_party_settings:
       weight: 5
       format_type: fieldset
       format_settings:
-        id: ''
         classes: ''
+        show_empty_fields: false
+        id: ''
         description: ''
         required_fields: true
-        show_empty_fields: false
     group_locale_settings:
       children:
         - timezone
+      label: 'Locale settings'
       parent_name: ''
       weight: 10
       format_type: fieldset
       format_settings:
-        id: ''
         classes: ''
+        id: ''
         description: ''
         required_fields: true
-      label: 'Locale settings'
 _core:
   default_config_hash: 1hzRbEuOccan-jfyZLeGHnzTVwEf2LpwGmEOgor9yVs
 id: user.user.default

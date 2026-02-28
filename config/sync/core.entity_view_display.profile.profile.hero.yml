@@ -35,45 +35,45 @@ bundle: profile
 mode: hero
 content:
   field_profile_first_name:
-    weight: 0
+    type: string
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 0
     region: content
   field_profile_function:
     type: string
-    weight: 3
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
+    weight: 3
     region: content
   field_profile_image:
-    weight: 2
+    type: image
     label: hidden
     settings:
-      image_style: social_large
       image_link: ''
+      image_style: social_large
     third_party_settings: {  }
-    type: image
+    weight: 2
     region: content
   field_profile_last_name:
-    weight: 1
+    type: string
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 1
     region: content
   field_profile_organization:
     type: string
-    weight: 4
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
+    weight: 4
     region: content
 hidden:
   affiliation_owned_count: true

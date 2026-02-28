@@ -36,28 +36,28 @@ mode: autocomplete_item
 content:
   field_profile_first_name:
     type: string
-    weight: 1
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
+    weight: 1
     region: content
   field_profile_image:
     type: image
-    weight: 0
     label: hidden
     settings:
-      image_style: social_small
       image_link: ''
+      image_style: social_small
     third_party_settings: {  }
+    weight: 0
     region: content
   field_profile_last_name:
     type: string
-    weight: 2
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
+    weight: 2
     region: content
 hidden:
   affiliation_owned_count: true

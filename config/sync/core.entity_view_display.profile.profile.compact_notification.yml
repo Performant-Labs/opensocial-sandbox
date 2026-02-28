@@ -35,13 +35,13 @@ bundle: profile
 mode: compact_notification
 content:
   field_profile_image:
-    weight: 7
+    type: image
     label: hidden
     settings:
-      image_style: social_medium
       image_link: ''
+      image_style: social_medium
     third_party_settings: {  }
-    type: image
+    weight: 7
     region: content
 hidden:
   affiliation_owned_count: true

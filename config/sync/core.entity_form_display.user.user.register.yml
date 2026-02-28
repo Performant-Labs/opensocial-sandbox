@@ -16,9 +16,9 @@ mode: register
 content:
   account:
     weight: 0
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
 hidden:
   contact: true
   field_external_identifier: true

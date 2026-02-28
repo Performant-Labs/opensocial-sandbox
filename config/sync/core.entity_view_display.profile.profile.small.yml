@@ -36,12 +36,12 @@ mode: small
 content:
   field_profile_image:
     type: image
-    weight: 0
     label: hidden
     settings:
-      image_style: social_small
       image_link: ''
+      image_style: social_small
     third_party_settings: {  }
+    weight: 0
     region: content
 hidden:
   affiliation_owned_count: true

@@ -38,13 +38,13 @@ bundle: profile
 mode: compact
 content:
   field_profile_image:
-    weight: 0
+    type: social_profile_avatar
     label: hidden
     settings:
-      image_style: social_medium
       image_link: owner
+      image_style: social_medium
     third_party_settings: {  }
-    type: social_profile_avatar
+    weight: 0
     region: content
 hidden:
   affiliation_owned_count: true

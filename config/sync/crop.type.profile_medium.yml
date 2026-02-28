@@ -4,8 +4,8 @@ status: true
 dependencies: {  }
 _core:
   default_config_hash: UiiDzWwsv6XOpSmO4iIT1PB8aaXWNq_fdJWki4TlE6I
-id: profile_medium
 label: 'Profile medium'
+id: profile_medium
 description: 'Medium sized profile image'
 aspect_ratio: '44:44'
 soft_limit_width: null
