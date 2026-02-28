@@ -60,6 +60,7 @@ module:
   jquery_ui_menu: 0
   jquery_ui_resizable: 0
   language: 0
+  lazy: 0
   like_and_dislike: 0
   link: 0
   mailer_transport: 0
@@ -134,6 +135,7 @@ module:
   social_group: 2
   social_group_flexible_group: 5
   social_group_request: 6
+  content_translation: 10
   views: 10
   paragraphs: 11
   improved_theme_settings: 50
