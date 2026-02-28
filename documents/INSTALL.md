@@ -25,7 +25,8 @@ git clone <repo-url> pl-opensocial
 cd pl-opensocial
 ```
 
-> The second argument (`pl-opensocial`) sets the target directory name. If you clone into a differently named directory you **must** edit `.ddev/config.yaml` and change the `name:` field to match, otherwise DDEV will use the old project's hostname and database.
+> [!IMPORTANT]
+> The second argument (`pl-opensocial`) sets the target directory name. If you clone into a differently named directory you **must** edit `.ddev/config.yaml` and change the `name:` field to match the directory name **before** running `ddev start`. Otherwise, DDEV will use the default project name from the configuration file.
 
 ### 2. Start DDEV
 
@@ -131,6 +132,8 @@ Log in with:
 | Run database updates | `ddev drush updb -y` |
 | Export config | `ddev drush config:export -y` |
 | Import config | `ddev drush config:import -y` |
+| Stop and remove data | `ddev stop --remove-data --omit-snapshot` |
+| Completely uninstall | `ddev stop --remove-data --omit-snapshot && rm -rf .ddev` |
 
 ---
 
@@ -156,10 +159,19 @@ rm -f .DS_Store
 
 Open Social's `mentions` module declares a typed property (`$textFormat`) without initialising it to `null`, which throws a fatal error in PHP 8.x when the property is accessed before `setTextFormat()` is called. A one-line patch is applied automatically by `composer install` via `patches/mentions-filter-php8-fix.patch`.
 
+### DDEV Nested Project Error
+
+If you see an error like `Something went wrong with ... a project is not allowed in ... because another project exists in the subdirectory`, it means DDEV has detected a `.ddev` folder or project registration in a parent or child directory of your current project. 
+
+To fix this:
+1. Ensure you are not trying to start a project inside another project's directory.
+2. Run `ddev stop --unlist` on the problematic project (refer to the path in the error message).
+
 ---
 
 ## Re-installing from scratch
 
+### Option 1: Wipe database only
 To wipe the database and start over without re-running `composer install`:
 
 ```bash
@@ -169,4 +181,13 @@ ddev drush site:install social \
   --site-name="Open Social" \
   -y
 ddev post-install
+```
+
+### Option 2: Full wipe and re-install
+To completely remove the DDEV project and start over:
+
+```bash
+ddev stop --remove-data --omit-snapshot
+# (Optional) Delete the directory if you want to re-clone
+# cd .. && rm -rf pl-opensocial
 ```
