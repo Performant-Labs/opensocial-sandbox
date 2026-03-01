@@ -159,17 +159,6 @@ rm -f .DS_Store
 
 Open Social's `mentions` module declares a typed property (`$textFormat`) without initialising it to `null`, which throws a fatal error in PHP 8.x when the property is accessed before `setTextFormat()` is called. A one-line patch is applied automatically by `composer install` via `patches/mentions-filter-php8-fix.patch`.
 
-### DDEV Nested Project Error
-
-If you see an error like `Something went wrong with ... a project is not allowed in ... because another project exists in the subdirectory`, it means DDEV has detected a `.ddev` folder in a parent directory, which makes DDEV think the parent is also a project.
-
-This usually happens if `ddev config` was accidentally run in your `~/Sites` or home directory.
-
-**To fix this:**
-1. Check if a `.ddev` directory exists in your parent folders (e.g., `ls -la ../.ddev`).
-2. If it shouldn't be there, remove it: `rm -rf ../.ddev`.
-3. Alternatively, unlist the parent project: `ddev stop --unlist` while inside the parent directory.
-
 ---
 
 ## Re-installing from scratch
