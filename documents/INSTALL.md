@@ -161,11 +161,14 @@ Open Social's `mentions` module declares a typed property (`$textFormat`) withou
 
 ### DDEV Nested Project Error
 
-If you see an error like `Something went wrong with ... a project is not allowed in ... because another project exists in the subdirectory`, it means DDEV has detected a `.ddev` folder or project registration in a parent or child directory of your current project. 
+If you see an error like `Something went wrong with ... a project is not allowed in ... because another project exists in the subdirectory`, it means DDEV has detected a `.ddev` folder in a parent directory, which makes DDEV think the parent is also a project.
 
-To fix this:
-1. Ensure you are not trying to start a project inside another project's directory.
-2. Run `ddev stop --unlist` on the problematic project (refer to the path in the error message).
+This usually happens if `ddev config` was accidentally run in your `~/Sites` or home directory.
+
+**To fix this:**
+1. Check if a `.ddev` directory exists in your parent folders (e.g., `ls -la ../.ddev`).
+2. If it shouldn't be there, remove it: `rm -rf ../.ddev`.
+3. Alternatively, unlist the parent project: `ddev stop --unlist` while inside the parent directory.
 
 ---
 
