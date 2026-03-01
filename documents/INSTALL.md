@@ -147,6 +147,10 @@ DDEV auto-generates `web/sites/default/settings.ddev.php` on `ddev start`. It in
 
 Search API Solr warnings are expected. The module is bundled with Open Social but no Solr container is configured in this DDEV setup. Site installation completes successfully despite the warnings.
 
+### Missing libraries or CSS/JS errors
+
+If you see errors on the homepage regarding missing files in `web/libraries/` (e.g., node-waves, bootstrap), ensure you have run `ddev composer install`. The project's `composer.json` is configured to automatically place these assets in the correct location via `oomphinc/composer-installers-extender`.
+
 ### macOS `.DS_Store` files
 
 If `ddev composer create-project` or similar commands fail with a "directory is not empty" error, check for a `.DS_Store` file:
