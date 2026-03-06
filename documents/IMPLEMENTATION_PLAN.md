@@ -10,6 +10,24 @@
 
 ---
 
+## Phase Standards
+
+To ensure data safety and traceability, the following procedures **must** be followed for every phase:
+
+1.  **Phase Start**:
+    - Backup the database: `ddev export-db --file=backups/phaseN-pre-[timestamp].sql.gz`
+    - Record the start in `documents/BUILD_LOG.md`.
+2.  **Phase Execution**:
+    - Record every significant step (configuration change, module install, code edit) in `documents/BUILD_LOG.md`.
+3.  **Phase Verification**:
+    - Run the phase-specific Playwright tests.
+    - All tests must pass before proceeding.
+4.  **Phase Completion**:
+    - Add dummy data sourced from `groups.drupal.org` (reproducing relevant g.d.o content structures).
+    - Finalize the phase entry in `documents/BUILD_LOG.md`.
+
+---
+
 ## Background
 
 groups.drupal.org is a Drupal 7 site running the Organic Groups (OG) module. It provides geographic and working groups, discussion threads, events, wiki pages, multi-group posting, email subscriptions, and a basic hot-content feed. Open Social is a modern Drupal 10 distribution with an overlapping but different feature set.
@@ -52,6 +70,8 @@ tests/
 ## Phase 1 — Content Types & Text Formats
 
 **Goal**: Make Topic, Event, and Page behave like Discussion, Event, and Wiki page on g.d.o.
+
+> **Pre-requisite**: Backup database to `backups/phase1-pre.sql.gz` and start build log entry.
 
 ### 1.1 Topic → Discussion
 
@@ -101,11 +121,15 @@ tests/
 | `wiki.edit.nonmember` | A logged-in user who is **not** a group member can edit a Page node |
 | `wiki.revision` | Editing a Page creates a new revision; revision log message is stored |
 
+> **Post-phase**: Add dummy Discussion, Event, and Wiki content from g.d.o; finalize phase 1 log.
+
 ---
 
 ## Phase 2 — Group Structure & Membership Models
 
 **Goal**: Replicate g.d.o's four membership models, group types, group directory, moderation queue, and archive type.
+
+> **Pre-requisite**: Backup database to `backups/phase2-pre.sql.gz` and update build log.
 
 ### 2.1 Group types
 
@@ -188,11 +212,15 @@ Add a guidelines block to the group creation form matching g.d.o's rules:
 | `group.moderation.email` | Email notification is sent to maintainer role when group enters "Needs Review" |
 | `group.guidelines.visible` | Group creation form displays submission guidelines text |
 
+> **Post-phase**: Add dummy groups and moderation entries from g.d.o; finalize phase 2 log.
+
 ---
 
 ## Phase 3 — Taxonomy, Discovery & Feeds
 
 **Goal**: Sitewide tags aggregation, events calendar with iCal, hot content page, per-group RSS feeds, and manually curated front page content.
+
+> **Pre-requisite**: Backup database to `backups/phase3-pre.sql.gz` and update build log.
 
 ### 3.1 Sitewide tags
 
@@ -256,11 +284,15 @@ Expose iCal feeds:
 | `promote.unflag` | Editor removes the flag; Topic disappears from the promoted block |
 | `rss.group` | GET `/group/{id}/stream/feed` returns valid RSS XML with `<item>` entries |
 
+> **Post-phase**: Add tagged content and promoted homepage items from g.d.o; finalize phase 3 log.
+
 ---
 
 ## Phase 4 — Multi-Group Posting
 
 **Goal**: Allow a single Topic or Event to appear in multiple groups simultaneously — the defining feature of g.d.o's posting model.
+
+> **Pre-requisite**: Backup database to `backups/phase4-pre.sql.gz` and update build log.
 
 ### 4.1 Group Audience field
 
@@ -294,11 +326,15 @@ Expose iCal feeds:
 | `multigroup.nonmember.excluded` | Group Audience checkboxes do not show groups the user is not a member of |
 | `multigroup.event.works` | An Event can be cross-posted to multiple groups with identical behaviour |
 
+> **Post-phase**: Add cross-posted Discussions and Events from g.d.o; finalize phase 4 log.
+
 ---
 
 ## Phase 5 — Notifications & Subscriptions
 
 **Goal**: Match g.d.o's notification model — email subscriptions by group/thread/author/content type, per-post opt-out, configurable frequency.
+
+> **Pre-requisite**: Backup database to `backups/phase5-pre.sql.gz` and update build log.
 
 ### 5.1 Notification subscription types
 
@@ -349,11 +385,15 @@ Display at `/user/{id}/notifications`:
 | `notify.cancel.all` | "Cancel all" removes all subscriptions; count drops to 0 |
 | `notify.rss.group` | Authenticated user can access `/group/{id}/stream/feed` and it returns current content |
 
+> **Post-phase**: Add dummy user subscriptions and digest settings samples; finalize phase 5 log.
+
 ---
 
 ## Phase 6 — User Profiles & History Stats
 
 **Goal**: Extended profile fields matching g.d.o, derived history stats, event organizers field, and an Ambassadors page.
+
+> **Pre-requisite**: Backup database to `backups/phase6-pre.sql.gz` and update build log.
 
 ### 6.1 Extended profile fields
 
@@ -414,11 +454,15 @@ Signups tab: list all events the user has enrolled in, filterable by status (upc
 | `ambassadors.page` | `/organizers` page lists users who have been named as Event Organizer |
 | `ambassadors.count` | User who organised 3 events shows event count 3 on the ambassadors page |
 
+> **Post-phase**: Add dummy ambassador profiles and history stats from g.d.o; finalize phase 6 log.
+
 ---
 
 ## Phase 7 — Content Moderation & Group Admin
 
 **Goal**: Content pinning within groups, homepage promotion, group-level language override, group organizer sidebar.
+
+> **Pre-requisite**: Backup database to `backups/phase7-pre.sql.gz` and update build log.
 
 ### 7.1 Pin content in group
 
@@ -462,6 +506,8 @@ Ensure the group Mission Statement / About content is surfaced:
 | `group.language.fr` | Group language set to French; group homepage UI labels render in French |
 | `group.language.user.override` | User with personal locale set to Spanish sees Spanish UI even inside a French-language group |
 | `about.mission` | Group Mission Statement is visible on the group homepage |
+
+> **Post-phase**: Add dummy pinned content and mission statements from g.d.o; finalize phase 7 log.
 
 ---
 
