@@ -1,0 +1,8 @@
+name: 'PL Open Social Wiki'
+type: module
+description: 'Enables wiki-style [[title]] links for Open Social.'
+core_version_requirement: ^9 || ^10
+package: 'Custom'
+dependencies:
+  - drupal:filter
+  - linkit:linkit

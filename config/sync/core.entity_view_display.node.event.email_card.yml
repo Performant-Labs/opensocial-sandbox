@@ -19,6 +19,8 @@ dependencies:
     - field.field.node.event.field_event_managers
     - field.field.node.event.field_event_send_confirmation
     - field.field.node.event.field_event_send_invite_by_user
+    - field.field.node.event.field_event_type
+    - field.field.node.event.field_event_url
     - field.field.node.event.field_files
     - field.field.node.event.field_hide_enrollments
     - node.type.event
@@ -88,6 +90,7 @@ hidden:
   field_event_send_confirmation: true
   field_event_send_invite_by_user: true
   field_event_type: true
+  field_event_url: true
   field_files: true
   field_hide_enrollments: true
   groups: true

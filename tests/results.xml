@@ -1,0 +1,144 @@
+<testsuites id="" name="" tests="4" failures="4" skipped="0" errors="0" time="31.169693000000002">
+<testsuite name="phase1-content-types.spec.ts" timestamp="2026-03-06T02:49:30.642Z" hostname="chromium" tests="4" failures="4" skipped="0" time="120.419" errors="0">
+<testcase name="Phase 1: Content Types &amp; Text Formats › discussion.create: Create Topic with Markdown and attachment" classname="phase1-content-types.spec.ts" time="30.108">
+<failure message="phase1-content-types.spec.ts:12:9 discussion.create: Create Topic with Markdown and attachment" type="FAILURE">
+<![CDATA[  [chromium] › phase1-content-types.spec.ts:12:9 › Phase 1: Content Types & Text Formats › discussion.create: Create Topic with Markdown and attachment 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: page.fill: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('input#edit-title-0-value')
+
+
+      12 |     test('discussion.create: Create Topic with Markdown and attachment', async ({ page }) => {
+      13 |         await page.goto('/node/add/topic');
+    > 14 |         await page.fill('input#edit-title-0-value', 'Test Discussion Topic');
+         |                    ^
+      15 |
+      16 |         // Markdown body (CKEditor 5)
+      17 |         const editor = page.locator('div.ck-editor__editable');
+        at /var/www/html/tests/e2e/phase1-content-types.spec.ts:14:20
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/phase1-content-types-Phase-63acb-ith-Markdown-and-attachment-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/phase1-content-types-Phase-63acb-ith-Markdown-and-attachment-chromium/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/phase1-content-types-Phase-63acb-ith-Markdown-and-attachment-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|test-results/phase1-content-types-Phase-63acb-ith-Markdown-and-attachment-chromium/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Phase 1: Content Types &amp; Text Formats › discussion.markdown: Bold and Heading rendering" classname="phase1-content-types.spec.ts" time="30.102">
+<failure message="phase1-content-types.spec.ts:49:9 discussion.markdown: Bold and Heading rendering" type="FAILURE">
+<![CDATA[  [chromium] › phase1-content-types.spec.ts:49:9 › Phase 1: Content Types & Text Formats › discussion.markdown: Bold and Heading rendering 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: page.fill: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('input#edit-title-0-value')
+
+
+      49 |     test('discussion.markdown: Bold and Heading rendering', async ({ page }) => {
+      50 |         await page.goto('/node/add/topic');
+    > 51 |         await page.fill('input#edit-title-0-value', 'Markdown Test');
+         |                    ^
+      52 |         await page.locator('div.ck-editor__editable').click();
+      53 |         await page.keyboard.type('# Heading 1\n\n**Bold text**');
+      54 |
+        at /var/www/html/tests/e2e/phase1-content-types.spec.ts:51:20
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/phase1-content-types-Phase-acc75--Bold-and-Heading-rendering-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/phase1-content-types-Phase-acc75--Bold-and-Heading-rendering-chromium/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/phase1-content-types-Phase-acc75--Bold-and-Heading-rendering-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|test-results/phase1-content-types-Phase-acc75--Bold-and-Heading-rendering-chromium/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Phase 1: Content Types &amp; Text Formats › event.create: Create Event with type and metadata" classname="phase1-content-types.spec.ts" time="30.108">
+<failure message="phase1-content-types.spec.ts:66:9 event.create: Create Event with type and metadata" type="FAILURE">
+<![CDATA[  [chromium] › phase1-content-types.spec.ts:66:9 › Phase 1: Content Types & Text Formats › event.create: Create Event with type and metadata 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: page.fill: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('input#edit-title-0-value')
+
+
+      66 |     test('event.create: Create Event with type and metadata', async ({ page }) => {
+      67 |         await page.goto('/node/add/event');
+    > 68 |         await page.fill('input#edit-title-0-value', 'Test Event');
+         |                    ^
+      69 |
+      70 |         // Required Event Type
+      71 |         await page.selectOption('select#edit-field-event-type', { label: 'DrupalCon' });
+        at /var/www/html/tests/e2e/phase1-content-types.spec.ts:68:20
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/phase1-content-types-Phase-aef7d-vent-with-type-and-metadata-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/phase1-content-types-Phase-aef7d-vent-with-type-and-metadata-chromium/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/phase1-content-types-Phase-aef7d-vent-with-type-and-metadata-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|test-results/phase1-content-types-Phase-aef7d-vent-with-type-and-metadata-chromium/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Phase 1: Content Types &amp; Text Formats › wiki.edit.nonmember: Any authenticated user can edit Page" classname="phase1-content-types.spec.ts" time="30.101">
+<failure message="phase1-content-types.spec.ts:100:9 wiki.edit.nonmember: Any authenticated user can edit Page" type="FAILURE">
+<![CDATA[  [chromium] › phase1-content-types.spec.ts:100:9 › Phase 1: Content Types & Text Formats › wiki.edit.nonmember: Any authenticated user can edit Page 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: page.fill: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('input#edit-title-0-value')
+
+
+      100 |     test('wiki.edit.nonmember: Any authenticated user can edit Page', async ({ page }) => {
+      101 |         await page.goto('/node/add/page');
+    > 102 |         await page.fill('input#edit-title-0-value', 'Wiki Page Test');
+          |                    ^
+      103 |         await page.click('#edit-field-content-visibility-public');
+      104 |         await page.click('#edit-submit');
+      105 |         await page.waitForURL(/\/node\/\d+/);
+        at /var/www/html/tests/e2e/phase1-content-types.spec.ts:102:20
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/phase1-content-types-Phase-4e076-nticated-user-can-edit-Page-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/phase1-content-types-Phase-4e076-nticated-user-can-edit-Page-chromium/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/phase1-content-types-Phase-4e076-nticated-user-can-edit-Page-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|test-results/phase1-content-types-Phase-4e076-nticated-user-can-edit-Page-chromium/error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+</testsuites>

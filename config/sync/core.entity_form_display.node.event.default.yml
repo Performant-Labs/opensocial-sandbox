@@ -18,6 +18,8 @@ dependencies:
     - field.field.node.event.field_event_managers
     - field.field.node.event.field_event_send_confirmation
     - field.field.node.event.field_event_send_invite_by_user
+    - field.field.node.event.field_event_type
+    - field.field.node.event.field_event_url
     - field.field.node.event.field_files
     - field.field.node.event.field_hide_enrollments
     - image.style.social_x_large
@@ -96,6 +98,8 @@ third_party_settings:
     group_attachments:
       children:
         - field_files
+        - field_event_managers
+        - field_event_managers
         - field_event_managers
         - field_event_managers
       label: 'Additional information'
@@ -341,7 +345,23 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_event_type:
+    type: options_select
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_event_url:
+    type: link_default
+    weight: 11
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
 hidden:
   field_event_send_invite_by_user: true
+  field_event_type: true
+  field_event_url: true
   promote: true
   sticky: true

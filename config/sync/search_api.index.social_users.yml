@@ -1,6 +1,6 @@
 uuid: 8c2729ec-de39-428e-9562-5688c8401ece
 langcode: en
-status: true
+status: false
 dependencies:
   config:
     - core.entity_view_mode.profile.search_index
@@ -13,8 +13,6 @@ dependencies:
   module:
     - profile
     - search_api_solr
-    - social_group
-    - social_node
     - social_search
     - taxonomy
     - user
@@ -149,9 +147,12 @@ processor_settings:
     weights:
       add_properties: 20
     plugin_id: aggregated_field
+  auto_aggregated_fulltext_field: {  }
   blocked_users:
     weights:
       preprocess_query: -30
+  custom_value: {  }
+  entity_type: {  }
   html_filter:
     weights:
       preprocess_index: -15
@@ -190,6 +191,7 @@ processor_settings:
       add_properties: 0
       pre_index_save: -10
     plugin_id: rendered_item
+  solr_date_range: {  }
   stopwords:
     weights:
       preprocess_index: -5

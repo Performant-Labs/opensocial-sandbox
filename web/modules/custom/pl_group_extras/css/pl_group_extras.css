@@ -1,0 +1,54 @@
+/**
+ * @file
+ * Styles for PL Group Extras: Archived badge, guidelines block.
+ */
+
+/* Archived badge on group pages and teasers */
+.group-badge--archived {
+  display: inline-block;
+  padding: 4px 12px;
+  background-color: #6c757d;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 3px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+/* Guidelines block on group creation form */
+.group-submission-guidelines {
+  background-color: #f8f9fa;
+  border-left: 4px solid #0d6efd;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  border-radius: 0 4px 4px 0;
+}
+
+.group-submission-guidelines h3 {
+  margin-top: 0;
+  font-size: 1rem;
+  color: #0d6efd;
+}
+
+.group-submission-guidelines ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.group-submission-guidelines li {
+  margin-bottom: 6px;
+  line-height: 1.5;
+}
+
+/* Archive notice on content creation forms */
+.group-archive-notice {
+  background-color: #fff3cd;
+  border: 1px solid #ffc107;
+  padding: 16px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  color: #856404;
+}

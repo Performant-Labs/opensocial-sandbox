@@ -1,0 +1,224 @@
+<?php
+
+/**
+ * @file
+ * PL Group Extras module.
+ *
+ * Implements archive enforcement, submission guidelines, and moderation
+ * defaults for the flexible_group bundle.
+ */
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\group\Entity\GroupInterface;
+use Drupal\node\NodeInterface;
+
+/**
+ * Helper: determines whether a group is of the "Archive" type.
+ */
+function _pl_group_extras_is_archive(GroupInterface $group): bool {
+  if ($group->hasField('field_group_type') && !$group->get('field_group_type')->isEmpty()) {
+    $term = $group->get('field_group_type')->entity;
+    if ($term && $term->getName() === 'Archive') {
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Implements hook_page_attachments().
+ */
+function pl_group_extras_page_attachments(array &$attachments) {
+  $attachments['#attached']['library'][] = 'pl_group_extras/pl_group_extras';
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * - Adds submission guidelines to the group creation form.
+ * - Adds help text for membership models.
+ * - Blocks content creation forms inside archive groups.
+ */
+function pl_group_extras_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Group creation / edit form: add guidelines.
+  if (strpos($form_id, 'group_flexible_group') !== FALSE) {
+    $form['submission_guidelines'] = [
+      '#type' => 'markup',
+      '#markup' => '<div class="group-submission-guidelines">'
+        . '<h3>Group Submission Guidelines</h3>'
+        . '<ul>'
+        . '<li>Group names should be brief; avoid the word &ldquo;Drupal&rdquo;</li>'
+        . '<li>Don&rsquo;t overlap significantly with an existing group</li>'
+        . '<li>Provide a meaningful description and welcome message</li>'
+        . '<li>Groups should be Drupal-related</li>'
+        . '<li>Most groups should be open membership</li>'
+        . '<li>All groups are subject to moderator approval</li>'
+        . '</ul></div>',
+      '#weight' => -100,
+    ];
+  }
+
+  // Block content creation forms inside archive groups.
+  if (_pl_group_extras_is_archive_content_form($form_id, $form_state)) {
+    \Drupal::messenger()->addWarning(t('This group is archived. New content cannot be created.'));
+    $form['actions']['submit']['#access'] = FALSE;
+    // Add a notice at the top of the form.
+    $form['archive_notice'] = [
+      '#type' => 'markup',
+      '#markup' => '<div class="group-archive-notice">'
+        . '<strong>This group is archived.</strong> New content cannot be created in archived groups.'
+        . '</div>',
+      '#weight' => -100,
+    ];
+  }
+}
+
+/**
+ * Helper: Check whether a form is a content creation form inside an archive group.
+ */
+function _pl_group_extras_is_archive_content_form($form_id, FormStateInterface $form_state) {
+  // Check if this is a group content creation form.
+  if (strpos($form_id, 'node_') === FALSE || strpos($form_id, '_form') === FALSE) {
+    return FALSE;
+  }
+
+  // Try to get the group context from the route.
+  $route_match = \Drupal::routeMatch();
+  $group = $route_match->getParameter('group');
+  if ($group instanceof GroupInterface) {
+    return _pl_group_extras_is_archive($group);
+  }
+
+  return FALSE;
+}
+
+/**
+ * Implements hook_entity_presave() for groups.
+ *
+ * Makes groups created by non-admin users default to unpublished
+ * (moderation queue behaviour).
+ */
+function pl_group_extras_group_presave(EntityInterface $entity) {
+  if (!($entity instanceof GroupInterface)) {
+    return;
+  }
+
+  // Only act on new groups.
+  if (!$entity->isNew()) {
+    return;
+  }
+
+  $account = \Drupal::currentUser();
+  // If the user does not have admin-level group permission, unpublish.
+  if (!$account->hasPermission('administer group') && !$account->hasPermission('manage all groups')) {
+    $entity->set('status', 0);
+    \Drupal::messenger()->addStatus(t('Your group has been submitted for review and will be visible after approval.'));
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert() for group entities.
+ *
+ * Sends an email notification to site managers when a group is
+ * submitted for review (unpublished).
+ */
+function pl_group_extras_group_insert(EntityInterface $entity) {
+  if (!($entity instanceof GroupInterface)) {
+    return;
+  }
+
+  // Only notify for unpublished (pending) groups.
+  if ($entity->isPublished()) {
+    return;
+  }
+
+  // Find users with the 'sitemanager' role.
+  $user_storage = \Drupal::entityTypeManager()->getStorage('user');
+  $manager_ids = $user_storage->getQuery()
+    ->accessCheck(FALSE)
+    ->condition('roles', 'sitemanager')
+    ->condition('status', 1)
+    ->execute();
+
+  if (empty($manager_ids)) {
+    // Fall back to admin user.
+    $manager_ids = [1];
+  }
+
+  $managers = $user_storage->loadMultiple($manager_ids);
+  $mail_manager = \Drupal::service('plugin.manager.mail');
+  $site_config = \Drupal::config('system.site');
+
+  foreach ($managers as $manager) {
+    $mail_manager->mail(
+      'pl_group_extras',
+      'group_pending',
+      $manager->getEmail(),
+      $manager->getPreferredLangcode(),
+      [
+        'group_name' => $entity->label(),
+        'group_id' => $entity->id(),
+        'author' => $entity->getOwner()->getDisplayName(),
+        'site_name' => $site_config->get('name'),
+      ]
+    );
+  }
+}
+
+/**
+ * Implements hook_mail().
+ */
+function pl_group_extras_mail($key, &$message, $params) {
+  if ($key === 'group_pending') {
+    $message['subject'] = t('New group pending review: @name', ['@name' => $params['group_name']]);
+    $message['body'][] = t("A new group \"@name\" has been submitted for review by @author.\n\nReview pending groups at: @url", [
+      '@name' => $params['group_name'],
+      '@author' => $params['author'],
+      '@url' => \Drupal::request()->getSchemeAndHttpHost() . '/admin/groups/pending',
+    ]);
+  }
+}
+
+/**
+ * Implements hook_preprocess_group().
+ *
+ * Adds "Archived" badge to archive-type groups.
+ */
+function pl_group_extras_preprocess_group(&$variables) {
+  /** @var \Drupal\group\Entity\GroupInterface $group */
+  $group = $variables['group'];
+  if (_pl_group_extras_is_archive($group)) {
+    $variables['archived'] = TRUE;
+    $variables['attributes']['class'][] = 'group--archived';
+    // Provide a badge render array.
+    $variables['content']['archived_badge'] = [
+      '#type' => 'markup',
+      '#markup' => '<span class="group-badge--archived">Archived</span>',
+      '#weight' => -100,
+    ];
+  }
+}
+
+/**
+ * Implements hook_node_access().
+ *
+ * Denies create permission for content within archive-type groups.
+ */
+function pl_group_extras_node_access(NodeInterface $node, $op, AccountInterface $account) {
+  if ($op !== 'create') {
+    return AccessResult::neutral();
+  }
+
+  // Try to determine the group context from the route.
+  $route_match = \Drupal::routeMatch();
+  $group = $route_match->getParameter('group');
+  if ($group instanceof GroupInterface && _pl_group_extras_is_archive($group)) {
+    return AccessResult::forbidden('This group is archived and does not accept new content.')
+      ->addCacheableDependency($group);
+  }
+
+  return AccessResult::neutral();
+}

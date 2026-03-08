@@ -5,6 +5,7 @@ dependencies:
   config:
     - filter.format.basic_html
     - filter.format.simple_text
+    - node.type.page
     - taxonomy.vocabulary.expertise
     - taxonomy.vocabulary.group_type
     - taxonomy.vocabulary.interests
@@ -35,6 +36,7 @@ permissions:
   - 'access group search'
   - 'cancel account'
   - 'change own username'
+  - 'edit any page content'
   - 'select account cancellation method'
   - 'select terms in expertise'
   - 'select terms in group_type'

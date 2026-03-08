@@ -1,0 +1,8 @@
+name: 'PL Group Extras'
+type: module
+description: 'Archive enforcement, submission guidelines, and moderation defaults for groups.'
+core_version_requirement: ^9 || ^10
+package: 'Custom'
+dependencies:
+  - drupal:taxonomy
+  - social_group:social_group

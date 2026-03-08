@@ -1,0 +1,4 @@
+pl_group_extras:
+  css:
+    theme:
+      css/pl_group_extras.css: {}

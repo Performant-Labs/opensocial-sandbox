@@ -63,7 +63,9 @@ module:
   lazy: 0
   like_and_dislike: 0
   link: 0
+  linkit: 0
   mailer_transport: 0
+  markdown: 0
   mentions: 0
   menu_link_content: 0
   menu_ui: 0
@@ -76,6 +78,8 @@ module:
   override_node_options: 0
   path: 0
   path_alias: 0
+  pl_group_extras: 0
+  pl_opensocial_wiki: 0
   profile: 0
   r4032login: 0
   redirect: 0
