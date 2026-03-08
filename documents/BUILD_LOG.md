@@ -78,4 +78,53 @@ Configure group types, membership models, group directory, archive mechanism, mo
 ## Verification
 - **Playwright Test Suite**: `tests/e2e/phase2-groups.spec.ts`
 
-## Status: IN PROGRESS
+## Status: COMPLETE
+
+---
+
+# Phase 3: Taxonomy, Discovery & Feeds - Build Log
+
+## Overview
+Implement sitewide tags aggregation, events calendar with iCal feeds, hot content page, front page promotion via Flag module, and per-group RSS feeds.
+
+## Pre-requisite
+- Database backed up to `backups/phase3-pre.sql.gz`
+
+## Changes
+
+### 3.1 Sitewide Tags
+- Enabled `social_tagging` module — adds tagging to Topics via `social_tagging` vocabulary
+- Created `tags_aggregation` View at `/tags` — lists Topics filtered by tag
+
+### 3.2 Events Calendar & iCal Feeds
+- Created custom module `pl_discovery` (`web/modules/custom/pl_discovery/`):
+  - `IcalController` with 3 endpoints:
+    - `/upcoming-events/ical` — site-wide events iCal feed
+    - `/group/{group}/events/ical` — group-scoped events iCal
+    - `/user/{user}/events/ical` — user-enrolled events iCal
+  - `hook_cron()` — recomputes hot content scores (comments×3 + views×0.5)
+  - `hook_views_data()` — exposes `pl_discovery_hot_score` table to Views
+  - `hook_node_insert()` — seeds hot score entry for new published nodes
+- Enabled `statistics` module for node view count tracking
+
+### 3.3 Hot Content
+- Created `hot_content` View at `/hot` — lists content with exposed Content Type filter
+
+### 3.4 Front-Page Promotion
+- Enabled `flag_count` module
+- Created `promote_homepage` Flag (global, for Topic/Event/Page content types)
+  - Flagging permissions granted to `contentmanager` and `sitemanager` roles
+- Created `promoted_content` View at `/admin/content/promoted` — lists flagged content
+
+### 3.5 Per-Group RSS Feeds
+- Created `group_rss_feed` View at `/group/{id}/stream/feed` — RSS feed of group content
+
+## Verification
+- **Playwright Test Suite**: `tests/e2e/phase3-discovery.spec.ts` — 14/14 tests pass (1.5 min)
+  - Tags: View exists and loads, social_tagging vocabulary active
+  - Events: filter by type, calendar display, site + group iCal feeds, user iCal endpoint
+  - Hot Content: page loads, content type filter works, no errors
+  - Promoted Content: flag/unflag flow, admin page loads
+  - RSS: group feed endpoint works
+
+## Status: COMPLETE

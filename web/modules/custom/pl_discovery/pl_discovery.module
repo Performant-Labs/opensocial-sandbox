@@ -1,0 +1,134 @@
+<?php
+
+/**
+ * @file
+ * PL Discovery module.
+ *
+ * Implements hot-content scoring, Views integration, and helper hooks
+ * for the Phase 3 discovery features.
+ */
+
+use Drupal\views\ViewExecutable;
+
+/**
+ * Implements hook_cron().
+ *
+ * Recomputes composite hot scores for content from the last 7 days.
+ * Score = (comment_count × 3) + (view_count × 0.5).
+ */
+function pl_discovery_cron() {
+  $database = \Drupal::database();
+  $now = \Drupal::time()->getRequestTime();
+  $seven_days_ago = $now - (7 * 86400);
+
+  // Get all published nodes from the last 7 days.
+  $query = $database->select('node_field_data', 'n');
+  $query->fields('n', ['nid']);
+  $query->condition('n.status', 1);
+  $query->condition('n.changed', $seven_days_ago, '>=');
+  $nids = $query->execute()->fetchCol();
+
+  if (empty($nids)) {
+    return;
+  }
+
+  foreach ($nids as $nid) {
+    // Comment count.
+    $comment_count = 0;
+    if ($database->schema()->tableExists('comment_entity_statistics')) {
+      $comment_count = (int) $database->select('comment_entity_statistics', 'c')
+        ->fields('c', ['comment_count'])
+        ->condition('c.entity_id', $nid)
+        ->condition('c.entity_type', 'node')
+        ->execute()
+        ->fetchField();
+    }
+
+    // View count from Statistics module.
+    $view_count = 0;
+    if ($database->schema()->tableExists('node_counter')) {
+      $view_count = (int) $database->select('node_counter', 'nc')
+        ->fields('nc', ['totalcount'])
+        ->condition('nc.nid', $nid)
+        ->execute()
+        ->fetchField();
+    }
+
+    $score = ($comment_count * 3) + ($view_count * 0.5);
+
+    $database->merge('pl_discovery_hot_score')
+      ->key('nid', $nid)
+      ->fields([
+        'score' => $score,
+        'computed' => $now,
+      ])
+      ->execute();
+  }
+}
+
+/**
+ * Implements hook_views_data().
+ *
+ * Exposes the pl_discovery_hot_score table to Views.
+ */
+function pl_discovery_views_data() {
+  $data = [];
+
+  $data['pl_discovery_hot_score'] = [
+    'table' => [
+      'group' => t('Hot Content'),
+      'join' => [
+        'node_field_data' => [
+          'left_field' => 'nid',
+          'field' => 'nid',
+        ],
+      ],
+    ],
+    'nid' => [
+      'title' => t('Node ID'),
+      'help' => t('The node ID for the hot score.'),
+      'field' => ['id' => 'numeric'],
+      'filter' => ['id' => 'numeric'],
+      'sort' => ['id' => 'standard'],
+      'relationship' => [
+        'base' => 'node_field_data',
+        'base field' => 'nid',
+        'id' => 'standard',
+        'label' => t('Scored Content'),
+      ],
+    ],
+    'score' => [
+      'title' => t('Hot Score'),
+      'help' => t('Composite hot-content score: (comments × 3) + (views × 0.5).'),
+      'field' => ['id' => 'numeric'],
+      'filter' => ['id' => 'numeric'],
+      'sort' => ['id' => 'standard'],
+    ],
+    'computed' => [
+      'title' => t('Score Computed'),
+      'help' => t('Timestamp of last score computation.'),
+      'field' => ['id' => 'date'],
+      'filter' => ['id' => 'date'],
+      'sort' => ['id' => 'standard'],
+    ],
+  ];
+
+  return $data;
+}
+
+/**
+ * Implements hook_node_insert().
+ *
+ * Seeds a hot score entry for new nodes so they appear in the hot content view.
+ */
+function pl_discovery_node_insert(\Drupal\node\NodeInterface $node) {
+  if ($node->isPublished()) {
+    \Drupal::database()->merge('pl_discovery_hot_score')
+      ->key('nid', $node->id())
+      ->fields([
+        'score' => 0,
+        'computed' => \Drupal::time()->getRequestTime(),
+      ])
+      ->execute();
+  }
+}

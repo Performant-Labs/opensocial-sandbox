@@ -1,0 +1,41 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for PL Discovery.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function pl_discovery_schema() {
+  $schema['pl_discovery_hot_score'] = [
+    'description' => 'Composite hot-content scores for nodes.',
+    'fields' => [
+      'nid' => [
+        'description' => 'The node ID.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'score' => [
+        'description' => 'Composite hot score.',
+        'type' => 'float',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'computed' => [
+        'description' => 'UNIX timestamp of last computation.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+    ],
+    'primary key' => ['nid'],
+    'indexes' => [
+      'score' => ['score'],
+    ],
+  ];
+  return $schema;
+}
