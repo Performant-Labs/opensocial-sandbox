@@ -139,7 +139,16 @@ npx playwright test e2e/phase{N}-*.spec.ts --reporter=list
 1. Update BUILD_LOG with any corrections discovered during this phase
 2. Commit: `git add -A && git commit -m "Phase {N} complete — Steps {first}–{last}"`
 3. Post-phase backup: `ddev export-db --file=backups/phase{N}-post-$(date +%Y%m%d-%H%M).sql.gz`
-4. Proceed to next phase
+
+### G. Check In With User
+
+**Stop and report to the user** before proceeding to the next phase. Summarise:
+- Which steps were executed
+- Any corrections made to BUILD_LOG
+- Test results (pass/fail counts)
+- Any issues encountered and how they were resolved
+
+**Do not proceed to the next phase without user approval.**
 
 ---
 
