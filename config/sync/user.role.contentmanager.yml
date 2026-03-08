@@ -11,6 +11,7 @@ dependencies:
     - taxonomy.vocabulary.expertise
     - taxonomy.vocabulary.interests
     - taxonomy.vocabulary.profile_tag
+    - taxonomy.vocabulary.social_tagging
     - taxonomy.vocabulary.topic_types
   module:
     - comment
@@ -32,7 +33,9 @@ dependencies:
     - social_post
     - social_profile
     - social_search
+    - social_tagging
     - social_topic
+    - taxonomy
     - taxonomy_access_fix
     - toolbar
 _core:
@@ -69,6 +72,7 @@ permissions:
   - 'create event content'
   - 'create flexible_group group'
   - 'create page content'
+  - 'create terms in social_tagging'
   - 'create topic content'
   - 'create url aliases'
   - 'delete all revisions'
@@ -83,6 +87,7 @@ permissions:
   - 'delete own post entities'
   - 'delete own topic content'
   - 'delete page revisions'
+  - 'delete terms in social_tagging'
   - 'delete topic revisions'
   - 'edit any event content'
   - 'edit any page content'
@@ -95,8 +100,10 @@ permissions:
   - 'edit own post entities'
   - 'edit own topic content'
   - 'edit profile tags'
+  - 'edit terms in social_tagging'
   - 'flag follow_content'
   - 'flag mute_group_notifications'
+  - 'flag promote_homepage'
   - 'manage all groups'
   - 'manage everything enrollments'
   - 'override disabled public visibility'
@@ -127,10 +134,12 @@ permissions:
   - 'select terms in expertise'
   - 'select terms in interests'
   - 'select terms in profile_tag'
+  - 'select terms in social_tagging'
   - 'select terms in topic_types'
   - 'skip comment approval'
   - 'unflag follow_content'
   - 'unflag mute_group_notifications'
+  - 'unflag promote_homepage'
   - 'update any profile profile'
   - 'use select2 autocomplete'
   - 'use text format full_html'
@@ -155,13 +164,16 @@ permissions:
   - 'view own unpublished post entities'
   - 'view page revisions'
   - 'view public flexible_group group'
+  - 'view social_tagging'
   - 'view term names in expertise'
   - 'view term names in interests'
   - 'view term names in profile_tag'
+  - 'view term names in social_tagging'
   - 'view term names in topic_types'
   - 'view terms in expertise'
   - 'view terms in interests'
   - 'view terms in profile_tag'
+  - 'view terms in social_tagging'
   - 'view terms in topic_types'
   - 'view topic revisions'
   - 'view topics on my profile'

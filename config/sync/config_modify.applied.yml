@@ -26,3 +26,4 @@ files:
   - social_group_flexible_group.group_affiliation
   - social_group_flexible_group.search
   - social_group_flexible_group.view_hubs_flexible_groups
+  - social_tagging.default_permissions

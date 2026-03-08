@@ -16,6 +16,7 @@ dependencies:
     - social_group
     - social_node
     - social_search
+    - social_tagging
 _core:
   default_config_hash: F7r2RxE1oOYQcDkGrrCDMr16mhid640V6oTaefT4qrM
 id: social_content
@@ -88,6 +89,14 @@ field_settings:
           event: search_index
           page: search_index
           topic: search_index
+  social_tagging:
+    label: 'Social Tagging'
+    datasource_id: 'entity:node'
+    property_path: social_tagging
+    type: integer
+    dependencies:
+      module:
+        - social_tagging
   status:
     label: 'Publishing status'
     datasource_id: 'entity:node'

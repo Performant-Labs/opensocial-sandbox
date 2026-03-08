@@ -41,6 +41,7 @@ module:
   file_mdm_font: 0
   filter: 0
   flag: 0
+  flag_count: 0
   flexible_permissions: 0
   gin_toolbar: 0
   ginvite: 0
@@ -78,6 +79,7 @@ module:
   override_node_options: 0
   path: 0
   path_alias: 0
+  pl_discovery: 0
   pl_group_extras: 0
   pl_opensocial_wiki: 0
   profile: 0
@@ -116,9 +118,11 @@ module:
   social_queue_storage: 0
   social_search: 0
   social_swiftmail: 0
+  social_tagging: 0
   social_topic: 0
   social_user: 0
   state_machine: 0
+  statistics: 0
   symfony_mailer: 0
   system: 0
   taxonomy: 0
@@ -135,6 +139,7 @@ module:
   views_bulk_operations: 0
   views_ef_fieldset: 0
   views_infinite_scroll: 0
+  views_ui: 0
   votingapi: 0
   social_group: 2
   social_group_flexible_group: 5

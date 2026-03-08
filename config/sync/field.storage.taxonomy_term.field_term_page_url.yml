@@ -1,0 +1,24 @@
+uuid: 78aa4555-e738-4a82-8836-714ff56ecfcf
+langcode: en
+status: true
+dependencies:
+  module:
+    - link
+    - taxonomy
+  enforced:
+    module:
+      - social_tagging
+_core:
+  default_config_hash: IYB5xQzurAtzTAjVVJ81sMVArgr7TBNpCLFWPx1Smuk
+id: taxonomy_term.field_term_page_url
+field_name: field_term_page_url
+entity_type: taxonomy_term
+type: link
+settings: {  }
+module: link
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

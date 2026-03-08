@@ -60,12 +60,6 @@ display:
               past_format: '@interval ago'
               granularity: 2
               refresh: 60
-        operations:
-          id: operations
-          table: group
-          field: operations
-          plugin_id: entity_operations
-          label: Operations
       pager:
         type: full
         options:

@@ -10,6 +10,7 @@ dependencies:
     - taxonomy.vocabulary.group_type
     - taxonomy.vocabulary.interests
     - taxonomy.vocabulary.profile_tag
+    - taxonomy.vocabulary.social_tagging
     - taxonomy.vocabulary.topic_types
   module:
     - comment
@@ -21,6 +22,7 @@ dependencies:
     - social_like
     - social_post
     - social_search
+    - social_tagging
     - system
     - taxonomy_access_fix
 _core:
@@ -42,6 +44,7 @@ permissions:
   - 'select terms in group_type'
   - 'select terms in interests'
   - 'select terms in profile_tag'
+  - 'select terms in social_tagging'
   - 'select terms in topic_types'
   - 'update own profile profile'
   - 'use text format basic_html'
@@ -55,14 +58,17 @@ permissions:
   - 'view public flexible_group group'
   - 'view public posts'
   - 'view published post entities'
+  - 'view social_tagging'
   - 'view term names in expertise'
   - 'view term names in group_type'
   - 'view term names in interests'
   - 'view term names in profile_tag'
+  - 'view term names in social_tagging'
   - 'view term names in topic_types'
   - 'view terms in expertise'
   - 'view terms in group_type'
   - 'view terms in interests'
   - 'view terms in profile_tag'
+  - 'view terms in social_tagging'
   - 'view terms in topic_types'
   - 'view the administration theme'

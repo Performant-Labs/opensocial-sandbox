@@ -11,6 +11,7 @@ dependencies:
     - social_like
     - social_post
     - social_search
+    - social_tagging
     - system
     - taxonomy_access_fix
 _core:
@@ -32,5 +33,6 @@ permissions:
   - 'view public flexible_group group'
   - 'view public posts'
   - 'view published post entities'
+  - 'view social_tagging'
   - 'view term names in topic_types'
   - 'view terms in topic_types'

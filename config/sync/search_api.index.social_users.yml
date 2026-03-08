@@ -14,6 +14,7 @@ dependencies:
     - profile
     - search_api_solr
     - social_search
+    - social_tagging
     - taxonomy
     - user
 _core:
@@ -115,6 +116,14 @@ field_settings:
         'entity:profile':
           main: ''
           profile: search_index
+  social_tagging:
+    label: 'Social Tagging'
+    datasource_id: 'entity:profile'
+    property_path: social_tagging
+    type: integer
+    dependencies:
+      module:
+        - social_tagging
   uid:
     label: Owner
     datasource_id: 'entity:profile'

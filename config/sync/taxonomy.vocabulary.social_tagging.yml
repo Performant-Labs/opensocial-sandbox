@@ -1,0 +1,14 @@
+uuid: d63a28a8-dea3-4d58-8298-0964bef9af11
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - social_tagging
+_core:
+  default_config_hash: lF5You2M70ZxxEb1N3CHpN3P8GAuWrxK72DyhDpZyXA
+name: 'Content tags'
+vid: social_tagging
+description: 'Categories and terms used to tag content'
+weight: 0
+new_revision: false
