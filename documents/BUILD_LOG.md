@@ -66,6 +66,18 @@ ddev drush site:install social --account-name=admin --account-pass=admin --site-
 > All fields listed below are **Open Social defaults** — no new fields were created.
 > Phase 2 work consisted entirely of reconfiguring existing fields and text formats.
 
+> [!IMPORTANT]
+> **linkit Dependency**: The `full_html` text format configuration references the `linkit` filter. The `linkit` module MUST be enabled before importing the `filter.format.full_html` config, otherwise the import will hang or fail due to missing plugins.
+> ```bash
+> ddev drush en linkit -y
+> ```
+
+> [!NOTE]
+> **Why it might look "stuck"**:
+> 1. **Config Imports**: If a dependency (like a module or another config) is missing, Drush might hang or output cryptic errors. Always enable dependent modules first.
+> 2. **Playwright Installation**: `npx playwright install` downloads large browser binaries (~100MB+). It will look stuck while downloading; please allow 1-3 minutes for completion.
+> 3. **Playwright Tests**: If browsers aren't installed or the `baseURL` in `playwright.config.ts` is wrong/unreachable (e.g., wrong port), tests will hang until they hit their 30s timeout.
+
 ## Topic → Discussion
 
 **Step 100** — Body field + text format: enable Full HTML and Markdown; remove redundant display filters stripping HTML on render
@@ -152,7 +164,14 @@ ddev drush php:eval 'echo count(\Drupal::entityTypeManager()->getStorage("taxono
 
 ## Phase 2 Tests
 
-**Step 230** — Run (from the `tests/` directory): `./node_modules/.bin/playwright test e2e/phase1-content-types.spec.ts --reporter=list`
+> [!IMPORTANT]
+> **Test Environment Setup**:
+> 1. **Copy Tests**: `cp -r ~/Sites/pl-opensocial/tests ~/Sites/pl-opensocial-rework/tests`
+> 2. **Update Config**: Edit `tests/playwright.config.ts` to set `baseURL: 'https://pl-opensocial-rework.ddev.site:8543'`.
+> 3. **Install Dependencies**: Run `npm install` in the `tests/` directory.
+> 4. **Install Browsers**: Run `npx playwright install chromium` (Note: this is a large download).
+
+**Step 230** — Run (from the `tests/` directory): `./node_modules/.bin/playwright test e2e/phase1-content-types.spec.ts --reporter=list --timeout=30000`
 
 ---
 
