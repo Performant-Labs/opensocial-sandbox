@@ -19,6 +19,32 @@ The existing site at `~/Sites/pl-opensocial` remains **untouched** throughout th
 
 ---
 
+## Terminal Safety Rules
+
+To avoid terminal hangs and stuck commands:
+
+1. **No pipes** — never use `|` to chain commands (e.g. `grep … | wc -l`). Run each command separately and read the output directly.
+2. **No `2>&1`** — do not redirect stderr to stdout. Let each stream appear naturally.
+3. **One command per invocation** — avoid `&&`-chained multi-commands. Run them as separate `run_command` calls.
+4. **Short timeouts** — set `WaitMsBeforeAsync` to **5 000 ms** for instant commands (`ls`, `git status`, `cat`) and **10 000 ms** for heavier commands (`ddev drush`, `composer`, `npm`). Never exceed 10 000 ms.
+5. **No retries in loops** — if a command does not return, terminate it and try once more with a simpler form. Do not retry more than once.
+6. **Prefer `ddev drush` over `ddev exec`** — drush commands have cleaner exit behaviour than raw shell inside the container.
+
+### Playwright Tests
+
+Playwright E2E tests are **long-running** (minutes, not seconds). Special rules apply:
+
+1. **Run as background command** — use `WaitMsBeforeAsync: 500` to send to background immediately.
+2. **Poll with `command_status`** — check every 30–60 s with `WaitDurationSeconds: 60`. Read output to monitor progress.
+3. **Per-test timeout** — always pass `--timeout=30000` (30 s per test) so individual failures surface quickly instead of hanging.
+4. **Example invocation**:
+   ```bash
+   npx playwright test e2e/phase1-content-types.spec.ts --reporter=list --timeout=30000
+   ```
+5. **Interpret results promptly** — once `command_status` reports the command is done, read the full output to check pass/fail counts.
+
+---
+
 ## Step 0 — Project Setup
 
 1. `mkdir ~/Sites/pl-opensocial-rework && cd ~/Sites/pl-opensocial-rework`
