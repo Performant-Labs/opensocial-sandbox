@@ -4,8 +4,26 @@ This log records every change made to the Open Social site across all implementa
 All configuration referenced below is exported to `config/sync/` and can be reproduced with `ddev drush cim -y`.
 Custom module code lives in `web/modules/custom/`.
 
-Step numbering uses BASIC-style sparse numbering: Phase 1 = 100s, Phase 2 = 200s, Phase 3 = 300s.
+Step numbering uses BASIC-style sparse numbering: Phase 1 = 100s, Phase 2 = 300s, Phase 3 = 500s.
 Steps increment by 10 to allow inserting new steps without renumbering.
+
+---
+
+## Config Import Method
+
+Phase configs are stored in `config/phaseN/` directories. Individual configs are imported via `ddev drush php:eval` because `ddev drush cim --partial` validates ALL active config (not just the partial import), and pre-existing dependency errors block it.
+
+```php
+ddev drush php:eval '
+$configs = ["config.name.one", "config.name.two"];
+foreach ($configs as $name) {
+  $yaml = file_get_contents("/var/www/html/config/phaseN/$name.yml");
+  $data = \Drupal\Component\Serialization\Yaml::decode($yaml);
+  \Drupal::configFactory()->getEditable($name)->setData($data)->save();
+  echo "Imported: $name\n";
+}
+'
+```
 
 ---
 
@@ -32,31 +50,57 @@ Steps increment by 10 to allow inserting new steps without renumbering.
 - Enable: `ddev drush en pl_opensocial_wiki -y`
 - `ddev drush cr`
 
+> Note: `pl_opensocial_wiki` is a PSR-4 module containing only `pl_opensocial_wiki.info.yml` and `src/Plugin/`. It does NOT have a `.module` file. The `cp -r` command should place the entire directory at `web/modules/custom/pl_opensocial_wiki/`.
+
 ## Event Enhancements
 
 **Step 140** — Enable Event Type sub-module and its field
 - `ddev drush en social_event_type -y`
 - Config: [field.field.node.event.field_event_type.yml](file:///Users/andreangelantoni/Sites/pl-opensocial/config/sync/field.field.node.event.field_event_type.yml)
 
+> [!IMPORTANT]
+> The module MUST be enabled BEFORE importing its field config. If you import the field YAML without the module active, the import will silently fail or error.
+
 **Step 150** — Enable Event Managers sub-module and its field
 - `ddev drush en social_event_managers -y`
 - Config: [field.field.node.event.field_event_managers.yml](file:///Users/andreangelantoni/Sites/pl-opensocial/config/sync/field.field.node.event.field_event_managers.yml)
+
+> [!IMPORTANT]
+> Same as Step 140: enable the module first, then import config.
 
 **Step 160** — Event attachments: 15 MB limit, expanded extensions
 - Config: [field.field.node.event.field_files.yml](file:///Users/andreangelantoni/Sites/pl-opensocial/config/sync/field.field.node.event.field_files.yml)
 
 **Step 170** — Create Event Type taxonomy terms
 - Vocabulary: `event_type` — [taxonomy.vocabulary.event_type.yml](file:///Users/andreangelantoni/Sites/pl-opensocial/config/sync/taxonomy.vocabulary.event_type.yml)
-```bash
-ddev drush term:create event_type "User group meeting"
-ddev drush term:create event_type "Drupalcamp or Regional Summit"
-ddev drush term:create event_type "DrupalCon"
-ddev drush term:create event_type "Online meeting (e.g. IRC meeting)"
-ddev drush term:create event_type "Training (free or commercial)"
-ddev drush term:create event_type "Sprint"
-ddev drush term:create event_type "Related event (not Drupal-specific)"
+
+> [!WARNING]
+> `ddev drush term:create` does not exist in the Drush version shipped with Open Social. Use `php:eval` with `Term::create()` instead.
+
+```php
+ddev drush php:eval '
+foreach ([
+  "User group meeting",
+  "Drupalcamp or Regional Summit",
+  "DrupalCon",
+  "Online meeting (e.g. IRC meeting)",
+  "Training (free or commercial)",
+  "Sprint",
+  "Related event (not Drupal-specific)",
+] as $name) {
+  $term = \Drupal\taxonomy\Entity\Term::create(["vid" => "event_type", "name" => $name]);
+  $term->save();
+  echo "Created: $name (tid=" . $term->id() . ")\n";
+}
+'
 ```
 > Terms live in the database, not config YAML. Tids may differ from original (5–11).
+
+**Step 175** — Verify event_type terms exist
+```bash
+ddev drush php:eval 'echo count(\Drupal::entityTypeManager()->getStorage("taxonomy_term")->loadByProperties(["vid" => "event_type"])) . " event_type terms\n";'
+```
+> Expected: 7 event_type terms
 
 > Note: `field_event_url` and `field_event_enroll` are OS defaults and require no config changes.
 
@@ -76,9 +120,11 @@ ddev drush term:create event_type "Related event (not Drupal-specific)"
 
 ## Phase 1 Tests
 
-**Step 220** — Run: `npx playwright test e2e/phase1-content-types.spec.ts`
+**Step 220** — Run (from the `tests/` directory): `./node_modules/.bin/playwright test e2e/phase1-content-types.spec.ts --reporter=list`
 
 ---
+
+**Step 295** — Pre-Phase 2 backup: `ddev export-db --file=backups/phase2-pre.sql.gz`
 
 # Phase 2 — Group Structure & Membership
 
@@ -88,16 +134,26 @@ ddev drush term:create event_type "Related event (not Drupal-specific)"
 
 Vocabulary: `group_type` (Open Social default) — [taxonomy.vocabulary.group_type.yml](file:///Users/andreangelantoni/Sites/pl-opensocial/config/sync/taxonomy.vocabulary.group_type.yml)
 
-**Step 300** — `ddev drush term:create group_type "Geographical" --description="Local user groups by city/region"`
+> [!WARNING]
+> `ddev drush term:create` does not exist in this Drush version. Use `php:eval` with `Term::create()`.
 
-**Step 310** — `ddev drush term:create group_type "Working group" --description="Module, feature, or initiative coordination"`
-
-**Step 320** — `ddev drush term:create group_type "Distribution" --description="Drupal distribution projects"`
-
-**Step 330** — `ddev drush term:create group_type "Event planning" --description="DrupalCon and camp organising"`
-
-**Step 340** — `ddev drush term:create group_type "Archive" --description="Inactive groups (read-only)"`
-
+**Steps 300–340** — Create group_type terms
+```php
+ddev drush php:eval '
+$terms = [
+  ["Geographical", "Local user groups by city/region"],
+  ["Working group", "Module, feature, or initiative coordination"],
+  ["Distribution", "Drupal distribution projects"],
+  ["Event planning", "DrupalCon and camp organising"],
+  ["Archive", "Inactive groups (read-only)"],
+];
+foreach ($terms as [$name, $desc]) {
+  $term = \Drupal\taxonomy\Entity\Term::create(["vid" => "group_type", "name" => $name, "description" => ["value" => $desc, "format" => "plain_text"]]);
+  $term->save();
+  echo "Created: $name (tid=" . $term->id() . ")\n";
+}
+'
+```
 > Terms live in the database, not config YAML. Tids may differ from original (12–16).
 
 ## Membership Models
@@ -142,10 +198,12 @@ Hooks implemented:
 
 ## Phase 2 Tests
 
-**Step 400** — Run: `npx playwright test e2e/phase2-groups.spec.ts`
+**Step 400** — Run (from the `tests/` directory): `./node_modules/.bin/playwright test e2e/phase2-groups.spec.ts --reporter=list`
 - 13 tests: group creation, directory filtering, archiving, moderation queue, guidelines.
 
 ---
+
+**Step 495** — Pre-Phase 3 backup: `ddev export-db --file=backups/phase3-pre.sql.gz`
 
 # Phase 3 — Content Discovery & Aggregation
 
@@ -208,7 +266,7 @@ Hooks:
 
 ## Phase 3 Tests
 
-**Step 630** — Run: `npx playwright test e2e/phase3-discovery.spec.ts`
+**Step 630** — Run (from the `tests/` directory): `./node_modules/.bin/playwright test e2e/phase3-discovery.spec.ts --reporter=list`
 
 ---
 
@@ -218,24 +276,26 @@ Starting from a vanilla Open Social 13.0.0 installation:
 
 ```bash
 # 1. Import all configuration
+#    Note: ddev drush cim --partial may fail due to pre-existing config
+#    dependency errors. Use the php:eval method documented above in
+#    "Config Import Method" for per-file imports.
 ddev drush cim -y
 
 # 2. Enable custom modules (creates DB tables, registers hooks)
 ddev drush en pl_opensocial_wiki pl_group_extras pl_discovery -y
 
 # 3. Create taxonomy terms (not stored in config)
-ddev drush term:create group_type "Geographical"
-ddev drush term:create group_type "Working group"
-ddev drush term:create group_type "Distribution"
-ddev drush term:create group_type "Event planning"
-ddev drush term:create group_type "Archive"
-ddev drush term:create event_type "User group meeting"
-ddev drush term:create event_type "Drupalcamp or Regional Summit"
-ddev drush term:create event_type "DrupalCon"
-ddev drush term:create event_type "Online meeting (e.g. IRC meeting)"
-ddev drush term:create event_type "Training (free or commercial)"
-ddev drush term:create event_type "Sprint"
-ddev drush term:create event_type "Related event (not Drupal-specific)"
+#    NOTE: ddev drush term:create does NOT exist in this Drush version.
+#    Use php:eval with Term::create() — see Steps 170 and 300-340 above.
+ddev drush php:eval '
+foreach (["Geographical", "Working group", "Distribution", "Event planning", "Archive"] as $name) {
+  \Drupal\taxonomy\Entity\Term::create(["vid" => "group_type", "name" => $name])->save();
+}
+foreach (["User group meeting", "Drupalcamp or Regional Summit", "DrupalCon", "Online meeting (e.g. IRC meeting)", "Training (free or commercial)", "Sprint", "Related event (not Drupal-specific)"] as $name) {
+  \Drupal\taxonomy\Entity\Term::create(["vid" => "event_type", "name" => $name])->save();
+}
+echo "Done\n";
+'
 
 # 4. Clear caches
 ddev drush cr
