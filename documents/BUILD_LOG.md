@@ -4,14 +4,14 @@ This log records every change made to the Open Social site across all implementa
 All configuration referenced below is exported to `config/sync/` and can be reproduced with `ddev drush cim -y`.
 Custom module code lives in `web/modules/custom/`.
 
-Step numbering uses BASIC-style sparse numbering: Phase 1 = 100s, Phase 2 = 300s, Phase 3 = 500s.
+Step numbering uses BASIC-style sparse numbering: Phase 1 = 0-90, Phase 2 = 100s, Phase 3 = 300s, Phase 4 = 500s.
 Steps increment by 10 to allow inserting new steps without renumbering.
 
 ---
 
 ## Config Import Method
 
-Phase configs are stored in `config/phaseN/` directories. Individual configs are imported via `ddev drush php:eval` because `ddev drush cim --partial` validates ALL active config (not just the partial import), and pre-existing dependency errors block it.
+Phase configs are stored in `config/phaseN/` directories (where N is the phase number). Individual configs are imported via `ddev drush php:eval` because `ddev drush cim --partial` validates ALL active config (not just the partial import), and pre-existing dependency errors block it.
 
 ```php
 ddev drush php:eval '
@@ -27,12 +27,44 @@ foreach ($configs as $name) {
 
 ---
 
-# Phase 1 — Content Types & Text Formats
+# Phase 1 — Clean-Room Initialization
+
+**Goal**: Establish a fresh Open Social 13.0.0 environment with correct port pinning and private file system configuration.
+
+**Step 010** — Scaffold Project
+Use the Drupal recommended project template and require Open Social 13.
+```bash
+composer create-project drupal/recommended-project:^10 . --no-interaction
+composer require goalgorilla/open_social:^13 drush/drush:^13.7 drupal/linkit:^7.0 drupal/markdown:^3.1 erusev/parsedown:^1.8 erusev/parsedown-extra:^0.9.0 league/commonmark:^2.0 oomphinc/composer-installers-extender:^2.0 cweagans/composer-patches:^1.7 --no-interaction
+```
+
+**Step 020** — Configure DDEV
+Pin ports to avoid conflicts with other projects and set specific versions.
+```bash
+ddev config --project-name=pl-opensocial-rework --project-type=drupal10 --docroot=web --php-version=8.3 --database=mariadb:11.8 --router-http-port=8580 --router-https-port=8543 --auto
+ddev start
+mkdir private
+```
+
+**Step 030** — Configure Private Path
+Append to `web/sites/default/settings.php`:
+```php
+$settings['file_private_path'] = '/var/www/html/private';
+```
+
+**Step 040** — Site Install
+```bash
+ddev drush site:install social --account-name=admin --account-pass=admin --site-name="Open Social Rework" -y
+```
+
+---
+
+# Phase 2 — Content Types & Text Formats
 
 **Goal**: Configure Topic, Event, and Page content types to match g.d.o's feature set.
 
 > All fields listed below are **Open Social defaults** — no new fields were created.
-> Phase 1 work consisted entirely of reconfiguring existing fields and text formats.
+> Phase 2 work consisted entirely of reconfiguring existing fields and text formats.
 
 ## Topic → Discussion
 
@@ -96,7 +128,7 @@ foreach ([
 ```
 > Terms live in the database, not config YAML. Tids may differ from original (5–11).
 
-**Step 175** — Verify event_type terms exist
+**Step 180** — Verify event_type terms exist
 ```bash
 ddev drush php:eval 'echo count(\Drupal::entityTypeManager()->getStorage("taxonomy_term")->loadByProperties(["vid" => "event_type"])) . " event_type terms\n";'
 ```
@@ -106,27 +138,27 @@ ddev drush php:eval 'echo count(\Drupal::entityTypeManager()->getStorage("taxono
 
 ## Page → Wiki Page
 
-**Step 180** — Edit permissions for authenticated users
+**Step 190** — Edit permissions for authenticated users
 - Config: [user.role.authenticated.yml](file:///Users/andreangelantoni/Sites/pl-opensocial/config/sync/user.role.authenticated.yml)
 
-**Step 190** — Revision log enabled by default
+**Step 200** — Revision log enabled by default
 - Config: [node.type.page.yml](file:///Users/andreangelantoni/Sites/pl-opensocial/config/sync/node.type.page.yml)
 
-**Step 200** — Page attachments: 15 MB limit, expanded extensions
+**Step 210** — Page attachments: 15 MB limit, expanded extensions
 - Config: [field.field.node.page.field_files.yml](file:///Users/andreangelantoni/Sites/pl-opensocial/config/sync/field.field.node.page.field_files.yml)
 
-**Step 210** — Clear caches after Phase 1 config imports
+**Step 220** — Clear caches after Phase 2 config imports
 - `ddev drush cr`
 
-## Phase 1 Tests
+## Phase 2 Tests
 
-**Step 220** — Run (from the `tests/` directory): `./node_modules/.bin/playwright test e2e/phase1-content-types.spec.ts --reporter=list`
+**Step 230** — Run (from the `tests/` directory): `./node_modules/.bin/playwright test e2e/phase1-content-types.spec.ts --reporter=list`
 
 ---
 
-**Step 295** — Pre-Phase 2 backup: `ddev export-db --file=backups/phase2-pre.sql.gz`
+**Step 240** — Pre-Phase 3 backup: `ddev export-db --file=backups/phase3-pre.sql.gz`
 
-# Phase 2 — Group Structure & Membership
+# Phase 3 — Group Structure & Membership
 
 **Goal**: Configure Open Social's `flexible_group` to replicate g.d.o's group types, membership models, archive enforcement, moderation queue, and submission guidelines.
 
@@ -137,7 +169,7 @@ Vocabulary: `group_type` (Open Social default) — [taxonomy.vocabulary.group_ty
 > [!WARNING]
 > `ddev drush term:create` does not exist in this Drush version. Use `php:eval` with `Term::create()`.
 
-**Steps 300–340** — Create group_type terms
+**Step 300** — Create group_type terms
 ```php
 ddev drush php:eval '
 $terms = [
@@ -158,7 +190,7 @@ foreach ($terms as [$name, $desc]) {
 
 ## Membership Models
 
-**Step 350** — No configuration changes needed. Open Social's `flexible_group` already supports all g.d.o models:
+**Step 310** — No configuration changes needed. Open Social's `flexible_group` already supports all g.d.o models:
 
 | g.d.o model | `field_group_allowed_join_method` | `field_flexible_group_visibility` |
 |---|---|---|
@@ -169,16 +201,16 @@ foreach ($terms as [$name, $desc]) {
 
 ## Group Directory
 
-**Step 360** — Modify `newest_groups` view: filter out secret groups by default
+**Step 320** — Modify `newest_groups` view: filter out secret groups by default
 - Config: [views.view.newest_groups.yml](file:///Users/andreangelantoni/Sites/pl-opensocial/config/sync/views.view.newest_groups.yml)
 
 ## Custom Module: `pl_group_extras`
 
-**Step 370** — Copy module to `web/modules/custom/pl_group_extras/`
+**Step 330** — Copy module to `web/modules/custom/pl_group_extras/`
 - `cp -r ~/Sites/pl-opensocial/web/modules/custom/pl_group_extras web/modules/custom/`
 - Contents: `pl_group_extras.info.yml`, `pl_group_extras.module`, `pl_group_extras.libraries.yml`, `css/pl_group_extras.css`
 
-**Step 380** — Enable: `ddev drush en pl_group_extras -y`
+**Step 340** — Enable: `ddev drush en pl_group_extras -y`
 
 Hooks implemented:
 - `hook_form_alter()` — blocks content creation in archived groups; injects submission guidelines
@@ -189,23 +221,23 @@ Hooks implemented:
 
 ## Pending Groups View
 
-**Step 390** — Import `pending_groups` view at `/admin/groups/pending`
+**Step 350** — Import `pending_groups` view at `/admin/groups/pending`
 - Config: [views.view.pending_groups.yml](file:///Users/andreangelantoni/Sites/pl-opensocial/config/sync/views.view.pending_groups.yml)
 - Note: the `operations` field was removed after initial deployment due to a broken `entity_operations` plugin. The exported YAML already has this fix.
 
-**Step 395** — Clear caches after Phase 2 config imports
+**Step 360** — Clear caches after Phase 3 config imports
 - `ddev drush cr`
 
-## Phase 2 Tests
+## Phase 3 Tests
 
-**Step 400** — Run (from the `tests/` directory): `./node_modules/.bin/playwright test e2e/phase2-groups.spec.ts --reporter=list`
+**Step 370** — Run (from the `tests/` directory): `./node_modules/.bin/playwright test e2e/phase2-groups.spec.ts --reporter=list`
 - 13 tests: group creation, directory filtering, archiving, moderation queue, guidelines.
 
 ---
 
-**Step 495** — Pre-Phase 3 backup: `ddev export-db --file=backups/phase3-pre.sql.gz`
+**Step 380** — Pre-Phase 4 backup: `ddev export-db --file=backups/phase4-pre.sql.gz`
 
-# Phase 3 — Content Discovery & Aggregation
+# Phase 4 — Content Discovery & Aggregation
 
 **Goal**: Implement tags, events calendar, iCal feeds, hot content scoring, promoted content, and RSS feeds.
 
@@ -261,10 +293,10 @@ Hooks:
 **Step 610** — Import `group_rss_feed` view for group activity RSS
 - Config: [views.view.group_rss_feed.yml](file:///Users/andreangelantoni/Sites/pl-opensocial/config/sync/views.view.group_rss_feed.yml)
 
-**Step 620** — Clear caches after Phase 3 config imports
+**Step 620** — Clear caches after Phase 4 config imports
 - `ddev drush cr`
 
-## Phase 3 Tests
+## Phase 4 Tests
 
 **Step 630** — Run (from the `tests/` directory): `./node_modules/.bin/playwright test e2e/phase3-discovery.spec.ts --reporter=list`
 
@@ -272,7 +304,7 @@ Hooks:
 
 # How to Reproduce This Site
 
-Starting from a vanilla Open Social 13.0.0 installation:
+Starting from a vanilla Open Social 13.0.0 installation (see **Phase 1**):
 
 ```bash
 # 1. Import all configuration
@@ -286,7 +318,7 @@ ddev drush en pl_opensocial_wiki pl_group_extras pl_discovery -y
 
 # 3. Create taxonomy terms (not stored in config)
 #    NOTE: ddev drush term:create does NOT exist in this Drush version.
-#    Use php:eval with Term::create() — see Steps 170 and 300-340 above.
+#    Use php:eval with Term::create() — see Steps 170 and 300 above.
 ddev drush php:eval '
 foreach (["Geographical", "Working group", "Distribution", "Event planning", "Archive"] as $name) {
   \Drupal\taxonomy\Entity\Term::create(["vid" => "group_type", "name" => $name])->save();
