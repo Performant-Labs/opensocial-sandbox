@@ -38,7 +38,8 @@ composer create-project goalgorilla/social_template:13.0.0 . --no-interaction
 ```
 
 **Step 020** — Configure DDEV
-Pin ports to avoid conflicts with other projects and set specific versions. Use `8443` for HTTPS to match standard DDEV/Playwright expectations.
+Pin ports to avoid conflicts with other projects. We use `8443` for HTTPS as it's the standard expected by Playwright tests.
+- Prerequisites: DDEV 1.22+, Node 18+, PHP 8.3
 ```bash
 ddev config --project-name=pl-opensocial-rework --project-type=drupal10 --docroot=web --php-version=8.3 --database=mariadb:11.8 --router-http-port=8080 --router-https-port=8443 --auto
 ddev start
@@ -52,6 +53,8 @@ $settings['file_private_path'] = '/var/www/html/private';
 ```
 
 **Step 040** — Site Install
+> [!IMPORTANT]
+> The account password MUST be `admin` to allow the Playwright tests to log in successfully.
 ```bash
 ddev drush site:install social --account-name=admin --account-pass=admin --site-name="Open Social Rework" -y
 ```
@@ -145,29 +148,35 @@ ddev drush php:eval 'echo count(\Drupal::entityTypeManager()->getStorage("taxono
 ```
 > Expected: 7 event_type terms
 
-## Enrollment & Stability Fixes
+## Stability & Infrastructure (Critical)
 
-**Step 182** — Enable Enrollment sub-modules and grant permissions
-- `ddev drush en social_event_an_enroll social_event_max_enroll -y`
-- Fix permissions (Note: machine names may include spaces):
-  - `ddev drush role:perm:add authenticated "add event enrollment entities"`
-  - `ddev drush role:perm:add authenticated "manage everything enrollments"`
-  - `ddev drush role:perm:add authenticated "view published event enrollment entities"`
-  - `ddev drush role:perm:add anonymous "add event enrollment entities"`
-
-**Step 184** — Fix "Unexpected Error" (WSOD) on Event pages
-If Event pages crash due to missing `field_event_url` table, manually synchronize storage:
+**Step 182** — Fix "Unexpected Error" (WSOD) on Event pages
+If Event pages crash with `SQLSTATE[42S02]: Table 'db.node__field_event_url' doesn't exist`, manually synchronize the storage definition:
 ```bash
 ddev drush php:eval '\Drupal::entityDefinitionUpdateManager()->installFieldStorageDefinition("field_event_url", "node", "node", \Drupal\field\Entity\FieldStorageConfig::loadByName("node", "field_event_url"));'
 ```
 
-**Step 186** — Restore missing Frontend Libraries
-Ensure `node-waves` and `autosize` are present in `web/libraries/`.
+**Step 184** — Restore Frontend Libraries
+The `social_base` theme expects `node-waves` and `autosize` in the libraries folder.
 ```bash
 mkdir -p web/libraries
+# If using composer doesn't pull them in, copy from source:
 cp -R ~/Sites/pl-opensocial/web/libraries/node-waves web/libraries/
 cp -R ~/Sites/pl-opensocial/web/libraries/autosize web/libraries/
 ```
+
+**Step 186** — Disable problematic HTML filters
+The `markdown` filter in `full_html` can cause HTML escaping issues (rendering `<strong>` as plain text).
+- Go to `/admin/config/content/formats/manage/full_html`
+- Ensure **Markdown** is UNCHECKED.
+
+**Step 188** — Enable Enrollment & Permissions
+- `ddev drush en social_event_an_enroll social_event_max_enroll -y`
+- Fix permissions (Note: machine names include spaces):
+  - `ddev drush role:perm:add authenticated "add event enrollment entities"`
+  - `ddev drush role:perm:add authenticated "manage everything enrollments"`
+  - `ddev drush role:perm:add authenticated "view published event enrollment entities"`
+  - `ddev drush role:perm:add anonymous "add event enrollment entities"`
 
 > Note: `field_event_url` and `field_event_enroll` are OS defaults and require no config changes.
 
@@ -350,34 +359,29 @@ Hooks:
 
 # How to Reproduce This Site
 
-Starting from a vanilla Open Social 13.0.0 installation (see **Phase 1**):
+Starting from a fresh environment:
 
-```bash
-# 1. Import all configuration
-#    Note: ddev drush cim --partial may fail due to pre-existing config
-#    dependency errors. Use the php:eval method documented above in
-#    "Config Import Method" for per-file imports.
-ddev drush cim -y
-
-# 2. Enable custom modules (creates DB tables, registers hooks)
-ddev drush en pl_opensocial_wiki pl_group_extras pl_discovery -y
-
-# 3. Create taxonomy terms (not stored in config)
-#    NOTE: ddev drush term:create does NOT exist in this Drush version.
-#    Use php:eval with Term::create() — see Steps 170 and 300 above.
-ddev drush php:eval '
-foreach (["Geographical", "Working group", "Distribution", "Event planning", "Archive"] as $name) {
-  \Drupal\taxonomy\Entity\Term::create(["vid" => "group_type", "name" => $name])->save();
-}
-foreach (["User group meeting", "Drupalcamp or Regional Summit", "DrupalCon", "Online meeting (e.g. IRC meeting)", "Training (free or commercial)", "Sprint", "Related event (not Drupal-specific)"] as $name) {
-  \Drupal\taxonomy\Entity\Term::create(["vid" => "event_type", "name" => $name])->save();
-}
-echo "Done\n";
-'
-
-# 4. Clear caches
-ddev drush cr
-```
+1. **Phase 1 Base**: Follow Steps 010–040. **Password must be `admin`**.
+2. **Infrastructure Fixes**: Follow Steps 182–188 (Storage sync, Libraries, HTML filters, Enrollment).
+3. **Custom Code**: Copy all modules from `web/modules/custom/` in the source project.
+4. **Configuration**:
+   ```bash
+   ddev drush cim -y
+   # If cim fails due to dependencies, use the php:eval method in Step 100+
+   ```
+5. **Taxonomy & Metadata**:
+   ```bash
+   ddev drush php:eval '
+   foreach (["Geographical", "Working group", "Distribution", "Event planning", "Archive"] as $name) {
+     \Drupal\taxonomy\Entity\Term::create(["vid" => "group_type", "name" => $name])->save();
+   }
+   foreach (["User group meeting", "Drupalcamp or Regional Summit", "DrupalCon", "Online meeting (e.g. IRC meeting)", "Training (free or commercial)", "Sprint", "Related event (not Drupal-specific)"] as $name) {
+     \Drupal\taxonomy\Entity\Term::create(["vid" => "event_type", "name" => $name])->save();
+   }
+   '
+   ddev drush cr
+   ```
+6. **Verification**: Follow Step 230 to run Phase 1 tests.
 
 ---
 
