@@ -1,0 +1,25 @@
+uuid: 4bee39b9-576a-4f41-b0b2-1163538325d8
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+  enforced:
+    module:
+      - social_event_max_enroll
+_core:
+  default_config_hash: H1DU2uzyjVK-orBuMZTMj38bY_bSvj2ByYGMKVlGZvo
+id: node.field_event_max_enroll_num
+field_name: field_event_max_enroll_num
+entity_type: node
+type: integer
+settings:
+  unsigned: false
+  size: normal
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

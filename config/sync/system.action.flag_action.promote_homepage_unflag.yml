@@ -1,0 +1,15 @@
+uuid: e407512d-ba0a-4cd0-8db6-b808e8ba9ea0
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.promote_homepage
+  module:
+    - flag
+id: flag_action.promote_homepage_unflag
+label: 'Remove from homepage'
+type: node
+plugin: 'flag_action:promote_homepage_unflag'
+configuration:
+  flag_id: promote_homepage
+  flag_action: unflag

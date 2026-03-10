@@ -1,0 +1,21 @@
+uuid: 8be8a5e3-1aaf-408c-be92-c0f7a75dfa71
+langcode: en
+status: true
+dependencies:
+  module:
+    - taxonomy
+_core:
+  default_config_hash: ZDNPlbivjg6Eevo_Wx6F3KdqkqOo2i4sl1zQj6k61vQ
+id: taxonomy_term.field_category_usage
+field_name: field_category_usage
+entity_type: taxonomy_term
+type: string_long
+settings:
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

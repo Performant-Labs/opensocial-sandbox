@@ -9,6 +9,7 @@ dependencies:
     - field.field.node.event.field_enroll_method
     - field.field.node.event.field_event_address
     - field.field.node.event.field_event_all_day
+    - field.field.node.event.field_event_an_enroll
     - field.field.node.event.field_event_comments
     - field.field.node.event.field_event_date
     - field.field.node.event.field_event_date_end
@@ -17,6 +18,8 @@ dependencies:
     - field.field.node.event.field_event_image
     - field.field.node.event.field_event_location
     - field.field.node.event.field_event_managers
+    - field.field.node.event.field_event_max_enroll
+    - field.field.node.event.field_event_max_enroll_num
     - field.field.node.event.field_event_send_confirmation
     - field.field.node.event.field_event_send_invite_by_user
     - field.field.node.event.field_event_type
@@ -87,7 +90,20 @@ content:
     third_party_settings: {  }
     weight: 3
     region: content
+  field_event_type:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: false
+    third_party_settings: {  }
+    weight: 2
+    region: content
   flag_follow_content:
+    weight: 10
+    region: content
+  flag_promote_homepage:
+    settings: {  }
+    third_party_settings: {  }
     weight: 10
     region: content
   links:
@@ -99,10 +115,13 @@ hidden:
   body: true
   field_enroll_method: true
   field_event_all_day: true
+  field_event_an_enroll: true
   field_event_comments: true
   field_event_enroll: true
   field_event_enroll_outside_group: true
   field_event_managers: true
+  field_event_max_enroll: true
+  field_event_max_enroll_num: true
   field_event_send_confirmation: true
   field_event_send_invite_by_user: true
   field_event_type: true
@@ -113,3 +132,4 @@ hidden:
   langcode: true
   like_and_dislike: true
   search_api_excerpt: true
+  social_tagging: true

@@ -1,0 +1,23 @@
+uuid: 9207f986-d619-4ec4-ab1a-3b8ddc580cef
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_message_context
+    - message.template.create_comment_author_node_post
+  module:
+    - options
+_core:
+  default_config_hash: Nhgmc61ETgjBoxG_2aImRvwdexG-U5s1doCdtx4hAYY
+id: message.create_comment_author_node_post.field_message_context
+field_name: field_message_context
+entity_type: message
+bundle: create_comment_author_node_post
+label: Context
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

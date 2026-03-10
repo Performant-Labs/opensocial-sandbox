@@ -27,3 +27,8 @@ files:
   - social_group_flexible_group.search
   - social_group_flexible_group.view_hubs_flexible_groups
   - social_tagging.default_permissions
+  - social_event_type.anonymous_taxonomy_permissions
+  - social_event_type.authenticated_taxonomy_permissions
+  - social_event_type.contentmanager_taxonomy_permissions
+  - social_event_type.sitemanager_taxonomy_permissions
+  - social_event_type.verified_taxonomy_permissions

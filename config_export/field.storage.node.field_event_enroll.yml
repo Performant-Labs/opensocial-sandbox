@@ -1,0 +1,20 @@
+uuid: 9b5ae381-4d13-41a9-83bd-41cf649bb491
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+_core:
+  default_config_hash: q1L5aaKA7giAB3zZyc_ZiihldYteLZkEvut6Pi0jhPQ
+id: node.field_event_enroll
+field_name: field_event_enroll
+entity_type: node
+type: boolean
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

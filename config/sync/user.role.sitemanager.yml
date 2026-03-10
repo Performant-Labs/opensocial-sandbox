@@ -34,6 +34,7 @@ dependencies:
     - social_comment_upload
     - social_core
     - social_event
+    - social_event_an_enroll
     - social_event_managers
     - social_font
     - social_footer
@@ -156,6 +157,7 @@ permissions:
   - 'edit terms in topic_types'
   - 'flag follow_content'
   - 'flag mute_group_notifications'
+  - 'manage all enrollments'
   - 'manage all groups'
   - 'manage everything enrollments'
   - 'override disabled public visibility'
@@ -211,8 +213,6 @@ permissions:
   - 'view members flexible_group group'
   - 'view node.event.field_content_visibility:community content'
   - 'view node.event.field_content_visibility:group content'
-  - 'view node.page.field_content_visibility:community content'
-  - 'view node.page.field_content_visibility:group content'
   - 'view node.topic.field_content_visibility:community content'
   - 'view node.topic.field_content_visibility:group content'
   - 'view own unpublished post entities'

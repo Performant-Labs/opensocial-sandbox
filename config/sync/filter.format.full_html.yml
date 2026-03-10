@@ -33,21 +33,6 @@ filters:
     settings:
       title: true
       media_substitution: metadata
-  markdown:
-    id: markdown
-    provider: markdown
-    status: true
-    weight: -15
-    settings:
-      id: commonmark
-      enabled: true
-      render_strategy:
-        type: none
-        custom_allowed_html: null
-        plugins: {  }
-      override: false
-      use_gfm: 'true'
-    filterFormat: null
   wikilink_filter:
     id: wikilink_filter
     provider: pl_opensocial_wiki

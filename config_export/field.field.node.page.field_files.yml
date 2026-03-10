@@ -1,0 +1,29 @@
+uuid: e7163f79-bcbc-4997-890f-2b2b64c89ad5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_files
+    - node.type.page
+  module:
+    - file
+_core:
+  default_config_hash: _GwcWhd2cqRePsp0FiMSNR7Jq4Ik30-MXdSj8auIp0g
+id: node.page.field_files
+field_name: field_files
+entity_type: node
+bundle: page
+label: Attachment
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:file'
+  handler_settings: {  }
+  file_directory: '[date:custom:Y]-[date:custom:m]'
+  file_extensions: 'jpg jpeg gif png txt xls pdf ppt pps odt ods odp gz tgz patch diff po pot psd html doc csv'
+  max_filesize: '15 MB'
+  description_field: true
+field_type: file

@@ -1,0 +1,31 @@
+uuid: 9a0f8535-d0dc-41f1-bbae-9ab640993d81
+langcode: en
+status: true
+dependencies:
+  module:
+    - social_tagging
+    - system
+  theme:
+    - socialblue
+  enforced:
+    module:
+      - social_tagging
+_core:
+  default_config_hash: _8KOBJ1BXLbPoNEimoWWD7s-XnP7LbOCW511YB7mqSU
+id: socialgrouptagsblock
+theme: socialblue
+region: content
+weight: 0
+provider: null
+plugin: social_group_tags_block
+settings:
+  id: social_group_tags_block
+  label: 'Group Tags'
+  label_display: visible
+  provider: social_tagging
+visibility:
+  request_path:
+    id: request_path
+    pages: '/group/*/about'
+    negate: false
+    context_mapping: {  }

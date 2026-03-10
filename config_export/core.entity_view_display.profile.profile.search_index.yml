@@ -1,0 +1,104 @@
+uuid: 91f93832-9134-4942-8442-787b8645845c
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.profile.search_index
+    - field.field.profile.profile.affiliation_owned_count
+    - field.field.profile.profile.field_enable_other_affiliations
+    - field.field.profile.profile.field_group_affiliation
+    - field.field.profile.profile.field_other_affiliations
+    - field.field.profile.profile.field_profile_address
+    - field.field.profile.profile.field_profile_banner_image
+    - field.field.profile.profile.field_profile_expertise
+    - field.field.profile.profile.field_profile_first_name
+    - field.field.profile.profile.field_profile_function
+    - field.field.profile.profile.field_profile_image
+    - field.field.profile.profile.field_profile_interests
+    - field.field.profile.profile.field_profile_last_name
+    - field.field.profile.profile.field_profile_organization
+    - field.field.profile.profile.field_profile_phone_number
+    - field.field.profile.profile.field_profile_profile_tag
+    - field.field.profile.profile.field_profile_self_introduction
+    - field.field.profile.profile.field_profile_show_email
+    - field.field.profile.profile.field_profile_summary
+    - field.field.profile.profile.user_removed_affiliations
+    - profile.type.profile
+  module:
+    - address
+    - text
+_core:
+  default_config_hash: kruw4MAujGG9MrpSqsF9TA52pWqNQYDS38aYhXqMxWo
+id: profile.profile.search_index
+targetEntityType: profile
+bundle: profile
+mode: search_index
+content:
+  field_profile_address:
+    type: address_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_profile_expertise:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 8
+    region: content
+  field_profile_function:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_profile_interests:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 7
+    region: content
+  field_profile_organization:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_profile_phone_number:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_profile_self_introduction:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 6
+    region: content
+hidden:
+  affiliation_owned_count: true
+  field_enable_other_affiliations: true
+  field_group_affiliation: true
+  field_other_affiliations: true
+  field_profile_banner_image: true
+  field_profile_first_name: true
+  field_profile_image: true
+  field_profile_last_name: true
+  field_profile_profile_tag: true
+  field_profile_show_email: true
+  field_profile_summary: true
+  search_api_excerpt: true
+  user_removed_affiliations: true

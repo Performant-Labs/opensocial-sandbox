@@ -1,0 +1,20 @@
+uuid: f76c197b-9d8e-4c77-9e1b-2860a3cf77b2
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.flexible_group
+    - user.role.sitemanager
+  enforced:
+    config:
+      - user.role.sitemanager
+_core:
+  default_config_hash: petgfDoI1kmiGQZlLJFzi-bpvexyiCsrmziVGmdYxFo
+id: flexible_group-sm-insider
+label: 'Site manager'
+weight: 4
+admin: true
+scope: insider
+global_role: sitemanager
+group_type: flexible_group
+permissions: {  }

@@ -1,0 +1,17 @@
+uuid: 535d032f-4388-4d60-92a4-5c51d91eadee
+langcode: en
+status: true
+dependencies:
+  module:
+    - pl_discovery
+title: 'Default cron handler'
+id: pl_discovery_cron
+weight: 0
+module: pl_discovery
+callback: pl_discovery_cron
+scheduler:
+  id: simple
+launcher:
+  id: serial
+logger:
+  id: database

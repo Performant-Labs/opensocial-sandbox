@@ -1,0 +1,22 @@
+uuid: d32c1d2e-5a85-41a3-b9ec-4b8d951fc09c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.event_enrollment.field_token
+  module:
+    - social_event
+_core:
+  default_config_hash: dgSzSDvK9pu9Bkr7VJy1oraPcwmbzg3-u4QgodcxRNY
+id: event_enrollment.event_enrollment.field_token
+field_name: field_token
+entity_type: event_enrollment
+bundle: event_enrollment
+label: Token
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

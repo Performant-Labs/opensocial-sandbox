@@ -48,6 +48,7 @@ For full details including daily workflow commands and known issues, see [docume
 | Document | Description |
 | --- | --- |
 | [documents/INSTALL.md](documents/INSTALL.md) | Full local setup instructions |
+| [documents/BUILD_LOG.md](documents/BUILD_LOG.md) | Step-by-step log of every change made across all phases, used for reproduction |
 | [documents/IMPLEMENTATION_PLAN.md](documents/IMPLEMENTATION_PLAN.md) | Seven-phase plan for configuring Open Social to match groups.drupal.org features, with Playwright e2e test specs per phase |
 | [documents/DEVELOPER_NOTES.md](documents/DEVELOPER_NOTES.md) | Lessons learned: config key ordering, MentionsFilter patch, missing field storages |
 

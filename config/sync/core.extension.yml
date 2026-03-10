@@ -24,6 +24,7 @@ module:
   config_update: 0
   crop: 0
   datetime: 0
+  dblog: 0
   dropdown: 0
   dynamic_entity_reference: 0
   dynamic_page_cache: 0
@@ -102,6 +103,7 @@ module:
   social_event: 0
   social_event_invite: 0
   social_event_managers: 0
+  social_event_type: 0
   social_follow_content: 0
   social_font: 0
   social_footer: 0
@@ -139,12 +141,13 @@ module:
   views_bulk_operations: 0
   views_ef_fieldset: 0
   views_infinite_scroll: 0
-  views_ui: 0
   votingapi: 0
   social_group: 2
   social_group_flexible_group: 5
   social_group_request: 6
   content_translation: 10
+  social_event_an_enroll: 10
+  social_event_max_enroll: 10
   views: 10
   paragraphs: 11
   improved_theme_settings: 50

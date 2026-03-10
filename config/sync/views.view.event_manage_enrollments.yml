@@ -89,12 +89,12 @@ display:
           clear_on_exposed: 0
           action_title: Action
           selected_actions:
-            -
+            0:
               action_id: social_event_managers_delete_event_enrollment_action
               preconfiguration:
                 label_override: Remove
-            -
-              action_id: social_event_managers_send_email_action
+            2:
+              action_id: social_event_an_enroll_send_email_action
               preconfiguration:
                 label_override: Email
         profile_entity_sortable:

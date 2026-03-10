@@ -1,0 +1,23 @@
+uuid: ccb63bd8-32dc-4758-993a-c1307c9925ea
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_message_destination
+    - message.template.invite_event_enrollment
+  module:
+    - options
+_core:
+  default_config_hash: UbcQQ1lBXn4wOnLdOpyAdrlkC0yDDGKvWULWuu7fC7A
+id: message.invite_event_enrollment.field_message_destination
+field_name: field_message_destination
+entity_type: message
+bundle: invite_event_enrollment
+label: field_message_destination
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

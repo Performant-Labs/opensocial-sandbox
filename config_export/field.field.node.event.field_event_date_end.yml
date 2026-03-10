@@ -1,0 +1,23 @@
+uuid: a207579f-e077-4c17-8c1d-b625d5e4bcf7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_event_date_end
+    - node.type.event
+  module:
+    - datetime
+_core:
+  default_config_hash: pnp07fwLzoJDoWynMO_m04WVFRjNqpfjOsrls8yqPGY
+id: node.event.field_event_date_end
+field_name: field_event_date_end
+entity_type: node
+bundle: event
+label: End
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

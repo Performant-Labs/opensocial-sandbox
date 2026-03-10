@@ -18,6 +18,8 @@ dependencies:
     - filter
     - node
     - profile
+    - social_event
+    - social_event_managers
     - social_group
     - social_like
     - social_post
@@ -36,9 +38,11 @@ permissions:
   - 'access content'
   - 'access content search'
   - 'access group search'
+  - 'add event enrollment entities'
   - 'cancel account'
   - 'change own username'
   - 'edit any page content'
+  - 'manage everything enrollments'
   - 'select account cancellation method'
   - 'select terms in expertise'
   - 'select terms in group_type'
@@ -51,12 +55,12 @@ permissions:
   - 'use text format simple_text'
   - 'view like widget'
   - 'view node.event.field_content_visibility:public content'
-  - 'view node.page.field_content_visibility:public content'
   - 'view node.topic.field_content_visibility:public content'
   - 'view own profile profile'
   - 'view own unpublished content'
   - 'view public flexible_group group'
   - 'view public posts'
+  - 'view published event enrollment entities'
   - 'view published post entities'
   - 'view social_tagging'
   - 'view term names in expertise'

@@ -1,0 +1,13 @@
+uuid: 0fbe064c-50f4-4f50-be01-b294a820f46f
+langcode: en
+status: true
+dependencies:
+  module:
+    - profile
+_core:
+  default_config_hash: JH3nv505iN4UqNbGtEugpWqpm3_rIery4SKKuY7m70w
+id: profile.autocomplete_item
+label: 'Autocomplete Item'
+description: ''
+targetEntityType: profile
+cache: true

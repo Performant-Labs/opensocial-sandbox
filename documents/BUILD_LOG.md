@@ -32,16 +32,15 @@ foreach ($configs as $name) {
 **Goal**: Establish a fresh Open Social 13.0.0 environment with correct port pinning and private file system configuration.
 
 **Step 010** — Scaffold Project
-Use the Drupal recommended project template and require Open Social 13.
+Use the official Open Social project template (`social_template`) to ensure all core and contrib patches are applied correctly.
 ```bash
-composer create-project drupal/recommended-project:^10 . --no-interaction
-composer require goalgorilla/open_social:^13 drush/drush:^13.7 drupal/linkit:^7.0 drupal/markdown:^3.1 erusev/parsedown:^1.8 erusev/parsedown-extra:^0.9.0 league/commonmark:^2.0 oomphinc/composer-installers-extender:^2.0 cweagans/composer-patches:^1.7 --no-interaction
+composer create-project goalgorilla/social_template:13.0.0 . --no-interaction
 ```
 
 **Step 020** — Configure DDEV
-Pin ports to avoid conflicts with other projects and set specific versions.
+Pin ports to avoid conflicts with other projects and set specific versions. Use `8443` for HTTPS to match standard DDEV/Playwright expectations.
 ```bash
-ddev config --project-name=pl-opensocial-rework --project-type=drupal10 --docroot=web --php-version=8.3 --database=mariadb:11.8 --router-http-port=8580 --router-https-port=8543 --auto
+ddev config --project-name=pl-opensocial-rework --project-type=drupal10 --docroot=web --php-version=8.3 --database=mariadb:11.8 --router-http-port=8080 --router-https-port=8443 --auto
 ddev start
 mkdir private
 ```
@@ -146,6 +145,30 @@ ddev drush php:eval 'echo count(\Drupal::entityTypeManager()->getStorage("taxono
 ```
 > Expected: 7 event_type terms
 
+## Enrollment & Stability Fixes
+
+**Step 182** — Enable Enrollment sub-modules and grant permissions
+- `ddev drush en social_event_an_enroll social_event_max_enroll -y`
+- Fix permissions (Note: machine names may include spaces):
+  - `ddev drush role:perm:add authenticated "add event enrollment entities"`
+  - `ddev drush role:perm:add authenticated "manage everything enrollments"`
+  - `ddev drush role:perm:add authenticated "view published event enrollment entities"`
+  - `ddev drush role:perm:add anonymous "add event enrollment entities"`
+
+**Step 184** — Fix "Unexpected Error" (WSOD) on Event pages
+If Event pages crash due to missing `field_event_url` table, manually synchronize storage:
+```bash
+ddev drush php:eval '\Drupal::entityDefinitionUpdateManager()->installFieldStorageDefinition("field_event_url", "node", "node", \Drupal\field\Entity\FieldStorageConfig::loadByName("node", "field_event_url"));'
+```
+
+**Step 186** — Restore missing Frontend Libraries
+Ensure `node-waves` and `autosize` are present in `web/libraries/`.
+```bash
+mkdir -p web/libraries
+cp -R ~/Sites/pl-opensocial/web/libraries/node-waves web/libraries/
+cp -R ~/Sites/pl-opensocial/web/libraries/autosize web/libraries/
+```
+
 > Note: `field_event_url` and `field_event_enroll` are OS defaults and require no config changes.
 
 ## Page → Wiki Page
@@ -167,11 +190,15 @@ ddev drush php:eval 'echo count(\Drupal::entityTypeManager()->getStorage("taxono
 > [!IMPORTANT]
 > **Test Environment Setup**:
 > 1. **Copy Tests**: `cp -r ~/Sites/pl-opensocial/tests ~/Sites/pl-opensocial-rework/tests`
-> 2. **Update Config**: Edit `tests/playwright.config.ts` to set `baseURL: 'https://pl-opensocial-rework.ddev.site:8543'`.
+> 2. **Update Config**: Edit `tests/playwright.config.ts` to set `baseURL: 'https://pl-opensocial-rework.ddev.site:8443'`.
 > 3. **Install Dependencies**: Run `npm install` in the `tests/` directory.
-> 4. **Install Browsers**: Run `npx playwright install chromium` (Note: this is a large download).
+> 4. **Install Browsers**: Run `npx playwright install chromium`.
 
-**Step 230** — Run (from the `tests/` directory): `./node_modules/.bin/playwright test e2e/phase1-content-types.spec.ts --reporter=list --timeout=30000`
+> [!NOTE]
+> **Open Social 13 Selector Updates**:
+> Tests in `phase1-content-types.spec.ts` have been updated to use `.body-text` instead of `.field--name-body`. Title assertions now target `.teaser__title h1` or `.block-page-title-block h1` to avoid conflicts with `h1` tags within Markdown content.
+
+**Step 230** — Run (from the `tests/` directory): `./node_modules/.bin/playwright test e2e/phase1-content-types.spec.ts --reporter=list --timeout=60000`
 
 ---
 

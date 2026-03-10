@@ -1,0 +1,26 @@
+uuid: a4ca5cb2-d155-4e23-b8ea-201b43b78c6a
+langcode: en
+status: true
+dependencies:
+  module:
+    - social_event
+  enforced:
+    module:
+      - social_event_an_enroll
+_core:
+  default_config_hash: dNb002qlVyeHJDs6-69TmywKsGRQlB0mZwUHRa6q14E
+id: event_enrollment.field_first_name
+field_name: field_first_name
+entity_type: event_enrollment
+type: string
+settings:
+  max_length: 255
+  is_ascii: false
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

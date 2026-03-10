@@ -1,0 +1,10 @@
+uuid: 13a0a811-8e3c-46c0-96ef-fa41bfc0aed3
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: oCOfNIDy4UeCC6jRGppYml4FaXr9F_ZoxEwxSDrHcU4
+id: platform_intro
+label: 'Platform introduction'
+revision: false
+description: 'Platform introduction block, meant for use in content regions.'

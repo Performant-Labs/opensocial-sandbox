@@ -7,8 +7,11 @@ dependencies:
     - field.field.event_enrollment.event_enrollment.field_email
     - field.field.event_enrollment.event_enrollment.field_enrollment_status
     - field.field.event_enrollment.event_enrollment.field_event
+    - field.field.event_enrollment.event_enrollment.field_first_name
+    - field.field.event_enrollment.event_enrollment.field_last_name
     - field.field.event_enrollment.event_enrollment.field_request_message
     - field.field.event_enrollment.event_enrollment.field_request_or_invite_status
+    - field.field.event_enrollment.event_enrollment.field_token
   module:
     - social_event
 _core:
@@ -61,5 +64,8 @@ content:
 hidden:
   field_account: true
   field_email: true
+  field_first_name: true
+  field_last_name: true
   field_request_message: true
   field_request_or_invite_status: true
+  field_token: true

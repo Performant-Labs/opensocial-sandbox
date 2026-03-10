@@ -1,0 +1,23 @@
+uuid: 2c169892-ced9-4884-b872-b7fb6ecd921e
+langcode: en
+status: true
+dependencies:
+  module:
+    - options
+    - taxonomy
+_core:
+  default_config_hash: 1l2NX-Th_wtB-WSLfZzFJbJDYtWQX6Arjo3Vthi3lPc
+id: taxonomy_term.field_event_type_icon
+field_name: field_event_type_icon
+entity_type: taxonomy_term
+type: list_string
+settings:
+  allowed_values: {  }
+  allowed_values_function: social_event_type_allowed_values_function
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

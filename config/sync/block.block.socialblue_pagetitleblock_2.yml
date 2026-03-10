@@ -25,4 +25,4 @@ visibility:
     id: request_path
     negate: false
     context_mapping: {  }
-    pages: "*/enrollments\r\n*/organisers\r\n*/manage-enrollments\r\n*/all-enrollments"
+    pages: "*/enrollments\r\n*/organisers\r\n*/manage-enrollments\r\n*/all-enrollments\r\n*/manage-enrollments"

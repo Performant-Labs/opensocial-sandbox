@@ -8,6 +8,7 @@ dependencies:
     - field.field.node.event.field_enroll_method
     - field.field.node.event.field_event_address
     - field.field.node.event.field_event_all_day
+    - field.field.node.event.field_event_an_enroll
     - field.field.node.event.field_event_comments
     - field.field.node.event.field_event_date
     - field.field.node.event.field_event_date_end
@@ -16,6 +17,8 @@ dependencies:
     - field.field.node.event.field_event_image
     - field.field.node.event.field_event_location
     - field.field.node.event.field_event_managers
+    - field.field.node.event.field_event_max_enroll
+    - field.field.node.event.field_event_max_enroll_num
     - field.field.node.event.field_event_send_confirmation
     - field.field.node.event.field_event_send_invite_by_user
     - field.field.node.event.field_event_type
@@ -31,6 +34,7 @@ dependencies:
     - field_group
     - file
     - image_widget_crop
+    - link
     - path
     - social_group
     - text
@@ -41,6 +45,8 @@ third_party_settings:
         - title
         - field_event_image
         - body
+        - field_event_type
+        - field_event_type
       label: 'Basic information'
       region: hidden
       parent_name: ''
@@ -102,6 +108,8 @@ third_party_settings:
         - field_event_managers
         - field_event_managers
         - field_event_managers
+        - field_event_managers
+        - field_event_managers
       label: 'Additional information'
       region: hidden
       parent_name: ''
@@ -133,6 +141,8 @@ third_party_settings:
         - field_enroll_method
         - field_event_enroll_outside_group
         - field_hide_enrollments
+        - field_event_an_enroll
+        - field_event_an_enroll
       label: 'Enrollment options fieldset'
       region: content
       parent_name: group_enrollment
@@ -210,6 +220,13 @@ content:
     settings:
       display_label: true
     third_party_settings: {  }
+  field_event_an_enroll:
+    type: boolean_checkbox
+    weight: 100
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
   field_event_comments:
     type: comment_default
     weight: 10
@@ -275,12 +292,40 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  field_event_max_enroll:
+    type: number
+    weight: 124
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_event_max_enroll_num:
+    type: boolean_checkbox
+    weight: 125
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
   field_event_send_confirmation:
     type: boolean_checkbox
     weight: 126
     region: content
     settings:
       display_label: true
+    third_party_settings: {  }
+  field_event_type:
+    type: options_select
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_event_url:
+    type: link_default
+    weight: 11
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
     third_party_settings: {  }
   field_files:
     type: file_generic
@@ -315,6 +360,12 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  social_tagging:
+    type: options_select
+    weight: 3
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   status:
     type: boolean_checkbox
     weight: 120
@@ -344,20 +395,6 @@ content:
     weight: 50
     region: content
     settings: {  }
-    third_party_settings: {  }
-  field_event_type:
-    type: options_select
-    weight: 10
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  field_event_url:
-    type: link_default
-    weight: 11
-    region: content
-    settings:
-      placeholder_url: ''
-      placeholder_title: ''
     third_party_settings: {  }
 hidden:
   field_event_send_invite_by_user: true
