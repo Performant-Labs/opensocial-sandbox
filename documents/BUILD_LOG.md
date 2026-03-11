@@ -402,6 +402,13 @@ Hooks:
 ## Phase 4 Tests
 
 **Step 630** — Run (from the `tests/` directory): `./node_modules/.bin/playwright test e2e/phase3-discovery.spec.ts --reporter=list`
+- 14 tests: tags, events calendar/iCal, hot content, promoted content, group RSS.
+
+> [!NOTE]
+> **Event Type filter**: The `social_event_type` module renders the "What type of events do you want to see?" dropdown on `/community-events` but does NOT populate it with `event_type` taxonomy terms. The select has only "- Any -". The test (`events.filter.type`) handles this by checking the option count before attempting to select.
+
+> [!WARNING]
+> **`ddev drush` intermittent SIGINT**: `ddev drush` commands sometimes receive SIGINT (exit code 130) for no apparent reason. Use `ddev exec drush` as a more reliable alternative. Both execute the same Drush binary inside the container.
 
 ---
 
