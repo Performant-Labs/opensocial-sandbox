@@ -27,41 +27,61 @@ foreach ($configs as $name) {
 
 ---
 
+> [!CAUTION]
+> **DDEV commands do NOT hang.** All `ddev drush`, `ddev exec`, and `ddev export-db` commands complete in seconds (typically 2-15s). If a terminal session appears "stuck" on a DDEV command, the problem is a **zombie shell session** from a cancelled tool call — not a stuck command. Verify by running `docker ps` to ensure containers are healthy, then re-run the command in a new terminal. Do NOT use the `timeout` command with `ddev` — it sends SIGINT (exit code 130) which kills the process prematurely.
+
+---
+
 # Phase 1 — Clean-Room Initialization
 
 **Goal**: Establish a fresh Open Social 13.0.0 environment with correct port pinning and private file system configuration.
 
-**Step 010** — Scaffold Project
-Use the official Open Social project template (`social_template`) to ensure all core and contrib patches are applied correctly.
+**Step 010** — Create and enter the project directory
 ```bash
-composer create-project goalgorilla/social_template:13.0.0 . --no-interaction
-```
-
-**Step 020** — Configure DDEV
-Pin ports to avoid conflicts with other projects. We use `8443` for HTTPS as it's the standard expected by Playwright tests.
-- Prerequisites: DDEV 1.22+, Node 18+, PHP 8.3
-```bash
-ddev config --project-name=pl-opensocial-rework --project-type=drupal10 --docroot=web --php-version=8.3 --database=mariadb:11.8 --router-http-port=8080 --router-https-port=8443 --auto
+mkdir pl-opensocial-rework && cd pl-opensocial-rework
+ddev config --project-type=drupal10 --docroot=web --php-version=8.3
 ddev start
-mkdir private
+rm -f .DS_Store
 ```
 
-**Step 030** — Configure Private Path
-Append to `web/sites/default/settings.php`:
-```php
-$settings['file_private_path'] = '/var/www/html/private';
-```
-
-**Step 040** — Site Install
-> [!IMPORTANT]
-> The account password MUST be `admin` to allow the Playwright tests to log in successfully.
+**Step 020** — Download Open Social via Composer
 ```bash
-ddev drush site:install social --account-name=admin --account-pass=admin --site-name="Open Social Rework" -y
+ddev composer create-project drupal/recommended-project:^10 . --no-interaction --stability=dev
+ddev composer config repositories.asset-packagist '{"type": "composer", "url": "https://asset-packagist.org"}'
+ddev composer config allow-plugins.tbachert/spi true
+ddev composer config allow-plugins.cweagans/composer-patches true
+ddev composer config allow-plugins.oomphinc/composer-installers-extender true
+ddev composer config --json extra.enable-patching true
+ddev composer require goalgorilla/open_social:^13 drush/drush -W --no-interaction
+```
+> [!IMPORTANT]
+> **Resource Intensive**: Step 020 is heavy on RAM/CPU. If the session crashes or hangs, try `ddev composer install` to resume the download without recalculating the dependency tree.
+
+**Step 030** — Configure the private directory
+```bash
+mkdir -p private
+chmod +w web/sites/default/settings.php
+echo "\n\$settings['file_private_path'] = '/var/www/html/private';" >> web/sites/default/settings.php
+```
+> [!IMPORTANT]
+> **Installer Requirement**: The `file_private_path` MUST be set in `settings.php` BEFORE running the site installer in Step 040. If missing, the Open Social installer will fail.
+
+**Step 040** — Site Install and Launch
+```bash
+ddev drush -y site-install social
+ddev drush php:eval 'node_access_rebuild();'
+ddev launch
 ```
 
 ---
 
 # Phase 2 — Content Types & Text Formats
+
+> [!IMPORTANT]
+> **Zombie cleanup**: Before starting this phase, kill any leftover processes from previous work:
+> ```bash
+> pkill -f "node.*playwright" 2>/dev/null; pkill -f "chromium --" 2>/dev/null
+> ```
 
 **Goal**: Configure Topic, Event, and Page content types to match g.d.o's feature set.
 
@@ -92,11 +112,15 @@ ddev drush site:install social --account-name=admin --account-pass=admin --site-
 - Config: [field.field.node.topic.field_files.yml](file:///Users/andreangelantoni/Sites/pl-opensocial/config/sync/field.field.node.topic.field_files.yml)
 
 **Step 130** — Wiki-links (`[[title]]`) support
-- Copy module: `cp -r ~/Sites/pl-opensocial/web/modules/custom/pl_opensocial_wiki web/modules/custom/`
+- Copy module: `cp -R ~/Sites/pl-opensocial/web/modules/custom/pl_opensocial_wiki web/modules/custom/`
 - Enable: `ddev drush en pl_opensocial_wiki -y`
 - `ddev drush cr`
+- **`ddev restart`** (required to flush PHP opcode cache so the web process can find the new class)
 
-> Note: `pl_opensocial_wiki` is a PSR-4 module containing only `pl_opensocial_wiki.info.yml` and `src/Plugin/`. It does NOT have a `.module` file. The `cp -r` command should place the entire directory at `web/modules/custom/pl_opensocial_wiki/`.
+> [!CAUTION]
+> The `cp -R` command MUST place the entire directory at `web/modules/custom/pl_opensocial_wiki/` (not flat files in `web/modules/custom/`). Verify with `ls web/modules/custom/pl_opensocial_wiki/src/Plugin/Filter/WikiLinkFilter.php`. If the module is installed with the wrong directory structure, the entire site will crash with `PluginException: class does not exist`.
+>
+> After enabling the module, you MUST run `ddev restart` to flush the PHP opcode cache. A `ddev drush cr` alone is not sufficient — the web process caches class paths separately from Drush CLI.
 
 ## Event Enhancements
 
@@ -199,21 +223,36 @@ The `markdown` filter in `full_html` can cause HTML escaping issues (rendering `
 > [!IMPORTANT]
 > **Test Environment Setup**:
 > 1. **Copy Tests**: `cp -r ~/Sites/pl-opensocial/tests ~/Sites/pl-opensocial-rework/tests`
-> 2. **Update Config**: Edit `tests/playwright.config.ts` to set `baseURL: 'https://pl-opensocial-rework.ddev.site:8443'`.
+> 2. **Update Config**: Edit `tests/playwright.config.ts`:
+>    - Set `baseURL: 'https://pl-opensocial-rework.ddev.site:8543'`.
+>    - Set `timeout: 30000` (Global) and `expect: { timeout: 5000 }` (Assertion). These "fail-fast" timeouts prevent long hangs if elements are missing.
 > 3. **Install Dependencies**: Run `npm install` in the `tests/` directory.
 > 4. **Install Browsers**: Run `npx playwright install chromium`.
 
+> [!IMPORTANT]
+> **Test Visibility**: Always use `--reporter=list` or `--reporter=line` when running tests to monitor progress. Do NOT suppress output. If a test appears stuck, check the reporter output for the specific step where it is waiting.
+
 > [!NOTE]
 > **Open Social 13 Selector Updates**:
-> Tests in `phase1-content-types.spec.ts` have been updated to use `.body-text` instead of `.field--name-body`. Title assertions now target `.teaser__title h1` or `.block-page-title-block h1` to avoid conflicts with `h1` tags within Markdown content.
+> All test selectors in `phase1-content-types.spec.ts` MUST be scoped to `main` (e.g., `page.locator('main h1')`, `page.locator('main button:has-text("Enroll")')`) to avoid matching hidden admin toolbar elements. Without `main` scoping, selectors like `a[href$="/edit"]` will match toolbar links (e.g., "Edit profile") instead of page content.
 
-**Step 230** — Run (from the `tests/` directory): `./node_modules/.bin/playwright test e2e/phase1-content-types.spec.ts --reporter=list --timeout=60000`
+**Step 230** — Run (from the `tests/` directory): `npx playwright test e2e/phase1-content-types.spec.ts --reporter=list`
 
 ---
 
 **Step 240** — Pre-Phase 3 backup: `ddev export-db --file=backups/phase3-pre.sql.gz`
 
+> [!NOTE]
+> `ddev export-db` typically completes in **10-15 seconds**. If it appears stuck, check that DDEV containers are healthy with `docker ps`. Do NOT cancel and retry without checking — the export may be running normally.
+> Always create the `backups/` directory first: `mkdir -p backups`
+
 # Phase 3 — Group Structure & Membership
+
+> [!IMPORTANT]
+> **Zombie cleanup**: Before starting this phase, kill any leftover processes from previous work:
+> ```bash
+> pkill -f "node.*playwright" 2>/dev/null; pkill -f "chromium --" 2>/dev/null
+> ```
 
 **Goal**: Configure Open Social's `flexible_group` to replicate g.d.o's group types, membership models, archive enforcement, moderation queue, and submission guidelines.
 
@@ -292,7 +331,16 @@ Hooks implemented:
 
 **Step 380** — Pre-Phase 4 backup: `ddev export-db --file=backups/phase4-pre.sql.gz`
 
+> [!NOTE]
+> Same timing as Step 240 — expect **10-15 seconds**.
+
 # Phase 4 — Content Discovery & Aggregation
+
+> [!IMPORTANT]
+> **Zombie cleanup**: Before starting this phase, kill any leftover processes from previous work:
+> ```bash
+> pkill -f "node.*playwright" 2>/dev/null; pkill -f "chromium --" 2>/dev/null
+> ```
 
 **Goal**: Implement tags, events calendar, iCal feeds, hot content scoring, promoted content, and RSS feeds.
 
