@@ -50,6 +50,7 @@ This document catalogs every type of process hang encountered in the Open Social
 |---|-----------|---------|-----|
 | 3 | Orphan Playwright processes | `node` processes persist after cancel | Run `kill-zombies.sh` |
 | 12 | `pkill` self-kill bug | Cleanup script kills itself | Use `pkill -f "node.*playwright"` |
+| 21 | Agent approval gate | Command sits forever, no output | Agent must use `SafeToAutoRun: true` for safe commands |
 
 ---
 
@@ -455,6 +456,46 @@ ls web/modules/custom/*.info.yml
 - Always copy module directories, not individual files
 - Always use `cp -r source/module_name/ destination/module_name/` preserving the directory structure
 - After copying modules, `ddev restart` (not just `ddev drush cr`) to ensure opcache picks up the new files
+
+---
+
+## 21. Agent Approval Gate (False Hang)
+
+*Discovered in session d401c580*
+
+### Symptom
+A command appears to hang indefinitely — no output, no error, no progress. It looks exactly like a stuck process, but the command never actually started. The terminal just sits there.
+
+### Root Cause
+The AI agent submitted the command with `SafeToAutoRun: false`, which means VS Code queues the command for **manual user approval** before executing it. However, the VS Code UI often **does not show an expand button or approval button** — the command is queued invisibly with no way the user can approve it. The command silently never runs, and the agent appears permanently stuck.
+
+This is especially deceptive for obviously safe commands like `ddev export-db` (which just writes a file) or `ddev drush cr` (which clears caches).
+
+### Detection
+- The command has been queued but there is **zero output** — not even a partial line
+- There is **no visible approval button or expand button** in the VS Code UI
+- The process is not visible in `ps aux` because it was never launched
+- The only way to break out is to cancel the agent
+
+### Solution
+1. Cancel the agent's current operation
+2. Tell the agent to re-run the command — it will complete in seconds
+3. If exit code 130 appears on retry, that's SIGINT residue from the cancel — just try once more
+
+### Commands That Should ALWAYS Be Auto-Run
+These commands are safe and should never wait for approval:
+- `ddev export-db` — writes a backup file
+- `ddev drush cr` — clears caches
+- `ddev drush status` — read-only status
+- `ddev describe` / `ddev list` — read-only info
+- `mkdir -p` — creates directories
+- `ls`, `cat`, `grep`, `head`, `tail` — read-only
+- `cp -r` (for module/config copying) — safe in context
+- `npx playwright test` — runs tests
+
+### Prevention
+- The agent should mark all non-destructive commands as `SafeToAutoRun: true`
+- Only destructive commands (e.g., `rm -rf`, `ddev delete`, `git push --force`) should require approval
 
 ---
 

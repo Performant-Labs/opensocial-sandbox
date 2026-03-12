@@ -1,5 +1,8 @@
 # Build Log — pl-opensocial
 
+> [!CAUTION]
+> **READ FIRST**: Before executing ANY commands in this log, read [HANGING_PROCESSES.md](file:///Users/andreangelantoni/Sites/pl-opensocial/documents/HANGING_PROCESSES.md). It documents 21 types of hangs encountered during this build — including silent agent approval gates, `networkidle` freezes, PHP opcache stale classes, and DDEV port conflicts. Every one of these has caused lost time.
+
 This log records every change made to the Open Social site across all implementation phases.
 All configuration referenced below is exported to `config/sync/` and can be reproduced with `ddev drush cim -y`.
 Custom module code lives in `web/modules/custom/`.
