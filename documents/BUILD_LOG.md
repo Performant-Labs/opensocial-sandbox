@@ -34,6 +34,13 @@ foreach ($configs as $name) {
 
 # Phase 1 — Clean-Room Initialization
 
+> [!IMPORTANT]
+> **DDEV Pre-Flight Check**: Before starting ANY phase:
+> 1. **Verify DDEV is running**: `ddev describe` — if it fails, run `ddev start`
+> 2. **Stop conflicting projects**: `ddev list` — if `pl-opensocial` (or any other project) is running, stop it: `cd ~/Sites/pl-opensocial && ddev stop`
+> 3. **Confirm the port**: Check the HTTPS URL in `ddev describe` output. If the port differs from `8493`, update `tests/playwright.config.ts` to match.
+> 4. **Kill zombies**: `bash ~/Sites/pl-opensocial/scripts/kill-zombies.sh`
+
 **Goal**: Establish a fresh Open Social 13.0.0 environment with correct port pinning and private file system configuration.
 
 **Step 010** — Create and enter the project directory
@@ -78,9 +85,9 @@ ddev launch
 # Phase 2 — Content Types & Text Formats
 
 > [!IMPORTANT]
-> **Zombie cleanup**: Before starting this phase, kill any leftover processes from previous work:
+> **Zombie cleanup**: Before starting this phase, run the cleanup script:
 > ```bash
-> pkill -f "node.*playwright" 2>/dev/null; pkill -f "chromium --" 2>/dev/null
+> bash ~/Sites/pl-opensocial/scripts/kill-zombies.sh
 > ```
 
 **Goal**: Configure Topic, Event, and Page content types to match g.d.o's feature set.
@@ -89,8 +96,9 @@ ddev launch
 > Phase 2 work consisted entirely of reconfiguring existing fields and text formats.
 
 > [!IMPORTANT]
-> **linkit Dependency**: The `full_html` text format configuration references the `linkit` filter. The `linkit` module MUST be enabled before importing the `filter.format.full_html` config, otherwise the import will hang or fail due to missing plugins.
+> **linkit Dependency**: The `full_html` text format configuration references the `linkit` filter. The `linkit` module is NOT bundled with Open Social and must be installed via Composer first:
 > ```bash
+> ddev composer require drupal/linkit --no-interaction
 > ddev drush en linkit -y
 > ```
 
@@ -131,6 +139,12 @@ ddev launch
 > [!IMPORTANT]
 > The module MUST be enabled BEFORE importing its field config. If you import the field YAML without the module active, the import will silently fail or error.
 
+**Step 145** — Import the Event form display (places event_type, event_managers, and other fields on the Event form)
+- Config: [core.entity_form_display.node.event.default.yml](file:///Users/andreangelantoni/Sites/pl-opensocial/config/sync/core.entity_form_display.node.event.default.yml)
+
+> [!CAUTION]
+> This config is REQUIRED. Without it, the Event Type dropdown (`#edit-field-event-type`) will not appear on the Event creation form, causing Test 3 to fail. This config must be imported AFTER enabling `social_event_type` and `social_event_managers`.
+
 **Step 150** — Enable Event Managers sub-module and its field
 - `ddev drush en social_event_managers -y`
 - Config: [field.field.node.event.field_event_managers.yml](file:///Users/andreangelantoni/Sites/pl-opensocial/config/sync/field.field.node.event.field_event_managers.yml)
@@ -142,7 +156,7 @@ ddev launch
 - Config: [field.field.node.event.field_files.yml](file:///Users/andreangelantoni/Sites/pl-opensocial/config/sync/field.field.node.event.field_files.yml)
 
 **Step 170** — Create Event Type taxonomy terms
-- Vocabulary: `event_type` — [taxonomy.vocabulary.event_type.yml](file:///Users/andreangelantoni/Sites/pl-opensocial/config/sync/taxonomy.vocabulary.event_type.yml)
+- Vocabulary: `event_types` (**plural**) — [taxonomy.vocabulary.event_type.yml](file:///Users/andreangelantoni/Sites/pl-opensocial/config/sync/taxonomy.vocabulary.event_type.yml)
 
 > [!WARNING]
 > `ddev drush term:create` does not exist in the Drush version shipped with Open Social. Use `php:eval` with `Term::create()` instead.
@@ -158,19 +172,29 @@ foreach ([
   "Sprint",
   "Related event (not Drupal-specific)",
 ] as $name) {
-  $term = \Drupal\taxonomy\Entity\Term::create(["vid" => "event_type", "name" => $name]);
+  $term = \Drupal\taxonomy\Entity\Term::create(["vid" => "event_types", "name" => $name]);
   $term->save();
   echo "Created: $name (tid=" . $term->id() . ")\n";
 }
 '
 ```
+
+> [!CAUTION]
+> The vocabulary machine name is `event_types` (**plural**), NOT `event_type`. Using the wrong vid will silently create orphaned terms that don't appear in any select widget.
 > Terms live in the database, not config YAML. Tids may differ from original (5–11).
 
-**Step 180** — Verify event_type terms exist
+> [!CAUTION]
+> **taxonomy_access_fix**: Open Social ships with the `taxonomy_access_fix` module, which overrides the default entity reference selection handler. Without the `select terms in event_types` permission, the Event Type dropdown will appear **empty** (no options) even though the terms exist in the database. This MUST be granted after creating terms:
+> ```bash
+> ddev drush role:perm:add authenticated "select terms in event_types"
+> ddev drush role:perm:add administrator "select terms in event_types"
+> ```
+
+**Step 180** — Verify event_types terms exist
 ```bash
-ddev drush php:eval 'echo count(\Drupal::entityTypeManager()->getStorage("taxonomy_term")->loadByProperties(["vid" => "event_type"])) . " event_type terms\n";'
+ddev drush php:eval 'echo count(\Drupal::entityTypeManager()->getStorage("taxonomy_term")->loadByProperties(["vid" => "event_types"])) . " event_types terms\n";'
 ```
-> Expected: 7 event_type terms
+> Expected: 7 event_types terms
 
 ## Stability & Infrastructure (Critical)
 
@@ -212,6 +236,12 @@ The `markdown` filter in `full_html` can cause HTML escaping issues (rendering `
 **Step 200** — Revision log enabled by default
 - Config: [node.type.page.yml](file:///Users/andreangelantoni/Sites/pl-opensocial/config/sync/node.type.page.yml)
 
+**Step 205** — Import the Page form display (places revision log and other fields on the Page form)
+- Config: [core.entity_form_display.node.page.default.yml](file:///Users/andreangelantoni/Sites/pl-opensocial/config/sync/core.entity_form_display.node.page.default.yml)
+
+> [!CAUTION]
+> This config is REQUIRED. Without it, the revision log field (`#edit-revision-log-0-value`) will not appear on the Page edit form, causing Test 4 to fail.
+
 **Step 210** — Page attachments: 15 MB limit, expanded extensions
 - Config: [field.field.node.page.field_files.yml](file:///Users/andreangelantoni/Sites/pl-opensocial/config/sync/field.field.node.page.field_files.yml)
 
@@ -224,10 +254,13 @@ The `markdown` filter in `full_html` can cause HTML escaping issues (rendering `
 > **Test Environment Setup**:
 > 1. **Copy Tests**: `cp -r ~/Sites/pl-opensocial/tests ~/Sites/pl-opensocial-rework/tests`
 > 2. **Update Config**: Edit `tests/playwright.config.ts`:
->    - Set `baseURL: 'https://pl-opensocial-rework.ddev.site:8543'`.
+>    - Set `baseURL: 'https://pl-opensocial-rework.ddev.site:8493'`.
 >    - Set `timeout: 30000` (Global) and `expect: { timeout: 5000 }` (Assertion). These "fail-fast" timeouts prevent long hangs if elements are missing.
 > 3. **Install Dependencies**: Run `npm install` in the `tests/` directory.
 > 4. **Install Browsers**: Run `npx playwright install chromium`.
+
+> [!CAUTION]
+> **`networkidle` causes permanent hangs**: The test `beforeEach` hook MUST use `waitForLoadState('load')`, NOT `waitForLoadState('networkidle')`. Open Social has perpetual background AJAX (heartbeat/polling) that prevents `networkidle` from ever resolving. This single line causes **every test to hang forever**. If tests appear stuck during login, check this setting first.
 
 > [!IMPORTANT]
 > **Test Visibility**: Always use `--reporter=list` or `--reporter=line` when running tests to monitor progress. Do NOT suppress output. If a test appears stuck, check the reporter output for the specific step where it is waiting.
@@ -249,9 +282,9 @@ The `markdown` filter in `full_html` can cause HTML escaping issues (rendering `
 # Phase 3 — Group Structure & Membership
 
 > [!IMPORTANT]
-> **Zombie cleanup**: Before starting this phase, kill any leftover processes from previous work:
+> **Zombie cleanup**: Before starting this phase, run the cleanup script:
 > ```bash
-> pkill -f "node.*playwright" 2>/dev/null; pkill -f "chromium --" 2>/dev/null
+> bash ~/Sites/pl-opensocial/scripts/kill-zombies.sh
 > ```
 
 **Goal**: Configure Open Social's `flexible_group` to replicate g.d.o's group types, membership models, archive enforcement, moderation queue, and submission guidelines.
@@ -337,9 +370,9 @@ Hooks implemented:
 # Phase 4 — Content Discovery & Aggregation
 
 > [!IMPORTANT]
-> **Zombie cleanup**: Before starting this phase, kill any leftover processes from previous work:
+> **Zombie cleanup**: Before starting this phase, run the cleanup script:
 > ```bash
-> pkill -f "node.*playwright" 2>/dev/null; pkill -f "chromium --" 2>/dev/null
+> bash ~/Sites/pl-opensocial/scripts/kill-zombies.sh
 > ```
 
 **Goal**: Implement tags, events calendar, iCal feeds, hot content scoring, promoted content, and RSS feeds.
@@ -431,7 +464,7 @@ Starting from a fresh environment:
      \Drupal\taxonomy\Entity\Term::create(["vid" => "group_type", "name" => $name])->save();
    }
    foreach (["User group meeting", "Drupalcamp or Regional Summit", "DrupalCon", "Online meeting (e.g. IRC meeting)", "Training (free or commercial)", "Sprint", "Related event (not Drupal-specific)"] as $name) {
-     \Drupal\taxonomy\Entity\Term::create(["vid" => "event_type", "name" => $name])->save();
+     \Drupal\taxonomy\Entity\Term::create(["vid" => "event_types", "name" => $name])->save();
    }
    '
    ddev drush cr
