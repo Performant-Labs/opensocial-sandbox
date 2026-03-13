@@ -14,7 +14,7 @@ _core:
   default_config_hash: GLFsPNUVtLB18i8WJdYBOUQUrWgvhSRg4MUtCzXUFOc
 id: views_block__group_managers_block_list_managers
 theme: socialblue
-region: content
+region: complementary_bottom
 weight: -15
 provider: null
 plugin: 'views_block:group_managers-block_list_managers'
@@ -39,4 +39,4 @@ visibility:
     id: request_path
     negate: false
     context_mapping: {  }
-    pages: '/group/*/about'
+    pages: '/group/*'

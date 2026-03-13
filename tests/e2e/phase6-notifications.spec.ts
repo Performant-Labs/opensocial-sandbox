@@ -1,7 +1,7 @@
 import { test, expect, Page } from '@playwright/test';
 
 /**
- * Phase 5: Notifications & Subscriptions
+ * Phase 6: Notifications & Subscriptions
  *
  * Tests cover: thread subscription via follow_content flag, per-post opt-out,
  * notification frequency settings, subscription management page (list, disable,
@@ -112,7 +112,7 @@ async function getMailpitMessages(page: Page, toEmail?: string): Promise<any[]> 
     return [];
 }
 
-test.describe('Phase 5: Notifications & Subscriptions', () => {
+test.describe('Phase 6: Notifications & Subscriptions', () => {
 
     test.beforeEach(async ({ page }) => {
         await loginAs(page, 'admin', 'admin');

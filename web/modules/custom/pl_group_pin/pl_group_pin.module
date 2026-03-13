@@ -1,0 +1,105 @@
+<?php
+
+/**
+ * @file
+ * PL Group Pin module.
+ *
+ * Allows group managers to pin content in group streams.
+ * Pinned content appears above chronological entries with a "Pinned" badge.
+ */
+
+use Drupal\node\NodeInterface;
+use Drupal\views\ViewExecutable;
+
+/**
+ * Implements hook_page_attachments().
+ */
+function pl_group_pin_page_attachments(array &$attachments) {
+  $attachments['#attached']['library'][] = 'pl_group_pin/pl_group_pin';
+}
+
+/**
+ * Implements hook_preprocess_node().
+ *
+ * Adds "Pinned" badge to nodes that have the pin_in_group flag.
+ */
+function pl_group_pin_preprocess_node(&$variables) {
+  /** @var \Drupal\node\NodeInterface $node */
+  $node = $variables['node'];
+
+  // Check if this node is flagged with pin_in_group.
+  $flag_service = \Drupal::service('flag');
+  $flag = $flag_service->getFlagById('pin_in_group');
+  if (!$flag) {
+    return;
+  }
+
+  // Check if any user has flagged this node (global pin check).
+  $flag_count = \Drupal::service('flag.count')
+    ->getEntityFlagCounts($node);
+
+  if (!empty($flag_count['pin_in_group']) && $flag_count['pin_in_group'] > 0) {
+    $variables['pinned'] = TRUE;
+    $variables['attributes']['class'][] = 'node--pinned';
+    $variables['content']['pin_badge'] = [
+      '#type' => 'markup',
+      '#markup' => '<span class="pin-badge">Pinned</span>',
+      '#weight' => -100,
+    ];
+  }
+}
+
+/**
+ * Implements hook_views_query_alter().
+ *
+ * Alters group_topics view to sort pinned content above chronological entries.
+ */
+function pl_group_pin_views_query_alter(ViewExecutable $view, $query) {
+  if ($view->id() !== 'group_topics') {
+    return;
+  }
+
+  // The group_topics view base table is group_relationship_field_data.
+  // The node table is joined via a relationship with alias:
+  // "node_field_data_group_relationship_field_data".
+  // We need to find the correct alias for the node table dynamically.
+  $node_table_alias = NULL;
+  foreach ($query->tables as $table_key => $tables) {
+    foreach ($tables as $alias => $info) {
+      if (strpos($alias, 'node_field_data') === 0) {
+        $node_table_alias = $alias;
+        break 2;
+      }
+    }
+  }
+
+  if (!$node_table_alias) {
+    return;
+  }
+
+  // LEFT JOIN the flagging table to detect pinned nodes.
+  $definition = [
+    'table' => 'flagging',
+    'field' => 'entity_id',
+    'left_table' => $node_table_alias,
+    'left_field' => 'nid',
+    'extra' => [
+      [
+        'field' => 'flag_id',
+        'value' => 'pin_in_group',
+      ],
+      [
+        'field' => 'entity_type',
+        'value' => 'node',
+      ],
+    ],
+    'type' => 'LEFT',
+  ];
+
+  $join = \Drupal::service('plugin.manager.views.join')
+    ->createInstance('standard', $definition);
+  $query->addRelationship('pin_flagging', $join, 'flagging');
+
+  // Add a sort: pinned items first, then by existing sort (chronological).
+  $query->addOrderBy(NULL, 'CASE WHEN pin_flagging.id IS NOT NULL THEN 1 ELSE 0 END', 'DESC', 'is_pinned');
+}

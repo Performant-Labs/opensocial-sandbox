@@ -1,7 +1,7 @@
 import { test, expect, Page } from '@playwright/test';
 
 /**
- * Phase 3: Taxonomy, Discovery & Feeds
+ * Phase 4: Taxonomy, Discovery & Feeds
  *
  * Tests cover sitewide tags, events calendar, iCal feeds,
  * hot content page, promoted content, and per-group RSS feeds.
@@ -223,7 +223,7 @@ async function createEvent(page: Page, groupId: string, title: string, eventType
 }
 
 
-test.describe('Phase 3: Taxonomy, Discovery & Feeds', () => {
+test.describe('Phase 4: Taxonomy, Discovery & Feeds', () => {
 
     test.beforeEach(async ({ page }) => {
         await loginAs(page, 'admin', 'admin');

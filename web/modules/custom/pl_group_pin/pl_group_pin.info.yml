@@ -1,0 +1,9 @@
+name: PL Group Pin
+type: module
+description: 'Content pinning within groups. Allows group managers to pin topics above the chronological stream.'
+core_version_requirement: ^10
+package: Custom
+dependencies:
+  - flag:flag
+  - group:group
+  - drupal:node

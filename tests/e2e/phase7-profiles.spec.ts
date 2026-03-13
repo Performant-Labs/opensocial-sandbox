@@ -1,7 +1,7 @@
 import { test, expect, Page } from '@playwright/test';
 
 /**
- * Phase 6: User Profiles & History Stats
+ * Phase 7: User Profiles & History Stats
  *
  * Tests cover: profile page rendering, profile field display, profile editing,
  * contribution stats block, profile completeness block, and image upload.
@@ -18,7 +18,7 @@ async function loginAs(page: Page, username: string, password: string) {
     await expect(page.locator('#search-input, .profile-name, .avatar').first()).toBeVisible();
 }
 
-test.describe('Phase 6: User Profiles & History Stats', () => {
+test.describe('Phase 7: User Profiles & History Stats', () => {
 
     test.beforeEach(async ({ page }) => {
         await loginAs(page, 'admin', 'admin');

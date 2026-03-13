@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { Buffer } from 'node:buffer';
 
-test.describe('Phase 1: Content Types & Text Formats', () => {
+test.describe('Phase 2: Content Types & Text Formats', () => {
 
     test.beforeEach(async ({ page }) => {
         await page.goto('/user/login');

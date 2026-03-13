@@ -272,7 +272,7 @@ The `markdown` filter in `full_html` can cause HTML escaping issues (rendering `
 > **Open Social 13 Selector Updates**:
 > All test selectors in `phase1-content-types.spec.ts` MUST be scoped to `main` (e.g., `page.locator('main h1')`, `page.locator('main button:has-text("Enroll")')`) to avoid matching hidden admin toolbar elements. Without `main` scoping, selectors like `a[href$="/edit"]` will match toolbar links (e.g., "Edit profile") instead of page content.
 
-**Step 230** — Run (from the `tests/` directory): `npx playwright test e2e/phase1-content-types.spec.ts --reporter=list`
+**Step 230** — Run (from the `tests/` directory): `npx playwright test e2e/phase2-content-types.spec.ts --reporter=list`
 
 ---
 
@@ -360,7 +360,7 @@ Hooks implemented:
 
 ## Phase 3 Tests
 
-**Step 370** — Run (from the `tests/` directory): `./node_modules/.bin/playwright test e2e/phase2-groups.spec.ts --reporter=list`
+**Step 370** — Run (from the `tests/` directory): `./node_modules/.bin/playwright test e2e/phase3-groups.spec.ts --reporter=list`
 - 13 tests: group creation, directory filtering, archiving, moderation queue, guidelines.
 
 ---
@@ -437,7 +437,7 @@ Hooks:
 
 ## Phase 4 Tests
 
-**Step 630** — Run (from the `tests/` directory): `./node_modules/.bin/playwright test e2e/phase3-discovery.spec.ts --reporter=list`
+**Step 630** — Run (from the `tests/` directory): `./node_modules/.bin/playwright test e2e/phase4-discovery.spec.ts --reporter=list`
 - 14 tests: tags, events calendar/iCal, hot content, promoted content, group RSS.
 
 > [!NOTE]
@@ -472,7 +472,7 @@ Starting from a fresh environment:
    '
    ddev drush cr
    ```
-6. **Verification**: Follow Step 230 to run Phase 1 tests.
+6. **Verification**: Follow Step 230 to run Phase 2 tests.
 
 ---
 
@@ -583,10 +583,10 @@ ddev drush cr
 > [!IMPORTANT]
 > **Test Setup**: Copy updated tests to the rework directory:
 > ```bash
-> cp ~/Sites/pl-opensocial/tests/e2e/phase4-multigroup.spec.ts ~/Sites/pl-opensocial-rework/tests/e2e/
+> cp ~/Sites/pl-opensocial/tests/e2e/phase5-multigroup.spec.ts ~/Sites/pl-opensocial-rework/tests/e2e/
 > ```
 
-**Step 760** — Run (from the `tests/` directory): `./node_modules/.bin/playwright test e2e/phase4-multigroup.spec.ts --reporter=list`
+**Step 760** — Run (from the `tests/` directory): `./node_modules/.bin/playwright test e2e/phase5-multigroup.spec.ts --reporter=list`
 - 7 tests: group audience fieldset, cross-posting, duplicates, cross-post badge, "Posted in" display, non-member exclusion, event cross-posting.
 - **All 7 tests pass** (executed 2026-03-13, ~1.1 minutes total).
 
@@ -655,10 +655,10 @@ Features:
 > [!IMPORTANT]
 > **Test Setup**: Copy tests to the rework directory:
 > ```bash
-> cp ~/Sites/pl-opensocial/tests/e2e/phase5-notifications.spec.ts ~/Sites/pl-opensocial-rework/tests/e2e/
+> cp ~/Sites/pl-opensocial/tests/e2e/phase6-notifications.spec.ts ~/Sites/pl-opensocial-rework/tests/e2e/
 > ```
 
-**Step 850** — Run (from `tests/`): `./node_modules/.bin/playwright test e2e/phase5-notifications.spec.ts --reporter=list`
+**Step 850** — Run (from `tests/`): `./node_modules/.bin/playwright test e2e/phase6-notifications.spec.ts --reporter=list`
 - 8 tests: follow content flag, opt-out checkbox, opt-out post, management page, disable-all toggle, follow-shows-in-settings, cancel-all, on-site notifications.
 - **All 8 tests pass** (executed 2026-03-13, ~35 seconds total).
 
@@ -741,7 +741,7 @@ $profile->save();
 
 ## Phase 7 Tests
 
-**Step 950** — Run (from `tests/`): `./node_modules/.bin/playwright test e2e/phase6-profiles.spec.ts --reporter=list`
+**Step 950** — Run (from `tests/`): `./node_modules/.bin/playwright test e2e/phase7-profiles.spec.ts --reporter=list`
 - 8 tests: profile page, field display, profile edit, stats block, completeness block, numeric stats, missing fields, multi-user profiles.
 - **All 8 tests pass** (executed 2026-03-13, ~31 seconds total).
 
@@ -750,3 +750,211 @@ $profile->save();
 
 > [!CAUTION]
 > **Errata (original instructions)**: Step 925 originally used `$block_storage->create(...)->save()` without checking if the block already existed. On re-run this throws `'block' entity with ID already exists`. Fixed by adding `$block_storage->load()` guard. Step ordering was also corrected: module copy/enable (915/920) must come before profile population (930). Test copy step was missing.
+
+---
+
+# Phase 8 — Content Moderation & Group Admin
+
+**Goal**: Add content pinning, homepage promotion, group-level language, organizer sidebar, and mission statement block.
+
+## Custom Modules
+
+**Step 1010** — Copy modules to `web/modules/custom/`:
+```bash
+# pl_group_pin — Flag-based content pinning with Views sort + badge
+cp -r ~/Sites/pl-opensocial/web/modules/custom/pl_group_pin web/modules/custom/
+
+# pl_group_language — Language negotiation from group field
+cp -r ~/Sites/pl-opensocial/web/modules/custom/pl_group_language web/modules/custom/
+
+# pl_group_mission — Mission statement sidebar block
+cp -r ~/Sites/pl-opensocial/web/modules/custom/pl_group_mission web/modules/custom/
+
+# pl_group_extras — Homepage promotion view config
+cp -r ~/Sites/pl-opensocial/web/modules/custom/pl_group_extras web/modules/custom/
+```
+
+Contents:
+- `pl_group_pin`: `hook_views_query_alter` (LEFT JOIN for pin sort), `hook_preprocess_node` (adds "Pinned" badge), CSS
+- `pl_group_language`: `LanguageNegotiationGroup` plugin — parses group ID from URL path (not route params, since language negotiation runs before routing)
+- `pl_group_mission`: `GroupMissionBlock` plugin — renders `field_group_description` in sidebar
+- `pl_group_extras`: Views config for homepage promoted content
+
+> [!IMPORTANT]
+> **Language negotiation timing**: Drupal resolves language **before** route matching. The `LanguageNegotiationGroup` plugin uses `$request->getPathInfo()` with regex `#^/group/(\d+)#` — NOT `\Drupal::routeMatch()->getParameter('group')` which is always NULL at negotiation time.
+
+**Step 1020** — Enable modules:
+```bash
+ddev drush en pl_group_pin pl_group_language pl_group_mission pl_group_extras -y
+```
+
+## Flag Configuration
+
+**Step 1030** — Create "Pin in group" and "Promote to homepage" flags (idempotent):
+```bash
+ddev drush php:eval '
+$flag_storage = \Drupal::entityTypeManager()->getStorage("flag");
+
+if (!$flag_storage->load("pin_in_group")) {
+  $flag_storage->create([
+    "id" => "pin_in_group",
+    "label" => "Pin in group",
+    "entity_type" => "node",
+    "flag_type" => "entity:node",
+    "link_type" => "reload",
+    "flagTypeConfig" => [],
+    "linkTypeConfig" => [],
+    "flag_short" => "Pin in group",
+    "unflag_short" => "Unpin",
+    "global" => TRUE,
+  ])->save();
+  echo "Created pin_in_group flag\n";
+} else {
+  echo "pin_in_group flag already exists\n";
+}
+
+if (!$flag_storage->load("promote_homepage")) {
+  $flag_storage->create([
+    "id" => "promote_homepage",
+    "label" => "Promote to homepage",
+    "entity_type" => "node",
+    "flag_type" => "entity:node",
+    "link_type" => "reload",
+    "flagTypeConfig" => [],
+    "linkTypeConfig" => [],
+    "flag_short" => "Promote to homepage",
+    "unflag_short" => "Remove from homepage",
+    "global" => TRUE,
+  ])->save();
+  echo "Created promote_homepage flag\n";
+} else {
+  echo "promote_homepage flag already exists\n";
+}
+'
+```
+
+## Language Setup
+
+**Step 1040** — Add 12 languages:
+```bash
+ddev drush php:eval '
+$langs = ["ca","zh-hans","da","nl","fr","de","nb","pt-br","ru","es","sv","tr"];
+$storage = \Drupal::entityTypeManager()->getStorage("configurable_language");
+foreach ($langs as $langcode) {
+  if (!$storage->load($langcode)) {
+    $storage->create(["id" => $langcode])->save();
+    echo "Added: $langcode\n";
+  } else {
+    echo "Exists: $langcode\n";
+  }
+}
+'
+```
+
+**Step 1050** — Download translations:
+```bash
+ddev drush locale:check
+ddev drush locale:update
+```
+> [!NOTE]
+> This downloads ~139k translation strings across 12 languages. French alone has ~14,400 strings. Takes 1-2 minutes.
+
+**Step 1060** — Enable group language negotiation:
+```bash
+ddev drush php:eval '
+$config = \Drupal::configFactory()->getEditable("language.types");
+$config->set("negotiation.language_interface.enabled", [
+  "language-user" => -10,
+  "language-group" => -5,
+  "language-url" => -4,
+  "language-selected" => 0,
+]);
+$config->set("negotiation.language_interface.method_weights", [
+  "language-user" => -10,
+  "language-group" => -5,
+  "language-url" => -4,
+  "language-selected" => 0,
+]);
+$config->save();
+echo "Language negotiation configured\n";
+'
+```
+
+## Group Language Field
+
+**Step 1070** — Add `field_group_language` to `flexible_group` (idempotent):
+```bash
+ddev drush php:eval '
+$field_storage = \Drupal::entityTypeManager()->getStorage("field_storage_config")->load("group.field_group_language");
+if (!$field_storage) {
+  \Drupal\field\Entity\FieldStorageConfig::create([
+    "field_name" => "field_group_language",
+    "entity_type" => "group",
+    "type" => "language",
+    "cardinality" => 1,
+  ])->save();
+  echo "Created field storage\n";
+}
+
+$field = \Drupal::entityTypeManager()->getStorage("field_config")->load("group.flexible_group.field_group_language");
+if (!$field) {
+  \Drupal\field\Entity\FieldConfig::create([
+    "field_name" => "field_group_language",
+    "entity_type" => "group",
+    "bundle" => "flexible_group",
+    "label" => "Group Language",
+    "required" => FALSE,
+    "settings" => ["language_override" => "und"],
+  ])->save();
+  echo "Created field instance\n";
+}
+
+// Add to form display.
+$form_display = \Drupal::entityTypeManager()->getStorage("entity_form_display")->load("group.flexible_group.default");
+if ($form_display && !$form_display->getComponent("field_group_language")) {
+  $form_display->setComponent("field_group_language", [
+    "type" => "language_select",
+    "weight" => 20,
+    "region" => "content",
+  ])->save();
+  echo "Added to form display\n";
+}
+'
+```
+
+## Mission Block Placement
+
+**Step 1080** — Place group mission block in sidebar (idempotent):
+```bash
+ddev drush php:eval '
+$block_storage = \Drupal::entityTypeManager()->getStorage("block");
+if (!$block_storage->load("pl_group_mission")) {
+  $block_storage->create([
+    "id" => "pl_group_mission",
+    "plugin" => "pl_group_mission",
+    "region" => "complementary_bottom",
+    "theme" => "socialblue",
+    "weight" => 10,
+    "settings" => ["id" => "pl_group_mission", "label" => "About this group", "label_display" => "visible", "provider" => "pl_group_mission"],
+    "visibility" => ["request_path" => ["id" => "request_path", "pages" => "/group/*", "negate" => FALSE]],
+  ])->save();
+  echo "Mission block placed\n";
+} else {
+  echo "Mission block already exists\n";
+}
+'
+```
+
+**Step 1090** — Clear caches: `ddev drush cr`
+
+## Phase 8 Tests
+
+**Step 1100** — Run (from `tests/`): `./node_modules/.bin/playwright test e2e/phase8-moderation.spec.ts --reporter=list`
+- 9 tests: pin/unpin/badge, member cannot pin, homepage promote, organizer sidebar, group language (French), user language override, mission statement.
+- **All 9 tests pass** (executed 2026-03-13, ~1.8 minutes total).
+
+> [!NOTE]
+> **Drush-based test setup**: Phase 8 tests use `execSync('ddev drush php:eval ...')` for all entity creation (groups, topics, users, flags). Playwright only handles login, navigation, and GUI assertions. This avoids CKEditor and hidden form field issues.
+
+> [!IMPORTANT]
+> **PIN SQL join fix**: The `pl_group_pin` module's `hook_views_query_alter` must dynamically look up the correct node table alias for the `group_topics` view. The alias is `node_field_data_group_relationship_field_data` (not the default `node_field_data`). Using a hardcoded alias causes a SQL error.

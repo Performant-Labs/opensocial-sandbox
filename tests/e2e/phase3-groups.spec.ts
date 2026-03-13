@@ -1,7 +1,7 @@
 import { test, expect, Page } from '@playwright/test';
 
 /**
- * Phase 2: Group Structure & Membership Models
+ * Phase 3: Group Structure & Membership Models
  *
  * Tests cover group types, membership models, group directory,
  * archive enforcement, moderation queue, and submission guidelines.
@@ -128,7 +128,7 @@ async function ensureUserExists(page: Page, username: string, password: string) 
     await page.waitForTimeout(1000);
 }
 
-test.describe('Phase 2: Group Structure & Membership Models', () => {
+test.describe('Phase 3: Group Structure & Membership Models', () => {
 
     test.beforeEach(async ({ page }) => {
         // Login as admin

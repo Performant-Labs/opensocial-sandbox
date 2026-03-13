@@ -1,7 +1,7 @@
 import { test, expect, Page } from '@playwright/test';
 
 /**
- * Phase 4: Multi-Group Posting
+ * Phase 5: Multi-Group Posting
  *
  * Tests cover the Group Audience fieldset, cross-posting to multiple groups,
  * duplicate prevention, "Posted in" and "Cross-posted from" display labels,
@@ -121,7 +121,7 @@ function extractGroupId(url: string): string | null {
     return match ? match[1] : null;
 }
 
-test.describe('Phase 4: Multi-Group Posting', () => {
+test.describe('Phase 5: Multi-Group Posting', () => {
 
     test.beforeEach(async ({ page }) => {
         await loginAs(page, 'admin', 'admin');
