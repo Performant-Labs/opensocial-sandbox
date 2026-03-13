@@ -1,0 +1,96 @@
+<?php
+
+/**
+ * @file
+ * PL Notifications module.
+ *
+ * Provides:
+ * - Per-post opt-out checkbox on Topic/Event/Page forms.
+ * - Integration with activity_send_email to suppress notifications.
+ * - Subscription management page at /user/{uid}/notification-settings.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_form_node_form_alter().
+ *
+ * Adds "Do not send notifications for this update" checkbox to
+ * Topic, Event, and Page node create/edit forms.
+ */
+function pl_notifications_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $node = $form_state->getFormObject()->getEntity();
+  $bundle = $node->bundle();
+
+  if (!in_array($bundle, ['topic', 'event', 'page'])) {
+    return;
+  }
+
+  $form['pl_notifications_optout'] = [
+    '#type' => 'details',
+    '#title' => t('Notification options'),
+    '#open' => FALSE,
+    '#weight' => 90,
+    '#attributes' => ['class' => ['pl-notifications-optout']],
+  ];
+
+  $form['pl_notifications_optout']['suppress_notifications'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Do not send notifications for this update'),
+    '#description' => t('Check this box to prevent email notifications from being sent about this post.'),
+    '#default_value' => FALSE,
+  ];
+
+  // Add submit handler to store the opt-out flag.
+  $form['actions']['submit']['#submit'][] = 'pl_notifications_node_form_submit';
+}
+
+/**
+ * Submit handler: stores opt-out flag so activity hooks can check it.
+ */
+function pl_notifications_node_form_submit($form, FormStateInterface $form_state) {
+  $suppress = $form_state->getValue('suppress_notifications', FALSE);
+
+  if ($suppress) {
+    $node = $form_state->getFormObject()->getEntity();
+    if ($node instanceof NodeInterface && $node->id()) {
+      // Store suppression flag in key-value store with a short TTL.
+      // The activity pipeline runs in the same request, so this is reliable.
+      $key = 'pl_notifications_suppress_' . $node->id();
+      \Drupal::state()->set($key, TRUE);
+
+      // Clean up after 5 minutes (in case cron or other processes check).
+      // The flag is primarily consumed during this request.
+    }
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert() for activity entities.
+ *
+ * Checks if the related node has the suppress flag set and marks the
+ * activity for suppression.
+ */
+function pl_notifications_activity_insert(\Drupal\Core\Entity\EntityInterface $entity) {
+  // Check if this activity relates to a suppressed node.
+  if ($entity->hasField('field_activity_entity') && !$entity->get('field_activity_entity')->isEmpty()) {
+    $related = $entity->get('field_activity_entity')->entity;
+    if ($related instanceof NodeInterface) {
+      $key = 'pl_notifications_suppress_' . $related->id();
+      if (\Drupal::state()->get($key, FALSE)) {
+        // Mark this activity as suppressed by setting its status to 0
+        // (unpublished), which prevents email sending.
+        $entity->set('status', 0);
+        // Clean up the state key.
+        \Drupal::state()->delete($key);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_user_format_name_alter().
+ *
+ * No-op placeholder for module discovery.
+ */

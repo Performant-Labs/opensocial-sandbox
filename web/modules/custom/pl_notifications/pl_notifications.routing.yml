@@ -1,0 +1,25 @@
+pl_notifications.notification_settings:
+  path: '/user/{user}/notification-settings'
+  defaults:
+    _controller: '\Drupal\pl_notifications\Controller\NotificationSettingsController::page'
+    _title: 'Notification Settings'
+  requirements:
+    _permission: 'access content'
+    user: \d+
+  options:
+    parameters:
+      user:
+        type: entity:user
+
+pl_notifications.cancel_all:
+  path: '/user/{user}/notification-settings/cancel-all'
+  defaults:
+    _form: '\Drupal\pl_notifications\Form\CancelAllSubscriptionsForm'
+    _title: 'Cancel All Subscriptions'
+  requirements:
+    _permission: 'access content'
+    user: \d+
+  options:
+    parameters:
+      user:
+        type: entity:user

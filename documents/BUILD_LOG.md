@@ -600,3 +600,69 @@ ddev drush cr
 >
 > **Duplicate count locator**: The "no duplicates" test uses `main h4 a:has-text("title")` to count topic card headings. Using a broader selector like `main a:has-text()` will match "Read more about …" secondary links and fail with a count of 3 instead of 1.
 
+
+# Phase 6 — Notifications & Subscriptions
+
+> [!IMPORTANT]
+> **Zombie cleanup**: Before starting this phase, run the cleanup script:
+> ```bash
+> bash ~/Sites/pl-opensocial/scripts/kill-zombies.sh
+> ```
+
+**Goal**: Enable email subscriptions (group/thread/author/tag), per-post opt-out, configurable frequency (immediate/daily/weekly), and subscription management page. ~80% built into Open Social's existing `activity_send_email` pipeline.
+
+## Enable Sub-Modules
+
+**Step 800** — Enable notification sub-modules:
+```bash
+ddev drush en social_follow_tag social_follow_user message_notify -y
+ddev drush cr
+```
+Also enables `social_follow_taxonomy` (auto-dependency).
+
+**Step 805** — Grant follow permissions:
+```bash
+ddev drush role:perm:add authenticated "flag follow_content,unflag follow_content"
+```
+
+## Custom Module: `pl_notifications`
+
+**Step 810** — Copy module to `web/modules/custom/pl_notifications/`
+```bash
+cp -r ~/Sites/pl-opensocial/web/modules/custom/pl_notifications web/modules/custom/
+```
+Contents: `pl_notifications.info.yml`, `pl_notifications.module`, `pl_notifications.routing.yml`, `pl_notifications.links.task.yml`, `src/Controller/NotificationSettingsController.php`, `src/Form/CancelAllSubscriptionsForm.php`
+
+**Step 820** — Enable: `ddev drush en pl_notifications -y && ddev restart`
+
+Features:
+- `hook_form_node_form_alter()` — Adds "Do not send notifications" checkbox to Topic/Event/Page forms.
+- Submit handler stores suppression flag in State API; `hook_activity_insert()` unpublishes the activity to prevent email dispatch.
+- `/user/{uid}/notification-settings` — Subscription management page listing all followed content/users.
+- Toggle disable/enable all notifications (State API).
+- Cancel all subscriptions (unflag all flaggings) with confirmation form.
+- "Notifications" tab on user profile pages.
+
+> [!CAUTION]
+> **Toggle disable caching**: The page uses `#cache => ['max-age' => 0]` to prevent stale renders. The toggle handler runs at the TOP of `page()` (before building the render array) so the redirect fires cleanly before any content is built.
+
+## Cache Clear
+
+**Step 840** — Clear caches: `ddev drush cr`
+
+## Phase 6 Tests
+
+> [!IMPORTANT]
+> **Test Setup**: Copy tests to the rework directory:
+> ```bash
+> cp ~/Sites/pl-opensocial/tests/e2e/phase5-notifications.spec.ts ~/Sites/pl-opensocial-rework/tests/e2e/
+> ```
+
+**Step 850** — Run (from `tests/`): `./node_modules/.bin/playwright test e2e/phase5-notifications.spec.ts --reporter=list`
+- 8 tests: follow content flag, opt-out checkbox, opt-out post, management page, disable-all toggle, follow-shows-in-settings, cancel-all, on-site notifications.
+- **All 8 tests pass** (executed 2026-03-13, ~35 seconds total).
+
+> [!NOTE]
+> **Existing notification infrastructure**: Open Social includes email frequency plugins (Immediately/Daily/Weekly/None), `ActivityDigestWorker` for digest emails, and `social_advanced_queue` for job tracking. No custom implementation needed for these.
+>
+> **Follow content flag**: The `social_follow_content` module renders follow/unfollow links on nodes. CSS classes vary by theme; tests use broad selectors with fallback.

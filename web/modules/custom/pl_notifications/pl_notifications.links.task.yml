@@ -1,0 +1,5 @@
+pl_notifications.notification_settings:
+  route_name: pl_notifications.notification_settings
+  title: 'Notifications'
+  base_route: entity.user.canonical
+  weight: 10

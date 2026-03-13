@@ -1,0 +1,10 @@
+name: PL Notifications
+type: module
+description: 'Per-post opt-out and subscription management page for Open Social notifications.'
+core_version_requirement: ^10
+package: Custom
+dependencies:
+  - drupal:flag
+  - drupal:node
+  - social:activity_send_email
+  - social:social_follow_content
