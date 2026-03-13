@@ -671,6 +671,55 @@ Features:
 
 **Goal**: Populate user profiles, add contribution stats block and profile completeness indicator to profile pages.
 
+## Custom Module: `pl_profile_stats`
+
+**Step 915** — Copy module to `web/modules/custom/pl_profile_stats/`
+```bash
+cp -r ~/Sites/pl-opensocial/web/modules/custom/pl_profile_stats web/modules/custom/
+```
+
+Contents:
+- `ContributionStatsBlock.php` — Counts topics, events, comments, groups, days active
+- `ProfileCompletenessBlock.php` — Checks 9 key profile fields, shows fill percentage
+- Twig templates + CSS for stats grid and progress bar
+
+**Step 920** — Enable: `ddev drush en pl_profile_stats -y`
+
+**Step 925** — Place blocks in main content area (idempotent — safe to re-run):
+```bash
+ddev drush php:eval '
+$block_storage = \Drupal::entityTypeManager()->getStorage("block");
+if (!$block_storage->load("pl_contribution_stats")) {
+  $block_storage->create([
+    "id" => "pl_contribution_stats",
+    "plugin" => "pl_contribution_stats",
+    "region" => "content",
+    "theme" => "socialblue",
+    "weight" => 50,
+    "settings" => ["id" => "pl_contribution_stats", "label" => "Contribution Stats", "label_display" => "0", "provider" => "pl_profile_stats"],
+    "visibility" => ["request_path" => ["id" => "request_path", "pages" => "/user/*", "negate" => FALSE]],
+  ])->save();
+  echo "Contribution Stats block placed\n";
+} else {
+  echo "Contribution Stats block already exists\n";
+}
+if (!$block_storage->load("pl_profile_completeness")) {
+  $block_storage->create([
+    "id" => "pl_profile_completeness",
+    "plugin" => "pl_profile_completeness",
+    "region" => "content",
+    "theme" => "socialblue",
+    "weight" => 51,
+    "settings" => ["id" => "pl_profile_completeness", "label" => "Profile Completeness", "label_display" => "0", "provider" => "pl_profile_stats"],
+    "visibility" => ["request_path" => ["id" => "request_path", "pages" => "/user/*", "negate" => FALSE]],
+  ])->save();
+  echo "Profile Completeness block placed\n";
+} else {
+  echo "Profile Completeness block already exists\n";
+}
+'
+```
+
 ## Populate Admin Profile
 
 **Step 930** — Set sample profile data for admin (uid 1):
@@ -688,45 +737,6 @@ $profile->save();
 '
 ```
 
-## Custom Module: `pl_profile_stats`
-
-**Step 915** — Copy module to `web/modules/custom/pl_profile_stats/`
-```bash
-cp -r ~/Sites/pl-opensocial/web/modules/custom/pl_profile_stats web/modules/custom/
-```
-
-Contents:
-- `ContributionStatsBlock.php` — Counts topics, events, comments, groups, days active
-- `ProfileCompletenessBlock.php` — Checks 9 key profile fields, shows fill percentage
-- Twig templates + CSS for stats grid and progress bar
-
-**Step 920** — Enable: `ddev drush en pl_profile_stats -y`
-
-**Step 925** — Place blocks in main content area:
-```bash
-ddev drush php:eval '
-$block_storage = \Drupal::entityTypeManager()->getStorage("block");
-$block_storage->create([
-  "id" => "pl_contribution_stats",
-  "plugin" => "pl_contribution_stats",
-  "region" => "content",
-  "theme" => "socialblue",
-  "weight" => 50,
-  "settings" => ["id" => "pl_contribution_stats", "label" => "Contribution Stats", "label_display" => "0", "provider" => "pl_profile_stats"],
-  "visibility" => ["request_path" => ["id" => "request_path", "pages" => "/user/*", "negate" => FALSE]],
-])->save();
-$block_storage->create([
-  "id" => "pl_profile_completeness",
-  "plugin" => "pl_profile_completeness",
-  "region" => "content",
-  "theme" => "socialblue",
-  "weight" => 51,
-  "settings" => ["id" => "pl_profile_completeness", "label" => "Profile Completeness", "label_display" => "0", "provider" => "pl_profile_stats"],
-  "visibility" => ["request_path" => ["id" => "request_path", "pages" => "/user/*", "negate" => FALSE]],
-])->save();
-'
-```
-
 **Step 940** — Clear caches: `ddev drush cr`
 
 ## Phase 7 Tests
@@ -737,3 +747,6 @@ $block_storage->create([
 
 > [!NOTE]
 > **Existing profile fields**: Open Social already defines 17 profile fields (name, image, banner, organization, function, expertise, interests, address, phone, bio, summary). Only contribution stats and completeness computation needed custom code.
+
+> [!CAUTION]
+> **Errata (original instructions)**: Step 925 originally used `$block_storage->create(...)->save()` without checking if the block already existed. On re-run this throws `'block' entity with ID already exists`. Fixed by adding `$block_storage->load()` guard. Step ordering was also corrected: module copy/enable (915/920) must come before profile population (930). Test copy step was missing.
