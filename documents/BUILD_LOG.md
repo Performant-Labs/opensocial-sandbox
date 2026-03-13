@@ -491,3 +491,112 @@ Starting from a fresh environment:
 | `flexible_group-group_node-topic` | `group_node:topic` | Topic nodes in groups |
 | `flexible_group-group_invitation` | `group_invitation` | Group invitations |
 | `group_content_type_7fcb76fdf61a9` | `group_membership_request` | Membership requests |
+
+---
+
+# Phase 5 — Multi-Group Posting
+
+> [!IMPORTANT]
+> **Zombie cleanup**: Before starting this phase, run the cleanup script:
+> ```bash
+> bash ~/Sites/pl-opensocial/scripts/kill-zombies.sh
+> ```
+
+**Goal**: Allow a single Topic or Event to appear in multiple groups simultaneously — the defining feature of g.d.o's posting model. Uses the Group module's native `group_relationship` system rather than a separate entity reference field.
+
+## Pre-Phase Backup
+
+**Step 700** — Pre-Phase backup
+```bash
+mkdir -p backups
+ddev export-db --file=backups/phase5-pre.sql.gz
+```
+
+## Configuration Changes
+
+**Step 710** — Copy and import config files for unlimited group relationships per node:
+
+```bash
+cp ~/Sites/pl-opensocial/config/sync/group.content_type.flexible_group-group_node-topic.yml config/sync/
+cp ~/Sites/pl-opensocial/config/sync/group.content_type.flexible_group-group_node-event.yml config/sync/
+```
+
+Both set `entity_cardinality: 0` (unlimited groups per node), changed from `1`.
+
+- Config: [group.content_type.flexible_group-group_node-topic.yml](file:///Users/andreangelantoni/Sites/pl-opensocial/config/sync/group.content_type.flexible_group-group_node-topic.yml)
+- Config: [group.content_type.flexible_group-group_node-event.yml](file:///Users/andreangelantoni/Sites/pl-opensocial/config/sync/group.content_type.flexible_group-group_node-event.yml)
+
+> [!CAUTION]
+> **Breaking change**: `entity_cardinality: 0` allows unlimited group relationships per node. Any downstream code that assumes a 1:1 node-to-group relationship may need review. The existing `group_topics` and `group_events` Views already have `distinct: true`, so no duplicate entries will appear in group streams.
+
+**Step 720** — Import the updated configs
+```php
+ddev drush php:eval '
+$configs = [
+  "group.content_type.flexible_group-group_node-topic",
+  "group.content_type.flexible_group-group_node-event",
+];
+foreach ($configs as $name) {
+  $yaml = file_get_contents("/var/www/html/config/sync/$name.yml");
+  $data = \Drupal\Component\Serialization\Yaml::decode($yaml);
+  \Drupal::configFactory()->getEditable($name)->setData($data)->save();
+  echo "Imported: $name\n";
+}
+'
+```
+
+## Custom Module: `pl_multigroup`
+
+**Step 730** — Copy module to `web/modules/custom/pl_multigroup/`
+- `cp -r ~/Sites/pl-opensocial/web/modules/custom/pl_multigroup web/modules/custom/`
+- Contents: `pl_multigroup.info.yml`, `pl_multigroup.module`, `pl_multigroup.libraries.yml`, `css/pl_multigroup.css`
+
+**Step 740** — Enable: `ddev drush en pl_multigroup -y`
+
+> [!IMPORTANT]
+> After enabling the module, run `ddev restart` to flush the PHP opcode cache so the web process can find the new classes. A `ddev drush cr` alone may not be sufficient.
+
+Hooks implemented:
+- `hook_form_node_form_alter()` — Adds "Group Audience" collapsible fieldset with checkboxes to Topic and Event create/edit forms. Only shows groups the current user is a member of. Pre-checks groups the node already belongs to.
+- Custom submit handler `pl_multigroup_node_form_submit()` — Runs **after** the node save handler; creates/removes `group_relationship` entries to match the selected group checkboxes.
+- `hook_preprocess_node()` — On **full view**: displays "Posted in: Group A, Group B" with linked group names. On **teasers**: displays "Cross-posted from Group X" badge when viewing from a secondary group.
+- `hook_page_attachments()` — Attaches the CSS library.
+
+> [!CAUTION]
+> **`drupal_static` timing bug (FIXED 2026-03-13)**: The original module used `drupal_static('pl_multigroup_selected_groups')` to pass group selections from the form submit handler to `hook_node_insert()`/`hook_node_update()`. **This does NOT work** because `hook_node_insert` fires during node save, BEFORE the custom submit handler runs. The submit handler is appended via `$form['actions']['submit']['#submit'][]`, so it executes AFTER the default node save handler.
+>
+> **The fix**: Call `_pl_multigroup_sync_group_relationships()` directly in the submit handler (which runs post-save and has access to both the saved node and the form values). The `hook_node_insert`/`hook_node_update` hooks were removed entirely. Programmatic node saves (without the form) will not trigger group audience changes — this is intentional.
+
+## Group Stream Behaviour
+
+**Step 750** — No View modifications needed. The existing `group_topics` and `group_events` Views query `group_relationship_field_data` by `gid` (contextual argument). When a node has multiple `group_relationship` entries (one per group), it automatically appears in each group's stream. The `distinct: true` setting on these Views prevents duplicate entries.
+
+## Cache Clear
+
+**Step 755** — Clear caches after Phase 5 config imports and module enable
+```bash
+ddev drush cr
+```
+
+## Phase 5 Tests
+
+> [!IMPORTANT]
+> **Test Setup**: Copy updated tests to the rework directory:
+> ```bash
+> cp ~/Sites/pl-opensocial/tests/e2e/phase4-multigroup.spec.ts ~/Sites/pl-opensocial-rework/tests/e2e/
+> ```
+
+**Step 760** — Run (from the `tests/` directory): `./node_modules/.bin/playwright test e2e/phase4-multigroup.spec.ts --reporter=list`
+- 7 tests: group audience fieldset, cross-posting, duplicates, cross-post badge, "Posted in" display, non-member exclusion, event cross-posting.
+- **All 7 tests pass** (executed 2026-03-13, ~1.1 minutes total).
+
+> [!NOTE]
+> **Group Audience fieldset**: The fieldset only appears if the current user is a member of at least one group. The test creates groups as admin first, which automatically makes admin a member. Non-member users will not see the fieldset.
+>
+> **Cross-posted badge**: The "Cross-posted from" badge appears on teasers rendered via the `group_topics` or `group_events` Views, which render `group_content` entities in `teaser` mode. If Open Social uses a different view mode for the group stream, the badge may render differently.
+
+> [!CAUTION]
+> **Checkbox label interception**: Open Social's theme renders `<label>` elements that overlay `<input type="checkbox">` in form elements. Playwright's default click fails because the label intercepts pointer events. All checkbox clicks in the multigroup audience fieldset must use `{ force: true }` to bypass the interception check.
+>
+> **Duplicate count locator**: The "no duplicates" test uses `main h4 a:has-text("title")` to count topic card headings. Using a broader selector like `main a:has-text()` will match "Read more about …" secondary links and fail with a count of 3 instead of 1.
+

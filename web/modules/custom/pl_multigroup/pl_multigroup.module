@@ -1,0 +1,282 @@
+<?php
+
+/**
+ * @file
+ * PL Multi-Group Posting module.
+ *
+ * Allows Topics and Events to be posted in multiple groups simultaneously.
+ * Uses the Group module's native group_relationship system — no separate
+ * entity reference field is needed.
+ *
+ * Hooks:
+ * - hook_form_node_form_alter(): Adds "Group Audience" fieldset.
+ * - hook_node_insert() / hook_node_update(): Manages group_relationship entries.
+ * - hook_preprocess_node(): Adds "Posted in" and "Cross-posted from" display.
+ * - hook_page_attachments(): Attaches CSS library.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\group\Entity\GroupInterface;
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_page_attachments().
+ */
+function pl_multigroup_page_attachments(array &$attachments) {
+  $attachments['#attached']['library'][] = 'pl_multigroup/pl_multigroup';
+}
+
+/**
+ * Helper: get all groups the current user is a member of.
+ *
+ * @return array
+ *   Keyed by group ID, value is group label.
+ */
+function _pl_multigroup_user_groups($account = NULL) {
+  if (!$account) {
+    $account = \Drupal::currentUser();
+  }
+
+  $groups = [];
+  $group_membership_service = \Drupal::service('group.membership_loader');
+  $memberships = $group_membership_service->loadByUser($account);
+
+  foreach ($memberships as $membership) {
+    $group = $membership->getGroup();
+    $groups[$group->id()] = $group->label();
+  }
+
+  return $groups;
+}
+
+/**
+ * Helper: get all group IDs a node currently belongs to.
+ *
+ * @param \Drupal\node\NodeInterface $node
+ *   The node entity.
+ *
+ * @return array
+ *   Array of group IDs.
+ */
+function _pl_multigroup_node_groups(NodeInterface $node) {
+  $group_ids = [];
+
+  if ($node->isNew()) {
+    return $group_ids;
+  }
+
+  $group_relationship_storage = \Drupal::entityTypeManager()
+    ->getStorage('group_content');
+
+  $results = $group_relationship_storage->getQuery()
+    ->accessCheck(FALSE)
+    ->condition('entity_id', $node->id())
+    ->condition('type', 'flexible_group-group_node-' . $node->bundle())
+    ->execute();
+
+  if (!empty($results)) {
+    $relationships = $group_relationship_storage->loadMultiple($results);
+    foreach ($relationships as $relationship) {
+      $group_ids[] = $relationship->getGroup()->id();
+    }
+  }
+
+  return $group_ids;
+}
+
+/**
+ * Implements hook_form_node_form_alter().
+ *
+ * Adds a "Group Audience" fieldset with checkboxes for all groups the current
+ * user is a member of. Only applies to Topic and Event forms.
+ */
+function pl_multigroup_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $node = $form_state->getFormObject()->getEntity();
+  $bundle = $node->bundle();
+
+  // Only alter Topic and Event forms.
+  if (!in_array($bundle, ['topic', 'event'])) {
+    return;
+  }
+
+  $user_groups = _pl_multigroup_user_groups();
+
+  // No groups = no fieldset.
+  if (empty($user_groups)) {
+    return;
+  }
+
+  // Get the current group context (if creating content within a group).
+  $route_match = \Drupal::routeMatch();
+  $current_group = $route_match->getParameter('group');
+  $current_group_id = ($current_group instanceof GroupInterface) ? $current_group->id() : NULL;
+
+  // Get groups this node already belongs to.
+  $existing_group_ids = _pl_multigroup_node_groups($node);
+
+  // Build default values: existing groups + current group context.
+  $defaults = $existing_group_ids;
+  if ($current_group_id && !in_array($current_group_id, $defaults)) {
+    $defaults[] = $current_group_id;
+  }
+
+  $form['pl_multigroup_audience'] = [
+    '#type' => 'details',
+    '#title' => t('Show this post in these groups'),
+    '#description' => t('Select all groups where this post should appear.'),
+    '#open' => TRUE,
+    '#weight' => 50,
+    '#attributes' => ['class' => ['pl-multigroup-audience-fieldset']],
+  ];
+
+  $form['pl_multigroup_audience']['group_audience'] = [
+    '#type' => 'checkboxes',
+    '#options' => $user_groups,
+    '#default_value' => $defaults,
+  ];
+
+  // Add a submit handler to process the group audience selections.
+  $form['actions']['submit']['#submit'][] = 'pl_multigroup_node_form_submit';
+}
+
+/**
+ * Submit handler: syncs group_relationship entries directly.
+ *
+ * This runs AFTER the node has been saved (and after the Group module has
+ * created the initial group relationship), so the node already has an ID
+ * and we can safely add/remove group relationships.
+ */
+function pl_multigroup_node_form_submit($form, FormStateInterface $form_state) {
+  $selected = array_filter($form_state->getValue('group_audience', []));
+  $selected_ids = array_values($selected);
+
+  $node = $form_state->getFormObject()->getEntity();
+  if (!$node instanceof NodeInterface) {
+    return;
+  }
+
+  $bundle = $node->bundle();
+  if (!in_array($bundle, ['topic', 'event'])) {
+    return;
+  }
+
+  _pl_multigroup_sync_group_relationships($node, $selected_ids);
+}
+
+/**
+ * Helper: sync group_relationship entries for a node.
+ *
+ * Adds relationships for newly-selected groups, removes for unchecked groups.
+ *
+ * @param \Drupal\node\NodeInterface $node
+ * @param array $selected_group_ids
+ */
+function _pl_multigroup_sync_group_relationships(NodeInterface $node, array $selected_group_ids) {
+  $bundle = $node->bundle();
+  $plugin_id = 'group_node:' . $bundle;
+  $relationship_type_id = 'flexible_group-group_node-' . $bundle;
+
+  $group_relationship_storage = \Drupal::entityTypeManager()
+    ->getStorage('group_content');
+
+  // Get existing relationships.
+  $existing_results = $group_relationship_storage->getQuery()
+    ->accessCheck(FALSE)
+    ->condition('entity_id', $node->id())
+    ->condition('type', $relationship_type_id)
+    ->execute();
+
+  $existing_group_ids = [];
+  $existing_relationships = [];
+  if (!empty($existing_results)) {
+    $relationships = $group_relationship_storage->loadMultiple($existing_results);
+    foreach ($relationships as $id => $relationship) {
+      $gid = $relationship->getGroup()->id();
+      $existing_group_ids[] = $gid;
+      $existing_relationships[$gid] = $relationship;
+    }
+  }
+
+  // Add new relationships (groups that are selected but don't have a relationship yet).
+  $to_add = array_diff($selected_group_ids, $existing_group_ids);
+  foreach ($to_add as $gid) {
+    $group = \Drupal::entityTypeManager()->getStorage('group')->load($gid);
+    if ($group instanceof GroupInterface) {
+      $group->addRelationship($node, $plugin_id);
+    }
+  }
+
+  // Remove unselected relationships.
+  $to_remove = array_diff($existing_group_ids, $selected_group_ids);
+  foreach ($to_remove as $gid) {
+    if (isset($existing_relationships[$gid])) {
+      $existing_relationships[$gid]->delete();
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_node().
+ *
+ * Adds "Posted in: Group A, Group B" on full view and
+ * "Cross-posted from Group X" on teasers when viewing from a different group.
+ */
+function pl_multigroup_preprocess_node(&$variables) {
+  /** @var \Drupal\node\NodeInterface $node */
+  $node = $variables['node'];
+  $bundle = $node->bundle();
+
+  if (!in_array($bundle, ['topic', 'event'])) {
+    return;
+  }
+
+  $group_ids = _pl_multigroup_node_groups($node);
+
+  if (count($group_ids) <= 1) {
+    // Single-group or no-group post — nothing to do.
+    return;
+  }
+
+  // Load all groups.
+  $groups = \Drupal::entityTypeManager()->getStorage('group')
+    ->loadMultiple($group_ids);
+
+  $view_mode = $variables['view_mode'];
+
+  if ($view_mode === 'full') {
+    // Full view: "Posted in: Group A, Group B"
+    $links = [];
+    foreach ($groups as $group) {
+      $url = $group->toUrl()->toString();
+      $links[] = '<a href="' . $url . '">' . htmlspecialchars($group->label()) . '</a>';
+    }
+    $variables['content']['pl_multigroup_posted_in'] = [
+      '#type' => 'markup',
+      '#markup' => '<div class="pl-multigroup-posted-in"><span class="label">Posted in: </span>' . implode(', ', $links) . '</div>',
+      '#weight' => -90,
+    ];
+  }
+  elseif (in_array($view_mode, ['teaser', 'activity', 'activity_comment'])) {
+    // Teaser view: Detect if we're viewing from a non-originating group.
+    $route_match = \Drupal::routeMatch();
+    $current_group = $route_match->getParameter('group');
+    if ($current_group instanceof GroupInterface) {
+      $current_gid = $current_group->id();
+      // Find the "primary" group (first relationship, i.e., the original).
+      $primary_gid = reset($group_ids);
+
+      if ($current_gid != $primary_gid && in_array($current_gid, $group_ids)) {
+        // We're viewing from a secondary group — show cross-post badge.
+        $primary_group = $groups[$primary_gid] ?? NULL;
+        if ($primary_group) {
+          $url = $primary_group->toUrl()->toString();
+          $variables['content']['pl_multigroup_crosspost'] = [
+            '#type' => 'markup',
+            '#markup' => '<span class="pl-multigroup-crosspost-badge">Cross-posted from <a href="' . $url . '">' . htmlspecialchars($primary_group->label()) . '</a></span>',
+            '#weight' => -90,
+          ];
+        }
+      }
+    }
+  }
+}

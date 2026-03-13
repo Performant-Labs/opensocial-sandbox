@@ -1,0 +1,9 @@
+name: 'PL Multi-Group Posting'
+type: module
+description: 'Allows Topics and Events to be posted in multiple groups simultaneously.'
+core_version_requirement: ^10
+package: 'PL Custom'
+dependencies:
+  - drupal:node
+  - gnode:gnode
+  - group:group

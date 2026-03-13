@@ -16,5 +16,5 @@ group_type: flexible_group
 content_plugin: 'group_node:event'
 plugin_config:
   group_cardinality: 1
-  entity_cardinality: 1
+  entity_cardinality: 0
   use_creation_wizard: false

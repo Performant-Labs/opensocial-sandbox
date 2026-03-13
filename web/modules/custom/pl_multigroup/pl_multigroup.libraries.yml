@@ -1,0 +1,5 @@
+pl_multigroup:
+  version: 1.x
+  css:
+    theme:
+      css/pl_multigroup.css: {}

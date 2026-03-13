@@ -1,0 +1,54 @@
+/* PL Multi-Group Posting styles */
+
+.pl-multigroup-posted-in {
+  margin: 0.75em 0;
+  font-size: 0.9em;
+  color: #666;
+}
+
+.pl-multigroup-posted-in .label {
+  font-weight: 600;
+  color: #333;
+}
+
+.pl-multigroup-posted-in a {
+  color: #2196F3;
+  text-decoration: none;
+}
+
+.pl-multigroup-posted-in a:hover {
+  text-decoration: underline;
+}
+
+.pl-multigroup-crosspost-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  margin: 4px 0;
+  font-size: 0.8em;
+  border-radius: 3px;
+  background: #e3f2fd;
+  color: #1565c0;
+  border: 1px solid #bbdefb;
+}
+
+.pl-multigroup-crosspost-badge a {
+  color: #1565c0;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.pl-multigroup-crosspost-badge a:hover {
+  text-decoration: underline;
+}
+
+.pl-multigroup-audience-fieldset {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px 15px;
+  margin: 10px 0;
+}
+
+.pl-multigroup-audience-fieldset summary {
+  font-weight: 600;
+  cursor: pointer;
+}
