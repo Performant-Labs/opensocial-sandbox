@@ -1,0 +1,5 @@
+pl_profile_stats:
+  version: 1.x
+  css:
+    theme:
+      css/pl_profile_stats.css: {}

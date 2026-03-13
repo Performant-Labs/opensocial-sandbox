@@ -666,3 +666,74 @@ Features:
 > **Existing notification infrastructure**: Open Social includes email frequency plugins (Immediately/Daily/Weekly/None), `ActivityDigestWorker` for digest emails, and `social_advanced_queue` for job tracking. No custom implementation needed for these.
 >
 > **Follow content flag**: The `social_follow_content` module renders follow/unfollow links on nodes. CSS classes vary by theme; tests use broad selectors with fallback.
+
+# Phase 7 — User Profiles & History Stats
+
+**Goal**: Populate user profiles, add contribution stats block and profile completeness indicator to profile pages.
+
+## Populate Admin Profile
+
+**Step 930** — Set sample profile data for admin (uid 1):
+```bash
+ddev drush php:eval '
+$profiles = \Drupal::entityTypeManager()->getStorage("profile")->loadByProperties(["uid" => 1, "type" => "profile"]);
+$profile = reset($profiles);
+$profile->set("field_profile_first_name", "Site");
+$profile->set("field_profile_last_name", "Administrator");
+$profile->set("field_profile_organization", "Open Social Foundation");
+$profile->set("field_profile_function", "Platform Admin");
+$profile->set("field_profile_self_introduction", ["value" => "Managing the Open Social platform.", "format" => "basic_html"]);
+$profile->set("field_profile_summary", "Platform administrator with full access");
+$profile->save();
+'
+```
+
+## Custom Module: `pl_profile_stats`
+
+**Step 915** — Copy module to `web/modules/custom/pl_profile_stats/`
+```bash
+cp -r ~/Sites/pl-opensocial/web/modules/custom/pl_profile_stats web/modules/custom/
+```
+
+Contents:
+- `ContributionStatsBlock.php` — Counts topics, events, comments, groups, days active
+- `ProfileCompletenessBlock.php` — Checks 9 key profile fields, shows fill percentage
+- Twig templates + CSS for stats grid and progress bar
+
+**Step 920** — Enable: `ddev drush en pl_profile_stats -y`
+
+**Step 925** — Place blocks in main content area:
+```bash
+ddev drush php:eval '
+$block_storage = \Drupal::entityTypeManager()->getStorage("block");
+$block_storage->create([
+  "id" => "pl_contribution_stats",
+  "plugin" => "pl_contribution_stats",
+  "region" => "content",
+  "theme" => "socialblue",
+  "weight" => 50,
+  "settings" => ["id" => "pl_contribution_stats", "label" => "Contribution Stats", "label_display" => "0", "provider" => "pl_profile_stats"],
+  "visibility" => ["request_path" => ["id" => "request_path", "pages" => "/user/*", "negate" => FALSE]],
+])->save();
+$block_storage->create([
+  "id" => "pl_profile_completeness",
+  "plugin" => "pl_profile_completeness",
+  "region" => "content",
+  "theme" => "socialblue",
+  "weight" => 51,
+  "settings" => ["id" => "pl_profile_completeness", "label" => "Profile Completeness", "label_display" => "0", "provider" => "pl_profile_stats"],
+  "visibility" => ["request_path" => ["id" => "request_path", "pages" => "/user/*", "negate" => FALSE]],
+])->save();
+'
+```
+
+**Step 940** — Clear caches: `ddev drush cr`
+
+## Phase 7 Tests
+
+**Step 950** — Run (from `tests/`): `./node_modules/.bin/playwright test e2e/phase6-profiles.spec.ts --reporter=list`
+- 8 tests: profile page, field display, profile edit, stats block, completeness block, numeric stats, missing fields, multi-user profiles.
+- **All 8 tests pass** (executed 2026-03-13, ~31 seconds total).
+
+> [!NOTE]
+> **Existing profile fields**: Open Social already defines 17 profile fields (name, image, banner, organization, function, expertise, interests, address, phone, bio, summary). Only contribution stats and completeness computation needed custom code.

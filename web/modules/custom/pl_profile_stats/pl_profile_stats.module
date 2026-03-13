@@ -1,0 +1,41 @@
+<?php
+
+/**
+ * @file
+ * PL Profile Stats module.
+ *
+ * Provides contribution stats and profile completeness blocks.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function pl_profile_stats_theme() {
+  return [
+    'pl_contribution_stats' => [
+      'variables' => [
+        'stats' => [],
+        'user' => NULL,
+      ],
+    ],
+    'pl_profile_completeness' => [
+      'variables' => [
+        'percentage' => 0,
+        'filled' => 0,
+        'total' => 0,
+        'missing' => [],
+        'user' => NULL,
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_page_attachments().
+ */
+function pl_profile_stats_page_attachments(array &$attachments) {
+  $route = \Drupal::routeMatch()->getRouteName();
+  if ($route === 'entity.user.canonical') {
+    $attachments['#attached']['library'][] = 'pl_profile_stats/pl_profile_stats';
+  }
+}

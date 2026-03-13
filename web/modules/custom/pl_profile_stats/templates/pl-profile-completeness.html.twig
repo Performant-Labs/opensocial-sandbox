@@ -1,0 +1,19 @@
+<div class="pl-profile-completeness" id="pl-profile-completeness">
+  <h3>{{ 'Profile Completeness'|t }}</h3>
+  <div class="completeness-bar">
+    <div class="completeness-fill" style="width: {{ percentage }}%;" data-percentage="{{ percentage }}"></div>
+  </div>
+  <p class="completeness-text">
+    {{ percentage }}% {{ 'complete'|t }} ({{ filled }}/{{ total }} {{ 'fields'|t }})
+  </p>
+  {% if missing|length > 0 %}
+    <details class="completeness-missing">
+      <summary>{{ 'Missing fields'|t }}</summary>
+      <ul>
+        {% for field in missing %}
+          <li>{{ field }}</li>
+        {% endfor %}
+      </ul>
+    </details>
+  {% endif %}
+</div>
