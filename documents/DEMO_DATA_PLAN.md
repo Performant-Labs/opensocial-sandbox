@@ -126,14 +126,20 @@ foreach ($users_data as [$name, $pass, $roles]) {
 '
 ```
 
-## Step 2.3 — Set sophie_mueller language to German
+## Step 2.3 — Set user language preferences
+
+> With `social_language` enabled, each user's preferred language is visible
+> on their account settings page and the activity stream / notification
+> emails will render in that language.
 
 ```bash
 ddev drush php:eval '
-$user = user_load_by_name("sophie_mueller");
-$user->set("preferred_langcode", "de");
-$user->save();
-echo "sophie_mueller language set to de\n";
+foreach (["sophie_mueller" => "de", "elena_garcia" => "es"] as $name => $lang) {
+  $user = user_load_by_name($name);
+  $user->set("preferred_langcode", $lang);
+  $user->save();
+  echo "$name language set to $lang\n";
+}
 '
 ```
 
@@ -288,6 +294,9 @@ echo "james_okafor roles: " . implode(",", $james->getRoles()) . "\n";
 $sophie = user_load_by_name("sophie_mueller");
 echo "sophie_mueller lang: " . $sophie->getPreferredLangcode() . "\n";
 
+$elena = user_load_by_name("elena_garcia");
+echo "elena_garcia lang: " . $elena->getPreferredLangcode() . "\n";
+
 // Check ravi profile is incomplete
 $ravi_uid = user_load_by_name("ravi_patel")->id();
 $ravi_profile = $s->getStorage("profile")->loadByProperties(["uid" => $ravi_uid, "type" => "profile"]);
@@ -299,7 +308,7 @@ $tags = $s->getStorage("taxonomy_term")->loadByProperties(["vid" => "social_tagg
 echo "social_tagging terms: " . count($tags) . "\n";
 '
 ```
-Expected: Users=6, maria=contentmanager, james=sitemanager, sophie lang=de, ravi intro=EMPTY, tags=20
+Expected: Users=6, maria=contentmanager, james=sitemanager, sophie lang=de, elena lang=es, ravi intro=EMPTY, tags=20
 
 ---
 
@@ -1167,6 +1176,80 @@ echo "\nLegacy Infrastructure status: " . ($legacy->isPublished() ? "published" 
 ```
 Expected: pin=1, promote=2, follow_content=5 (2 explicit + 3 auto-follows from commenting), follow_term=1, follow_user=1, Legacy=UNPUBLISHED
 
+## Step 6.7 — Create content translations
+
+> Requires `social_language` (enables `content_translation`). Demonstrates
+> that content can be translated and that users see translated versions
+> when their preferred language matches.
+
+```bash
+ddev drush php:eval '
+$node_storage = \Drupal::entityTypeManager()->getStorage("node");
+
+// Translate "Nouveau thème pour drupal.fr" into English
+$nodes = $node_storage->loadByProperties(["title" => "Nouveau thème pour drupal.fr"]);
+$node = reset($nodes);
+if ($node && !$node->hasTranslation("en")) {
+  $translation = $node->addTranslation("en", [
+    "title" => "New theme for drupal.fr",
+    "body" => ["value" => "We are working on a new theme for the drupal.fr community site. Your feedback on the attached mockup is welcome.", "format" => "basic_html"],
+  ]);
+  $translation->save();
+  echo "Added EN translation: Nouveau thème -> New theme for drupal.fr\n";
+} else {
+  echo "SKIP: already translated or not found\n";
+}
+
+// Translate "Welcome to Open Social" into French
+$nodes = $node_storage->loadByProperties(["title" => "Welcome to Open Social"]);
+$node = reset($nodes);
+if ($node && !$node->hasTranslation("fr")) {
+  $translation = $node->addTranslation("fr", [
+    "title" => "Bienvenue sur Open Social",
+    "body" => ["value" => "Bienvenue sur notre plateforme communautaire ! Consultez [[Getting Started with Paragraphs]] pour créer du contenu riche.", "format" => "basic_html"],
+  ]);
+  $translation->save();
+  echo "Added FR translation: Welcome -> Bienvenue sur Open Social\n";
+} else {
+  echo "SKIP: already translated or not found\n";
+}
+
+// Translate "Welcome to Open Social" into Spanish
+$nodes = $node_storage->loadByProperties(["title" => "Welcome to Open Social"]);
+$node = reset($nodes);
+if ($node && !$node->hasTranslation("es")) {
+  $translation = $node->addTranslation("es", [
+    "title" => "Bienvenido a Open Social",
+    "body" => ["value" => "¡Bienvenido a nuestra plataforma comunitaria! Consulta [[Getting Started with Paragraphs]] para consejos sobre contenido enriquecido.", "format" => "basic_html"],
+  ]);
+  $translation->save();
+  echo "Added ES translation: Welcome -> Bienvenido a Open Social\n";
+} else {
+  echo "SKIP: already translated or not found\n";
+}
+'
+```
+
+**Assert:**
+```bash
+ddev drush php:eval '
+$node_storage = \Drupal::entityTypeManager()->getStorage("node");
+
+$nodes = $node_storage->loadByProperties(["title" => "Nouveau thème pour drupal.fr"]);
+$node = reset($nodes);
+echo "French topic EN translation: " . ($node->hasTranslation("en") ? "YES" : "NO") . "\n";
+if ($node->hasTranslation("en")) {
+  echo "  EN title: " . $node->getTranslation("en")->getTitle() . "\n";
+}
+
+$nodes = $node_storage->loadByProperties(["title" => "Welcome to Open Social"]);
+$node = reset($nodes);
+echo "Welcome FR translation: " . ($node->hasTranslation("fr") ? "YES" : "NO") . "\n";
+echo "Welcome ES translation: " . ($node->hasTranslation("es") ? "YES" : "NO") . "\n";
+'
+```
+Expected: French topic EN=YES ("New theme for drupal.fr"), Welcome FR=YES, Welcome ES=YES
+
 ---
 
 # Phase 7 — Index, Snapshot & Verify
@@ -1205,6 +1288,12 @@ Browse the site and confirm:
 - [ ] Search (`/search/all`) returns results via Solr
 - [ ] Drupal France group renders French UI labels
 - [ ] sophie_mueller in France group sees German UI (override)
+- [ ] elena_garcia sees Spanish UI labels (preferred_langcode=es)
+- [ ] "Nouveau thème" topic shows English translation when viewing in EN
+- [ ] "Welcome to Open Social" shows "Bienvenue" when viewing in FR
+- [ ] "Welcome to Open Social" shows "Bienvenido" when viewing in ES
+- [ ] Activity stream items render in the viewing user's preferred language
+- [ ] james_okafor (sitemanager) can access Content → Translate tab
 - [ ] Sprint Planning pinned at top of Portland stream
 - [ ] Thunder 7.0 Roadmap appears in both Thunder + Portland streams
 - [ ] Weekly Standup shows "Posted in" links to Portland + EMEA
@@ -1220,4 +1309,4 @@ Browse the site and confirm:
 - [ ] elena_garcia notification settings show followed content
 - [ ] Tags aggregation view shows tagged content
 - [ ] Camp Barcelona Recap has PDF file attachment visible
-- [ ] Users with photos show headshot on profile; ravi/alex show default avatar
+- [ ] Users with photos show headshot on profile; alex_novak shows default avatar
