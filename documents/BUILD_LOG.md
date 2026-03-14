@@ -810,7 +810,21 @@ Contents:
 > [!IMPORTANT]
 > **Language negotiation timing**: Drupal resolves language **before** route matching. The `LanguageNegotiationGroup` plugin uses `$request->getPathInfo()` with regex `#^/group/(\d+)#` — NOT `\Drupal::routeMatch()->getParameter('group')` which is always NULL at negotiation time.
 
-**Step 1020** — Enable modules:
+**Step 1015** — Enable `social_language` (Open Social's multilingual foundation):
+```bash
+ddev drush en social_language -y
+```
+
+> [!IMPORTANT]
+> `social_language` is an optional module included in the Open Social distribution. Enabling it:
+> - **Auto-enables** all 4 core translation modules (`language`, `interface_translation`, `config_translation`, `content_translation`) in one step
+> - **Grants Site Manager** permissions to translate content, menus, account settings, and system info
+> - **Makes the activity stream and notification emails translation-aware** — items render in each user's preferred language
+> - **Pre-configures** translation file storage
+>
+> It does **not** add languages, download translations, or configure negotiation order — those are handled in Steps 1040–1070 below.
+
+**Step 1020** — Enable custom modules:
 ```bash
 ddev drush en pl_group_pin pl_group_language pl_group_mission pl_group_extras -y
 ```
