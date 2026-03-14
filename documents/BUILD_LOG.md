@@ -851,6 +851,11 @@ foreach ($langs as $langcode) {
 '
 ```
 
+**Step 1045** — Enable the Locale module (required for translation downloads):
+```bash
+ddev drush en locale -y
+```
+
 **Step 1050** — Download translations:
 ```bash
 ddev drush locale:check
