@@ -983,3 +983,108 @@ if (!$block_storage->load("pl_group_mission")) {
 
 > [!IMPORTANT]
 > **PIN SQL join fix**: The `pl_group_pin` module's `hook_views_query_alter` must dynamically look up the correct node table alias for the `group_topics` view. The alias is `node_field_data_group_relationship_field_data` (not the default `node_field_data`). Using a hardcoded alias causes a SQL error.
+
+---
+
+# Post-Test Cleanup & Solr Setup
+
+## Clean Up Test Data
+
+**Step 1200** — Delete all test entities created by the Playwright test suite:
+```bash
+ddev drush php:eval '
+$storage = \Drupal::entityTypeManager();
+
+// Delete all nodes
+$nodes = $storage->getStorage("node")->loadMultiple();
+$storage->getStorage("node")->delete($nodes);
+echo "Deleted " . count($nodes) . " nodes\n";
+
+// Delete all groups
+$groups = $storage->getStorage("group")->loadMultiple();
+$storage->getStorage("group")->delete($groups);
+echo "Deleted " . count($groups) . " groups\n";
+
+// Delete test users (uid > 1)
+$users = $storage->getStorage("user")->loadMultiple();
+$test_users = [];
+foreach ($users as $u) {
+  if ($u->id() > 1) {
+    $test_users[] = $u;
+  }
+}
+if ($test_users) {
+  $storage->getStorage("user")->delete($test_users);
+}
+echo "Deleted " . count($test_users) . " test users\n";
+
+// Delete flaggings and enrollments
+$flaggings = $storage->getStorage("flagging")->loadMultiple();
+if ($flaggings) { $storage->getStorage("flagging")->delete($flaggings); }
+echo "Deleted " . count($flaggings) . " flaggings\n";
+
+try {
+  $enrollments = $storage->getStorage("event_enrollment")->loadMultiple();
+  if ($enrollments) { $storage->getStorage("event_enrollment")->delete($enrollments); }
+  echo "Deleted " . count($enrollments) . " enrollments\n";
+} catch (\Exception $e) { echo "No enrollments\n"; }
+'
+```
+
+**Step 1210** — Clear caches: `ddev drush cr`
+
+## Solr Search Setup
+
+**Step 1220** — Install the DDEV Solr add-on:
+```bash
+ddev add-on get ddev/ddev-solr
+ddev restart
+```
+
+> [!NOTE]
+> This pulls in Solr 9 with embedded ZooKeeper (SolrCloud mode). The first restart downloads the Solr Docker image (~400 MB).
+
+**Step 1230** — Set Solr version to 9 in the search_api server config:
+```bash
+ddev drush php:eval '
+$server = \Drupal\search_api\Entity\Server::load("social_solr");
+$config = $server->getBackendConfig();
+$config["connector_config"]["solr_version"] = "9";
+$server->setBackendConfig($config);
+$server->save();
+echo "Set Solr version to 9\n";
+'
+```
+
+**Step 1240** — Generate and upload the Drupal configset to Solr:
+```bash
+# Generate configset zip from Drupal
+ddev drush search-api-solr:get-server-config social_solr /tmp/solr-config.zip
+
+# Extract inside web container
+ddev exec bash -c 'mkdir -p /tmp/solr-configset && cd /tmp/solr-configset && unzip -o /tmp/solr-config.zip'
+
+# Copy to Solr container and upload to ZooKeeper
+docker cp ddev-pl-opensocial-rework-web:/tmp/solr-configset /tmp/solr-configset
+docker cp /tmp/solr-configset ddev-pl-opensocial-rework-solr:/tmp/solr-configset
+ddev solr zk upconfig -n drupal -d /tmp/solr-configset
+```
+
+**Step 1250** — Create the `drupal` collection:
+```bash
+ddev solr create -c drupal -n drupal
+```
+
+**Step 1260** — Index all content:
+```bash
+ddev drush search-api:index
+```
+
+**Step 1270** — Verify: Visit `/search/all` and confirm search works without Solr errors.
+
+## Final Backup
+
+**Step 1280** — Final database backup:
+```bash
+ddev export-db --file=backups/build-complete.sql.gz
+```
