@@ -233,6 +233,13 @@ cp -R ~/Sites/pl-opensocial/web/libraries/* web/libraries/
 ls web/libraries/ | wc -l
 ```
 
+> [!WARNING]
+> The `diff` library ships with `diff.js` but **not** `diff.min.js`. Drupal's asset pipeline references the minified filename, causing `file_get_contents` warnings on every page. Fix immediately after copying libraries:
+
+```bash
+cp web/libraries/diff/dist/diff.js web/libraries/diff/dist/diff.min.js
+```
+
 > [!NOTE]
 > These libraries are NOT managed by Composer — they must be tracked in git. Ensure `/web/libraries/` is **not** in `.gitignore`.
 

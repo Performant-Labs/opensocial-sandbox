@@ -17,8 +17,8 @@ ddev drush watchdog:delete all -y
 Run **after every phase**:
 ```bash
 ddev exec bash -c 'cat /tmp/logpipe | grep -i "error\|fatal\|warning" | tail -20'
-ddev drush watchdog:show --severity=error --count=10
-ddev drush watchdog:show --severity=warning --count=10
+ddev drush watchdog:show --severity=3 --count=10
+ddev drush watchdog:show --severity=4 --count=10
 ```
 
 ---
@@ -93,6 +93,7 @@ Use `generate_image` to create 5 realistic headshot portraits:
 - `james_okafor_photo.png` — Black man, 40s, professional headshot
 - `elena_garcia_photo.png` — Latina woman, 30s, friendly professional headshot
 - `sophie_mueller_photo.png` — European woman, 30s, professional headshot
+- `ravi_patel_photo.png` — South Asian man, late 20s, professional headshot
 
 Save photos to: `tests/fixtures/photos/`
 
@@ -218,6 +219,11 @@ foreach ($profiles as $username => $fields) {
 > Photos must exist at `tests/fixtures/photos/` before running.
 
 ```bash
+# Ensure target directory exists inside the container
+ddev exec mkdir -p /var/www/html/web/sites/default/files/profile-photos
+```
+
+```bash
 ddev drush php:eval '
 $photo_map = [
   "admin" => "admin_photo.png",
@@ -225,6 +231,7 @@ $photo_map = [
   "james_okafor" => "james_okafor_photo.png",
   "elena_garcia" => "elena_garcia_photo.png",
   "sophie_mueller" => "sophie_mueller_photo.png",
+  "ravi_patel" => "ravi_patel_photo.png",
 ];
 
 foreach ($photo_map as $username => $filename) {
@@ -438,6 +445,19 @@ $memberships = [
 foreach ($memberships as [$username, $group_label, $role]) {
   $group = $gid[$group_label];
   $user = \Drupal\user\Entity\User::load($uid[$username]);
+
+  // Admin is auto-added as creator — skip if already a member
+  if ($group->getMember($user)) {
+    echo "SKIP $username already member of $group_label\n";
+    if ($role === "manager") {
+      $membership = $group->getMember($user)->getGroupRelationship();
+      $membership->set("group_roles", ["flexible_group-group_manager"]);
+      $membership->save();
+      echo "  -> upgraded to manager\n";
+    }
+    continue;
+  }
+
   $values = ["group_roles" => []];
   if ($role === "manager") {
     $values["group_roles"] = ["flexible_group-group_manager"];
@@ -458,7 +478,7 @@ $core = reset($groups);
 $elena = user_load_by_name("elena_garcia");
 
 // Create a membership request (group_content_type = group_content_type_7fcb76fdf61a9)
-$request = \Drupal\group\Entity\GroupContent::create([
+$request = \Drupal::entityTypeManager()->getStorage("group_content")->create([
   "type" => "group_content_type_7fcb76fdf61a9",
   "gid" => $core->id(),
   "entity_id" => $elena->id(),
@@ -502,7 +522,10 @@ $requests = $s->getStorage("group_content")->loadByProperties([
 echo "elena_garcia pending requests: " . count($requests) . "\n";
 '
 ```
-Expected: Groups=7, Portland=7 members, Council=3 (vis=members), France lang=fr, elena NOT MEMBER of Core, 1 pending request
+Expected: Groups=7, Portland=6 members, Council=2 (vis=members), France lang=fr, elena NOT MEMBER of Core, 1 pending request
+
+> **Note:** Admin is auto-added as group creator, so member counts are 1 less than the matrix rows
+> (e.g., Portland matrix shows 7 rows but admin is already counted = 6 distinct members).
 
 ---
 
@@ -732,7 +755,7 @@ $events = [
     "title" => "Réunion mensuelle Paris",
     "uid" => $uid["elena_garcia"],
     "body" => "Réunion mensuelle du groupe Drupal France à Paris. Présentations, ateliers et networking.",
-    "event_type" => "User Group Meeting",
+    "event_type" => "User group meeting",
     "date_offset" => "+14 days",
     "duration_hours" => 3,
     "max_enroll" => 0,
@@ -742,7 +765,7 @@ $events = [
     "title" => "Core Committer Sync",
     "uid" => $uid["james_okafor"],
     "body" => "Weekly sync meeting for core committers. Agenda: release blockers, security issues, and mentoring updates.",
-    "event_type" => "Other",
+    "event_type" => "Related event (not Drupal-specific)",
     "date_offset" => "+7 days",
     "duration_hours" => 1,
     "max_enroll" => 0,
@@ -752,7 +775,7 @@ $events = [
     "title" => "DrupalCamp Barcelona",
     "uid" => $uid["maria_chen"],
     "body" => "DrupalCamp Barcelona 2026 — two days of sessions, sprints, and community building on the Mediterranean coast.",
-    "event_type" => "DrupalCamp",
+    "event_type" => "Drupalcamp or Regional Summit",
     "date_offset" => "+60 days",
     "duration_hours" => 16,
     "max_enroll" => 0,
@@ -1142,7 +1165,7 @@ $legacy = reset($groups);
 echo "\nLegacy Infrastructure status: " . ($legacy->isPublished() ? "published" : "UNPUBLISHED/ARCHIVED") . "\n";
 '
 ```
-Expected: pin=1, promote=2, follow_content=2, follow_term=1, follow_user=1, Legacy=UNPUBLISHED
+Expected: pin=1, promote=2, follow_content=5 (2 explicit + 3 auto-follows from commenting), follow_term=1, follow_user=1, Legacy=UNPUBLISHED
 
 ---
 
