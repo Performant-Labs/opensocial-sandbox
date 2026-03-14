@@ -1109,3 +1109,9 @@ ddev drush search-api:index
 ```bash
 ddev export-db --file=backups/build-complete.sql.gz
 ```
+
+---
+
+# Demo Data
+
+After the build is complete, populate the site with realistic demo content by following the [Demo Data Runbook](file:///Users/andreangelantoni/Sites/pl-opensocial/documents/DEMO_DATA_PLAN.md). The runbook creates users, groups, topics, events, pages, comments, enrollments, flags, and content translations — all via `ddev drush php:eval` for full reproducibility.

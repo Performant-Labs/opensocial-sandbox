@@ -97,7 +97,7 @@ Use `generate_image` to create 5 realistic headshot portraits:
 
 Save photos to: `tests/fixtures/photos/`
 
-> **ravi_patel** and **alex_novak** intentionally have NO photo (demonstrates ⚙ profile completeness).
+> **alex_novak** intentionally has NO photo (demonstrates ⚙ profile completeness).
 
 ## Step 2.2 — Create user accounts
 
@@ -1255,9 +1255,12 @@ Expected: French topic EN=YES ("New theme for drupal.fr"), Welcome FR=YES, Welco
 # Phase 7 — Index, Snapshot & Verify
 
 ```bash
+ddev drush cron
 ddev drush search-api:index
 ddev drush cr
 ```
+
+> `ddev drush cron` triggers `pl_discovery` hot score computation so `/hot` works.
 
 Snapshot complete demo database:
 ```bash
@@ -1274,6 +1277,24 @@ Expected: 0 items remaining to index
 ddev drush search-api:search "Portland" social_all 2>&1 | head -5
 ```
 Expected: Returns results
+
+```bash
+# iCal feed — should return BEGIN:VCALENDAR
+ddev drush php:eval '
+$gids = \Drupal::entityTypeManager()->getStorage("group")->loadByProperties(["label" => "Camp Organizers EMEA"]);
+$gid = reset($gids)->id();
+echo "EMEA gid=$gid\n";
+'
+curl -sk "https://pl-opensocial-rework.ddev.site:8493/upcoming-events/ical" | head -3
+curl -sk "https://pl-opensocial-rework.ddev.site:8493/group/{gid}/events/ical" | head -3
+```
+Expected: Both return `BEGIN:VCALENDAR` header
+
+```bash
+# RSS feed — should return valid XML
+curl -sk "https://pl-opensocial-rework.ddev.site:8493/group/{gid}/stream/feed" | head -5
+```
+Expected: Returns `<?xml` or `<rss` header
 
 ---
 
