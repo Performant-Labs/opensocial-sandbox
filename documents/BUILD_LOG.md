@@ -142,6 +142,19 @@ ddev launch
 > [!IMPORTANT]
 > The module MUST be enabled BEFORE importing its field config. If you import the field YAML without the module active, the import will silently fail or error.
 
+> [!CAUTION]
+> **target_bundles mismatch**: The imported `field.field.node.event.field_event_type.yml` references `target_bundles: {event_type: event_type}` (singular), but the actual vocabulary machine name is `event_types` (plural). This causes the Event Type dropdown to appear **empty** even with correct terms and permissions. Fix after importing:
+> ```bash
+> ddev drush php:eval '
+> $field = \Drupal\field\Entity\FieldConfig::loadByName("node", "event", "field_event_type");
+> $settings = $field->getSetting("handler_settings");
+> $settings["target_bundles"] = ["event_types" => "event_types"];
+> $field->setSetting("handler_settings", $settings);
+> $field->save();
+> echo "Fixed: target_bundles now points to event_types\n";
+> '
+> ```
+
 **Step 145** — Import the Event form display (places event_type, event_managers, and other fields on the Event form)
 - Config: [core.entity_form_display.node.event.default.yml](file:///Users/andreangelantoni/Sites/pl-opensocial/config/sync/core.entity_form_display.node.event.default.yml)
 
@@ -207,14 +220,21 @@ If Event pages crash with `SQLSTATE[42S02]: Table 'db.node__field_event_url' doe
 ddev drush php:eval '\Drupal::entityDefinitionUpdateManager()->installFieldStorageDefinition("field_event_url", "node", "node", \Drupal\field\Entity\FieldStorageConfig::loadByName("node", "field_event_url"));'
 ```
 
-**Step 184** — Restore Frontend Libraries
-The `social_base` theme expects `node-waves` and `autosize` in the libraries folder.
+**Step 184** — Restore ALL Frontend Libraries
+
+> [!CAUTION]
+> The `socialblue` / `social_base` theme depends on ~30 frontend libraries (Bootstrap JS, diff, jquery.caret, FontAwesome, select2, photoswipe, etc.). Copying only `node-waves` and `autosize` will cause `file_get_contents` warnings on most pages. Copy the **entire** libraries folder from the source project:
+
 ```bash
 mkdir -p web/libraries
-# If using composer doesn't pull them in, copy from source:
-cp -R ~/Sites/pl-opensocial/web/libraries/node-waves web/libraries/
-cp -R ~/Sites/pl-opensocial/web/libraries/autosize web/libraries/
+# Copy ALL libraries from source in one shot:
+cp -R ~/Sites/pl-opensocial/web/libraries/* web/libraries/
+# Verify count (should be ~30):
+ls web/libraries/ | wc -l
 ```
+
+> [!NOTE]
+> These libraries are NOT managed by Composer — they must be tracked in git. Ensure `/web/libraries/` is **not** in `.gitignore`.
 
 **Step 186** — Disable problematic HTML filters
 The `markdown` filter in `full_html` can cause HTML escaping issues (rendering `<strong>` as plain text).
