@@ -4,13 +4,26 @@ Deploy `pl-opensocial` on Spiderman (Linode x86) behind the existing nginx serve
 
 ---
 
+## Architecture
+
+```
+Client → nginx (SSL + static files) → fastcgi_pass 127.0.0.1:9000 → PHP-FPM container
+```
+
+- **nginx** runs on the host, serves static assets (CSS, JS, images, theme files) directly and forwards PHP requests to the container
+- **PHP-FPM** runs inside the container, bind-mounts the project directory so both nginx and PHP-FPM see the same files
+- **MariaDB** runs in a separate container with a persistent volume
+
+---
+
 ## Prerequisites
 
 Spiderman must have:
 
 - Docker Engine 24.0+
-- Docker Compose v2 (bundled with modern Docker Engine)
+- Docker Compose v2
 - Git
+- PHP 8.3 + Composer 2 (for running `composer install` on the host)
 - nginx (already running)
 - Certbot (for SSL)
 
@@ -23,22 +36,31 @@ git clone <repo-url> /opt/pl-opensocial
 cd /opt/pl-opensocial
 ```
 
-## Step 2 — Create the environment file
+## Step 2 — Install Composer dependencies
+
+```bash
+composer install --no-dev --optimize-autoloader --prefer-dist
+```
+
+This downloads Drupal core, Open Social, contributed modules/themes, and JS libraries into the project directory. Host nginx will serve static files directly from here.
+
+> This step requires PHP 8.3 and Composer 2 on the host. Install with:
+> ```bash
+> sudo apt install php8.3-cli php8.3-xml php8.3-mbstring php8.3-curl php8.3-zip php8.3-gd unzip
+> curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+> ```
+
+## Step 3 — Create the environment file
 
 ```bash
 cp .env.example .env
-```
-
-Edit `.env` and fill in all values:
-
-```bash
 nano .env
 ```
 
 Generate a hash salt:
 
 ```bash
-openssl rand -base64 64 | tr -d '\n'
+openssl rand -base64 64 | tr -d '\n'; echo
 ```
 
 The `.env` file should look like:
@@ -54,7 +76,13 @@ DRUPAL_ADMIN_PASS=<strong-admin-password>
 DRUPAL_TRUSTED_HOST=opensocial\.performantlabs\.com
 ```
 
-## Step 3 — Build and start the containers
+## Step 4 — Create the private files directory
+
+```bash
+mkdir -p private
+```
+
+## Step 5 — Build and start the containers
 
 ```bash
 docker compose up -d --build
@@ -62,10 +90,10 @@ docker compose up -d --build
 
 This will:
 
-1. Build the PHP-FPM image (~5 min on x86)
+1. Build the PHP-FPM image (~2 min on x86)
 2. Start MariaDB 11.8 and wait for it to be healthy
 3. Run `drush site:install` with the Open Social profile
-4. Run post-install configuration (UUID fixup, entity cleanup, config import with retry)
+4. Run post-install configuration (UUID fixup, entity cleanup, config import)
 5. Start PHP-FPM listening on `127.0.0.1:9000`
 
 Monitor progress:
@@ -81,17 +109,7 @@ Wait until you see:
 NOTICE: ready to handle connections
 ```
 
-## Step 4 — Find the web root path
-
-The Docker volume contains the full Drupal web root. Get its path on the host:
-
-```bash
-docker volume inspect pl-opensocial_web_root --format '{{ .Mountpoint }}'
-```
-
-Note the returned path — you'll use it in the nginx config below (e.g. `/var/lib/docker/volumes/pl-opensocial_web_root/_data`).
-
-## Step 5 — Configure nginx
+## Step 6 — Configure nginx
 
 Create the site config:
 
@@ -99,7 +117,7 @@ Create the site config:
 sudo nano /etc/nginx/sites-available/opensocial
 ```
 
-Paste the following, replacing `WEB_ROOT_PATH` with the path from Step 4:
+Paste the following:
 
 ```nginx
 server {
@@ -115,7 +133,7 @@ server {
     ssl_certificate     /etc/letsencrypt/live/opensocial.performantlabs.com/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/opensocial.performantlabs.com/privkey.pem;
 
-    root WEB_ROOT_PATH;
+    root /opt/pl-opensocial/web;
     index index.php;
 
     client_max_body_size 64M;
@@ -191,17 +209,15 @@ sudo nginx -t
 sudo systemctl reload nginx
 ```
 
-## Step 6 — Set up SSL
+## Step 7 — Set up SSL
 
 ```bash
 sudo certbot --nginx -d opensocial.performantlabs.com
 ```
 
-Certbot will obtain a Let's Encrypt certificate and update the nginx config. Reload nginx if prompted.
+> If the certificate hasn't been obtained yet, comment out the `ssl_certificate` lines first, reload nginx, run Certbot, then let Certbot add them back.
 
-> If the certificate hasn't been obtained yet, comment out the `ssl_certificate` and `ssl_certificate_key` lines first, reload nginx, run Certbot, then let Certbot add them back.
-
-## Step 7 — Verify
+## Step 8 — Verify
 
 ```bash
 curl -s -o /dev/null -w "%{http_code}" https://opensocial.performantlabs.com
@@ -218,10 +234,9 @@ Should return `200` or `302`. Open the site in a browser and log in with the adm
 ```bash
 cd /opt/pl-opensocial
 git pull
+composer install --no-dev --optimize-autoloader --prefer-dist
 docker compose up -d --build
 ```
-
-The entrypoint detects the site is already installed and runs `drush updatedb` + `drush cache:rebuild`.
 
 ### Drush commands
 
