@@ -4,7 +4,6 @@ status: true
 dependencies:
   module:
     - linkit
-    - markdown
     - pl_opensocial_wiki
 _core:
   default_config_hash: lywJG0LpqIPXuWotJj0NQEbwzgRN2GcSK9oFUjsNNwQ

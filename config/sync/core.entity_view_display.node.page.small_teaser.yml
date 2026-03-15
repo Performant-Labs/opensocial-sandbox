@@ -13,7 +13,6 @@ dependencies:
     - node.type.page
   module:
     - image
-    - lazy
     - user
 _core:
   default_config_hash: PNDaVNU1Bk6mj64fF0LuSoPK98Av7cUkSBB50wmPgTE
@@ -30,9 +29,7 @@ content:
     settings:
       image_style: social_medium
       image_link: content
-    third_party_settings:
-      lazy:
-        lazy_image: 0
+    third_party_settings: {  }
   links:
     weight: 100
     settings: {  }
