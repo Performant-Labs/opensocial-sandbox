@@ -1,0 +1,28 @@
+.git
+.ddev
+.DS_Store
+.idea
+.vscode
+node_modules
+
+# Composer-managed (rebuilt in container)
+vendor/
+web/core/
+web/modules/contrib/
+web/themes/contrib/
+web/profiles/contrib/
+web/libraries/
+
+# Runtime data
+web/sites/*/files/
+private/
+backups/
+
+# Dev & docs (not needed in image)
+tests/
+documents/
+views_config/
+config_export/
+*.swp
+*.swo
+.env

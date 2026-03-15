@@ -20,6 +20,12 @@
 # ============================================================
 /web/sites/*/settings.local.php
 /web/sites/*/settings.ddev.php
+/web/sites/*/settings.docker.php
+
+# ============================================================
+# Docker environment (contains secrets)
+# ============================================================
+.env
 /web/sites/*/services.local.yml
 
 # ============================================================
