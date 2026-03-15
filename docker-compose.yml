@@ -1,0 +1,48 @@
+services:
+  web:
+    build: .
+    container_name: pl-opensocial-web
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:9000:9000"
+    environment:
+      - DOCKER_ENV=true
+      - MYSQL_HOST=db
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - DRUPAL_HASH_SALT=${DRUPAL_HASH_SALT}
+      - DRUPAL_TRUSTED_HOST=${DRUPAL_TRUSTED_HOST}
+      - DRUPAL_ADMIN_USER=${DRUPAL_ADMIN_USER:-admin}
+      - DRUPAL_ADMIN_PASS=${DRUPAL_ADMIN_PASS}
+    volumes:
+      - drupal_files:/var/www/html/web/sites/default/files
+      - drupal_private:/var/www/html/private
+      - web_root:/var/www/html/web
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mariadb:11.8
+    container_name: pl-opensocial-db
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  db_data:
+  drupal_files:
+  drupal_private:
+  web_root:
