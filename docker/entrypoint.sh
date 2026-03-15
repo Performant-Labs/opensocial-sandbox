@@ -5,8 +5,14 @@ echo "============================================"
 echo "  pl-opensocial Docker entrypoint"
 echo "============================================"
 
+# ---- Place Docker settings into the bind-mounted web dir ----
+if [ -f /usr/local/share/settings.docker.php ]; then
+  cp /usr/local/share/settings.docker.php /var/www/html/web/sites/default/settings.docker.php
+  chown www-data:www-data /var/www/html/web/sites/default/settings.docker.php
+fi
+
 # ---- Ensure runtime directories ----
-mkdir -p /run/php /var/www/html/private /var/www/html/web/sites/default/files
+mkdir -p /var/www/html/private /var/www/html/web/sites/default/files
 chown -R www-data:www-data \
   /var/www/html/web/sites/default/files \
   /var/www/html/private
