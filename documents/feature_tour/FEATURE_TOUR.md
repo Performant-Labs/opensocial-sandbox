@@ -21,6 +21,21 @@ The homepage is the central hub, showing a chronological activity stream of rece
 5. **Newest groups widget** — Links to the groups listing for exploration
 6. **Authentication** — Sign up and Log in links for community access
 
+### Logged-In View
+
+Once authenticated, the homepage gains interactive features and admin controls.
+
+![Logged-in homepage with annotations](05_logged_in_homepage.png)
+
+**Additional elements for logged-in users:**
+
+1. **Quick-post composer** — "Say something to the Community" lets users post directly from the homepage
+2. **Admin toolbar** — Left sidebar with links to content, structure, appearance, and configuration
+3. **User avatars** — Profile photos appear inline with activity stream entries
+4. **Content moderation flags** — "Pin in group" and "Promote to homepage" buttons appear next to topics in the sidebar
+5. **Notifications** — Bell icon in header shows unread notifications
+6. **Threaded comments** — "Show all 3 comments" expands threaded discussions inline
+
 ---
 
 ## Topics
@@ -82,6 +97,18 @@ Event types from the demo data include:
 
 All groups use the **Flexible Group** bundle with configurable visibility and join methods. Groups require authentication to view.
 
+![Group page with annotations](06_group_page.png)
+
+**Key elements:**
+
+1. **Group type badge** — "Flexible group" label identifies the bundle
+2. **Group name** — Large header with hero banner area
+3. **Group statistics** — Member count, events, and topics at a glance (6 members / 3 events / 4 topics)
+4. **Membership status** — "Joined" button shows current user's membership; dropdown for leave/manage
+5. **Group navigation tabs** — Stream, About, Events, Topics, Members, and Manage members
+6. **Group manager with role** — Manager listed with title and organization
+7. **Group events sidebar** — Upcoming events specific to this group
+
 ### Visibility levels
 
 | Level | Behavior | Example |
@@ -122,6 +149,17 @@ The `pl_multigroup` module allows a single Topic or Event to belong to multiple 
 ## User Profiles
 
 Each user has a profile with name, organization, function, self-introduction, summary, and profile photo.
+
+![User profile with annotations](07_user_profile.png)
+
+**Key elements:**
+
+1. **AI-generated profile photo** — Circular avatar with high-quality headshot
+2. **Professional role** — Function/title displayed prominently (Content Manager)
+3. **Organization** — Company or affiliation (Community Builders Inc)
+4. **Contribution stats** — `pl_profile_stats` module shows events, topics, and group counts
+5. **Profile navigation tabs** — Stream, Events, Topics, Notifications, Groups, and Information
+6. **Wall post / direct message** — "Leave a message" composer for profile-to-profile communication
 
 ### Contribution statistics
 
