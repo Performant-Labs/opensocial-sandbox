@@ -8,6 +8,7 @@
 
 ### Topics (Discussions)
 - Rich-text authoring with **Full HTML** editor (CKEditor 5)
+- **Linkit** inline linking — autocomplete entity references in the editor
 - File attachments up to **15 MB** (pdf, doc, docx, xls, xlsx, ppt, pptx, txt, csv, zip, gz, tar)
 - **⚙ Custom — Wiki-style linking** (`[[Page Title]]` auto-links to existing content) via `pl_opensocial_wiki`
 
@@ -121,6 +122,8 @@
 
 - **12 languages** installed: Catalan, Chinese (Simplified), Danish, Dutch, French, German, Norwegian Bokmål, Portuguese (Brazil), Russian, Spanish, Swedish, Turkish
 - **139,000+ translation strings** imported
+- **Content translation** — Topics, Events, and Pages can be translated into any installed language
+- Site Managers can access the **Translate** tab to manage translations
 - **Language negotiation** chain: User preference → Group language → URL → Default
 
 ---
@@ -129,6 +132,7 @@
 
 - **Drupal 10** with **PHP 8.3**
 - **Open Social 13** distribution
+- **Apache Solr 9** — powers `/search/all` full-text search across content, groups, and users
 - **DDEV** local development (nginx-fpm, MariaDB 11.8, Mutagen sync)
 - **Drush** CLI for all admin operations
 - **Playwright** end-to-end test suite — **64 tests** across 8 phases
