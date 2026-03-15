@@ -8,8 +8,8 @@ Deploy `pl-opensocial` as a Docker container (PHP-FPM) behind the host's existin
 
 ```
 Client → Host nginx (SSL) → fastcgi_pass 127.0.0.1:9000 → PHP-FPM container
-                ↓
-         Static files served directly from named volume
+              ↓
+       Static files served from host bind mount
 ```
 
 The container runs **PHP-FPM only**. The host's nginx serves static files and forwards PHP requests via FastCGI.
@@ -62,17 +62,9 @@ First run will:
 
 > **First build takes 10–15 minutes** (Composer downloads + Drupal install). Subsequent rebuilds after code changes are faster due to Docker layer caching.
 
-## 4. Locate the web root volume
+## 4. Configure host nginx
 
-The `web_root` Docker volume contains the full Drupal web root (core, contrib, libraries, etc.). Find its path on the host:
-
-```bash
-docker volume inspect pl-opensocial_web_root --format '{{ .Mountpoint }}'
-```
-
-You'll need this path for the nginx config below (referred to as `WEB_ROOT_PATH`).
-
-## 5. Configure host nginx
+The docker-compose.yml uses bind mounts (`./web:/var/www/html/web`), so static files are served directly from the host path.
 
 Add a server block (e.g. `/etc/nginx/sites-available/opensocial`):
 
@@ -90,8 +82,8 @@ server {
     ssl_certificate     /etc/letsencrypt/live/opensocial.performantlabs.com/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/opensocial.performantlabs.com/privkey.pem;
 
-    # Point to the Docker volume mount path
-    root WEB_ROOT_PATH;
+    # Point to the host bind mount path (NOT the container path)
+    root /opt/pl-opensocial/web;
     index index.php;
 
     client_max_body_size 64M;
@@ -115,7 +107,8 @@ server {
         fastcgi_pass 127.0.0.1:9000;
         fastcgi_buffers 16 16k;
         fastcgi_buffer_size 32k;
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        # IMPORTANT: Must use container's internal path /var/www/html/web
+        fastcgi_param SCRIPT_FILENAME /var/www/html/web$fastcgi_script_name;
         fastcgi_param SCRIPT_NAME $fastcgi_script_name;
         fastcgi_index index.php;
         include fastcgi_params;
@@ -159,8 +152,6 @@ server {
 }
 ```
 
-Replace `WEB_ROOT_PATH` with the actual Docker volume path from step 4.
-
 Then:
 
 ```bash
@@ -175,7 +166,7 @@ For the SSL certificate:
 sudo certbot --nginx -d opensocial.performantlabs.com
 ```
 
-## 6. Verify
+## 5. Verify
 
 ```bash
 # Check containers are running
@@ -221,6 +212,21 @@ docker compose exec web drush config:import -y
 docker compose down -v    # -v removes volumes (DB data + files)
 docker compose up -d --build
 ```
+
+> **Warning**: This destroys the database and all uploaded files. The bind mount for `web/` means code changes persist, but `vendor/` and `private/` are in volumes and will be lost.
+
+## Troubleshooting
+
+### 404 errors on static files
+If static files (CSS, JS, images) return 404 but PHP works:
+1. Ensure nginx `root` points to the host path (e.g., `/opt/pl-opensocial/web`)
+2. Ensure `fastcgi_param SCRIPT_FILENAME` points to the container path (`/var/www/html/web$fastcgi_script_name`)
+3. Check that nginx has read permissions on the host directory
+
+### Permission denied errors
+If nginx returns "Permission denied" on files:
+- The host directory must be readable by nginx (www-data user)
+- Run: `sudo chown -R www-data:www-data /opt/pl-opensocial/web`
 
 ## Logs
 
