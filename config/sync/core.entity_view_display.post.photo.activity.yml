@@ -1,4 +1,4 @@
-uuid: 312e3bea-b305-4c94-8ae7-0b682b15d275
+uuid: a9742215-46cf-4b21-857e-3c1b49bce75f
 langcode: en
 status: true
 dependencies:
@@ -26,36 +26,36 @@ mode: activity
 content:
   field_post:
     type: text_default
+    weight: 2
+    region: content
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 2
-    region: content
   field_post_comments:
     type: comment_post_activity
+    weight: 3
+    region: content
     label: hidden
     settings:
       num_comments: '2'
       order: ASC
     third_party_settings: {  }
-    weight: 3
-    region: content
   field_post_image:
-    type: image
+    weight: 1
     label: hidden
     settings:
-      image_link: ''
       image_style: social_post_photo
+      image_link: ''
     third_party_settings: {  }
-    weight: 1
+    type: image
     region: content
   user_id:
-    type: author
     label: hidden
-    settings: {  }
-    third_party_settings: {  }
+    type: author
     weight: 0
     region: content
+    settings: {  }
+    third_party_settings: {  }
 hidden:
   field_recipient_group: true
   field_recipient_user: true

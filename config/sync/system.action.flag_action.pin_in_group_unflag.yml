@@ -1,0 +1,15 @@
+uuid: f4ebc510-8d2a-45d6-9989-b2ca13dbdd99
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.pin_in_group
+  module:
+    - flag
+id: flag_action.pin_in_group_unflag
+label: Unpin
+type: node
+plugin: 'flag_action:pin_in_group_unflag'
+configuration:
+  flag_id: pin_in_group
+  flag_action: unflag

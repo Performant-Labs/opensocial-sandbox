@@ -1,0 +1,19 @@
+uuid: ae2bc496-802e-48bc-9df2-af44c72e3ffe
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_group_language
+    - group.type.flexible_group
+id: group.flexible_group.field_group_language
+field_name: field_group_language
+entity_type: group
+bundle: flexible_group
+label: 'Group Language'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: language

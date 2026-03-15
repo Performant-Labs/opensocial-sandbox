@@ -1,4 +1,4 @@
-uuid: f2526119-4827-428b-ac27-bdec1f8776eb
+uuid: 1fa79c17-8b65-4d43-83e9-35285f26a219
 langcode: en
 status: true
 dependencies:
@@ -8,9 +8,6 @@ dependencies:
     - activity_logger
 third_party_settings:
   activity_logger:
-    activity_bundle_entities:
-      node-topic: node-topic
-    activity_action: create_entitiy_action
     activity_context: group_activity_context
     activity_destinations:
       notifications: notifications
@@ -18,6 +15,9 @@ third_party_settings:
       stream_home: stream_home
       stream_profile: stream_profile
     activity_create_direct: false
+    activity_action: create_entitiy_action
+    activity_bundle_entities:
+      node-topic: node-topic
     activity_aggregate: false
     activity_entity_condition: ''
     email_subject: ''
@@ -28,8 +28,8 @@ label: 'Create topic in group'
 description: 'A user created a topic in a group'
 text:
   -
-    value: '<p><a href="[message:revision_author:url:absolute]" translate="no">[message:revision_author:display-name]</a> created a topic in <a href="[message:gurl]">[message:gtitle]</a> [message:count_groups_per_node]</p>'
     format: full_html
+    value: '<p><a href="[message:revision_author:url:absolute]" translate="no">[message:revision_author:display-name]</a> created a topic in <a href="[message:gurl]">[message:gtitle]</a> [message:count_groups_per_node]</p>'
 settings:
   'token options':
     clear: false

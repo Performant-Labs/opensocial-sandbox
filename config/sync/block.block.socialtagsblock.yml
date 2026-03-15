@@ -1,4 +1,4 @@
-uuid: ac19f582-38c8-42fd-b101-450d5c5edf4d
+uuid: 09780abd-cd1d-45a9-b590-c5a60fa34139
 langcode: en
 status: true
 dependencies:
@@ -26,6 +26,6 @@ settings:
 visibility:
   request_path:
     id: request_path
+    pages: '/node/*'
     negate: false
     context_mapping: {  }
-    pages: '/node/*'

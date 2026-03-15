@@ -1,4 +1,4 @@
-uuid: 285a0469-6fd5-4a4d-aca3-59028b09e671
+uuid: 31fbd39f-54a8-4542-af05-620aa7ba1331
 langcode: en
 status: true
 dependencies:
@@ -21,6 +21,7 @@ mode: default
 content:
   field_call_to_action_link:
     type: link
+    weight: 2
     label: hidden
     settings:
       trim_length: 80
@@ -29,23 +30,22 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    weight: 2
     region: content
   field_hero_image:
     type: image
+    weight: 0
     label: hidden
     settings:
-      image_link: ''
       image_style: social_an_hero
+      image_link: ''
     third_party_settings: {  }
-    weight: 0
     region: content
   field_text_block:
     type: text_default
+    weight: 1
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 1
     region: content
 hidden:
   langcode: true

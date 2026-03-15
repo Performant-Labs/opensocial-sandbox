@@ -1,0 +1,23 @@
+uuid: 81306839-dd12-44a2-baa2-81b77b730232
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_message_context
+    - message.template.create_node_following_tag
+  module:
+    - options
+_core:
+  default_config_hash: io2zXZqhqdSHqnQaAyhjDdrL_OnjYCQfMlO1ehIA7bg
+id: message.create_node_following_tag.field_message_context
+field_name: field_message_context
+entity_type: message
+bundle: create_node_following_tag
+label: create_node_following_tag
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

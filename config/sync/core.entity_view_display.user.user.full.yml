@@ -1,9 +1,10 @@
-uuid: 4f2236cc-10d3-466a-9280-35183a23e1f8
+uuid: 8b0711ac-7534-4ae8-8e49-5bb3e89764ff
 langcode: en
 status: true
 dependencies:
   config:
     - core.entity_view_mode.user.full
+    - field.field.user.user.field_allow_following
     - field.field.user.user.field_external_identifier
   module:
     - user
@@ -15,6 +16,7 @@ bundle: user
 mode: full
 content: {  }
 hidden:
+  field_allow_following: true
   field_external_identifier: true
   groups: true
   langcode: true

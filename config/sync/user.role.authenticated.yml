@@ -6,6 +6,7 @@ dependencies:
     - filter.format.basic_html
     - filter.format.simple_text
     - node.type.page
+    - taxonomy.vocabulary.event_types
     - taxonomy.vocabulary.expertise
     - taxonomy.vocabulary.group_type
     - taxonomy.vocabulary.interests
@@ -16,6 +17,7 @@ dependencies:
     - comment
     - entity_access_by_field
     - filter
+    - flag
     - node
     - profile
     - social_event
@@ -42,14 +44,19 @@ permissions:
   - 'cancel account'
   - 'change own username'
   - 'edit any page content'
+  - 'flag follow_content'
+  - 'flag follow_term'
   - 'manage everything enrollments'
   - 'select account cancellation method'
+  - 'select terms in event_types'
   - 'select terms in expertise'
   - 'select terms in group_type'
   - 'select terms in interests'
   - 'select terms in profile_tag'
   - 'select terms in social_tagging'
   - 'select terms in topic_types'
+  - 'unflag follow_content'
+  - 'unflag follow_term'
   - 'update own profile profile'
   - 'use text format basic_html'
   - 'use text format simple_text'

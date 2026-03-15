@@ -1,0 +1,13 @@
+uuid: 567a2860-2bd0-4a25-b656-f5f21736bb4d
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - social_follow_tag
+_core:
+  default_config_hash: CQPg3NKOrjQIi87ZUbbgg1R-nMYkbWGBljdGXO-5MsU
+id: most_followed_tags
+label: 'Most followed tags'
+revision: false
+description: ''

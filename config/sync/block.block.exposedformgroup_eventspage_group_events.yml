@@ -1,4 +1,4 @@
-uuid: d2976772-0244-4299-bea1-816dac723ce1
+uuid: 63671566-c1c9-44c2-a9bd-2d21638b332b
 langcode: en
 status: true
 dependencies:
@@ -26,6 +26,6 @@ settings:
 visibility:
   request_path:
     id: request_path
+    pages: '/group/*/events'
     negate: false
     context_mapping: {  }
-    pages: '/group/*/events'

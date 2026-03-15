@@ -1,0 +1,28 @@
+uuid: 55efd851-e87b-49d7-9f77-32cf822a73b1
+langcode: en
+status: true
+dependencies:
+  module:
+    - social_follow_tag
+    - system
+  theme:
+    - socialblue
+_core:
+  default_config_hash: Cal9r5E954U3h0jdsAgK9QwEIZezvVop24fTNNF-NSY
+id: followtag
+theme: socialblue
+region: secondary_navigation
+weight: 2
+provider: null
+plugin: follow_tag_block
+settings:
+  id: follow_tag_block
+  label: 'Follow tag'
+  label_display: '0'
+  provider: social_follow_tag
+visibility:
+  request_path:
+    id: request_path
+    pages: "/search/content\r\n/search/content/*\r\n"
+    negate: false
+    context_mapping: {  }

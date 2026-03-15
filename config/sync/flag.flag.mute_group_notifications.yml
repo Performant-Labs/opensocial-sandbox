@@ -1,4 +1,4 @@
-uuid: 7cc3c1d1-5378-49e1-a2c0-d48f0436ac2b
+uuid: d9232449-fa50-4fdd-8bde-80e92de7f312
 langcode: en
 status: true
 dependencies:
@@ -11,6 +11,7 @@ label: 'Mute Group Notifications'
 bundles: {  }
 entity_type: group
 global: false
+weight: 0
 flag_short: 'Mute group'
 flag_long: 'Muting the group notifications will result in their notifications not being send you anymore.'
 flag_message: ''
@@ -18,7 +19,6 @@ unflag_short: 'Unmute group'
 unflag_long: 'Receive the notifications of this group again.'
 unflag_message: ''
 unflag_denied_text: ''
-weight: 0
 flag_type: 'entity:group'
 link_type: ajax_link
 flagTypeConfig:

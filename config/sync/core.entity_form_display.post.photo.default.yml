@@ -1,4 +1,4 @@
-uuid: 5dd850ab-7a1a-4c4a-b291-e48999450606
+uuid: 88807a9c-0ca3-46e2-9205-fd27e982b29e
 langcode: en
 status: true
 dependencies:
@@ -33,13 +33,13 @@ content:
       social_emoji:
         display_emoji_picker: true
   field_post_image:
-    type: image_image
     weight: 1
-    region: content
     settings:
-      progress_indicator: throbber
       preview_image_style: social_post_photo
+      progress_indicator: throbber
     third_party_settings: {  }
+    type: image_image
+    region: content
   field_visibility:
     type: dropdown_widget_type
     weight: 2
@@ -47,11 +47,11 @@ content:
     settings: {  }
     third_party_settings: {  }
   status:
-    type: boolean_checkbox
-    weight: 20
     region: content
     settings:
       display_label: true
+    type: boolean_checkbox
+    weight: 20
     third_party_settings: {  }
 hidden:
   field_post_comments: true

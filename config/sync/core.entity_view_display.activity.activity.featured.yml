@@ -1,4 +1,4 @@
-uuid: d84b23e8-e15e-4842-9353-dbcbbfd9be76
+uuid: ad5b1a24-2488-4ac6-afcb-de9a21c8f6c1
 langcode: en
 status: true
 dependencies:
@@ -23,7 +23,7 @@ bundle: activity
 mode: featured
 content:
   field_activity_entity:
-    type: dynamic_entity_reference_entity_view
+    weight: 1
     label: hidden
     settings:
       comment:
@@ -85,22 +85,22 @@ content:
         view_mode: default
         link: false
     third_party_settings: {  }
-    weight: 1
+    type: dynamic_entity_reference_entity_view
     region: content
   field_activity_output_text:
     type: text_default
+    weight: 0
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 0
     region: content
   name:
-    type: string
     label: above
+    type: string
+    weight: -4
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: -4
     region: content
 hidden:
   field_activity_destinations: true

@@ -1,4 +1,4 @@
-uuid: 84ea0f39-2235-427f-8fb6-b768542f6b6f
+uuid: 7e1af777-9e79-467e-93b3-bfec90028f18
 langcode: en
 status: true
 dependencies:
@@ -35,45 +35,45 @@ bundle: profile
 mode: hero
 content:
   field_profile_first_name:
-    type: string
+    weight: 0
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 0
+    type: string
     region: content
   field_profile_function:
     type: string
+    weight: 3
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 3
     region: content
   field_profile_image:
-    type: image
+    weight: 2
     label: hidden
     settings:
-      image_link: ''
       image_style: social_large
+      image_link: ''
     third_party_settings: {  }
-    weight: 2
+    type: image
     region: content
   field_profile_last_name:
-    type: string
+    weight: 1
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 1
+    type: string
     region: content
   field_profile_organization:
     type: string
+    weight: 4
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 4
     region: content
 hidden:
   affiliation_owned_count: true

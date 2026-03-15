@@ -1,4 +1,4 @@
-uuid: 506f7dcd-5c5e-4ea8-bb2a-3a0937a022a0
+uuid: 488157ab-e8df-4b10-aeb0-70fa0a509768
 langcode: en
 status: true
 dependencies:
@@ -20,10 +20,10 @@ translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: 'default:file'
-  handler_settings: {  }
   file_directory: '[date:custom:Y]-[date:custom:m]'
   file_extensions: 'txt pdf doc docx xls xlsx ppt pptx csv png gif jpg jpeg'
   max_filesize: ''
   description_field: false
+  handler: 'default:file'
+  handler_settings: {  }
 field_type: file

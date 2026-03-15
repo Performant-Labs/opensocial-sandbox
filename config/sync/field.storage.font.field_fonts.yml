@@ -1,4 +1,4 @@
-uuid: 527c44b3-5400-4bbf-81bf-f8f1c609828f
+uuid: 23138aa2-6fc8-46e7-ac8e-58d1db3df625
 langcode: en
 status: true
 dependencies:
@@ -12,10 +12,10 @@ field_name: field_fonts
 entity_type: font
 type: file
 settings:
-  target_type: file
   display_field: false
   display_default: false
   uri_scheme: public
+  target_type: file
 module: file
 locked: false
 cardinality: -1

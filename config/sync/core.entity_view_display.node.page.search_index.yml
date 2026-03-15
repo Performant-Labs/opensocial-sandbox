@@ -1,4 +1,4 @@
-uuid: 8c7655ac-e602-41e1-b144-19485e209a8c
+uuid: 6c20ad23-7212-4d27-9c50-0dc3d0e989a6
 langcode: en
 status: true
 dependencies:
@@ -23,26 +23,26 @@ bundle: page
 mode: search_index
 content:
   body:
-    type: text_default
     label: hidden
+    type: text_default
+    weight: 0
     settings: {  }
     third_party_settings: {  }
-    weight: 0
     region: content
   field_page_comments:
-    type: comment_default
+    weight: 1
     label: above
     settings:
-      view_mode: default
       pager_id: 0
+      view_mode: default
     third_party_settings: {  }
-    weight: 1
+    type: comment_default
     region: content
   flag_follow_content:
-    settings: {  }
-    third_party_settings: {  }
     weight: 2
     region: content
+    settings: {  }
+    third_party_settings: {  }
 hidden:
   field_content_visibility: true
   field_files: true

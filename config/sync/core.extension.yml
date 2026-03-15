@@ -21,10 +21,10 @@ module:
   comment: 0
   config: 0
   config_modify: 0
+  config_translation: 0
   config_update: 0
   crop: 0
   datetime: 0
-  dblog: 0
   dropdown: 0
   dynamic_entity_reference: 0
   dynamic_page_cache: 0
@@ -62,16 +62,16 @@ module:
   jquery_ui_menu: 0
   jquery_ui_resizable: 0
   language: 0
-  lazy: 0
   like_and_dislike: 0
   link: 0
   linkit: 0
+  locale: 0
   mailer_transport: 0
-  markdown: 0
   mentions: 0
   menu_link_content: 0
   menu_ui: 0
   message: 0
+  message_notify: 0
   metatag: 0
   metatag_open_graph: 0
   mysql: 0
@@ -82,7 +82,13 @@ module:
   path_alias: 0
   pl_discovery: 0
   pl_group_extras: 0
+  pl_group_language: 0
+  pl_group_mission: 0
+  pl_group_pin: 0
+  pl_multigroup: 0
+  pl_notifications: 0
   pl_opensocial_wiki: 0
+  pl_profile_stats: 0
   profile: 0
   r4032login: 0
   redirect: 0
@@ -105,6 +111,8 @@ module:
   social_event_managers: 0
   social_event_type: 0
   social_follow_content: 0
+  social_follow_taxonomy: 0
+  social_follow_user: 0
   social_font: 0
   social_footer: 0
   social_group_gvbo: 0
@@ -148,8 +156,10 @@ module:
   content_translation: 10
   social_event_an_enroll: 10
   social_event_max_enroll: 10
+  social_follow_tag: 10
   views: 10
   paragraphs: 11
+  social_language: 11
   improved_theme_settings: 50
   social: 1000
 theme:

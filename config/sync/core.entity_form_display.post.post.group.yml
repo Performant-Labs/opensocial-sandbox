@@ -1,4 +1,4 @@
-uuid: 56f01647-1cb7-426e-b865-809919c88348
+uuid: e65c47ea-c7d0-4459-8129-30657d5c8071
 langcode: en
 status: true
 dependencies:
@@ -22,26 +22,26 @@ content:
   field_post:
     type: string_textarea
     weight: 0
-    region: content
+    label: hidden
     settings:
       rows: 5
       placeholder: "What's on your mind?"
     third_party_settings:
       social_emoji:
         display_emoji_picker: true
-    label: hidden
+    region: content
   field_visibility:
     type: dropdown_widget_type
     weight: 1
-    region: content
     settings: {  }
     third_party_settings: {  }
+    region: content
   status:
-    type: boolean_checkbox
-    weight: 20
     region: content
     settings:
       display_label: true
+    type: boolean_checkbox
+    weight: 20
     third_party_settings: {  }
 hidden:
   field_post_comments: true

@@ -1,4 +1,4 @@
-uuid: 3eb81c22-4c12-4188-ba33-fd76566cd3bb
+uuid: 8be1ea2a-117d-4367-abc1-8b30618d69a3
 langcode: en
 status: true
 dependencies:
@@ -26,6 +26,6 @@ settings:
 visibility:
   request_path:
     id: request_path
+    pages: /community-events
     negate: false
     context_mapping: {  }
-    pages: /community-events

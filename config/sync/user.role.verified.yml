@@ -1,4 +1,4 @@
-uuid: 27b4cbc6-31f2-4403-8a58-9fe5cf029d28
+uuid: ecc52a17-5fb7-4339-9b53-a81bc444e9c5
 langcode: en
 status: true
 dependencies:
@@ -6,6 +6,7 @@ dependencies:
     - filter.format.mail_html
     - node.type.event
     - node.type.topic
+    - taxonomy.vocabulary.event_types
     - taxonomy.vocabulary.expertise
     - taxonomy.vocabulary.interests
     - taxonomy.vocabulary.profile_tag
@@ -30,6 +31,7 @@ dependencies:
     - social_search
     - social_tagging
     - social_topic
+    - taxonomy
     - taxonomy_access_fix
 _core:
   default_config_hash: N_EVY02CgNEqw9slStmtWAwwUhlEZ7xbuUXjiPnvvGc
@@ -54,6 +56,7 @@ permissions:
   - 'administer own comments'
   - 'create event content'
   - 'create flexible_group group'
+  - 'create terms in event_types'
   - 'create topic content'
   - 'delete own comments'
   - 'delete own event content'
@@ -64,11 +67,14 @@ permissions:
   - 'edit own post entities'
   - 'edit own topic content'
   - 'flag follow_content'
+  - 'flag follow_term'
+  - 'flag follow_user'
   - 'flag mute_group_notifications'
   - 'override event published option'
   - 'override topic published option'
   - 'post comments'
   - 'select account cancellation method'
+  - 'select terms in event_types'
   - 'select terms in expertise'
   - 'select terms in interests'
   - 'select terms in profile_tag'
@@ -76,6 +82,8 @@ permissions:
   - 'select terms in topic_types'
   - 'skip comment approval'
   - 'unflag follow_content'
+  - 'unflag follow_term'
+  - 'unflag follow_user'
   - 'unflag mute_group_notifications'
   - 'use select2 autocomplete'
   - 'use text format mail_html'
@@ -94,11 +102,13 @@ permissions:
   - 'view own unpublished post entities'
   - 'view public flexible_group group'
   - 'view social_tagging'
+  - 'view term names in event_types'
   - 'view term names in expertise'
   - 'view term names in interests'
   - 'view term names in profile_tag'
   - 'view term names in social_tagging'
   - 'view term names in topic_types'
+  - 'view terms in event_types'
   - 'view terms in expertise'
   - 'view terms in interests'
   - 'view terms in profile_tag'

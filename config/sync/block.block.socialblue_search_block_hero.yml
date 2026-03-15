@@ -1,4 +1,4 @@
-uuid: 6de16507-a439-4816-9529-f9ea6f09d07e
+uuid: 54a5a24c-4648-4407-b9a4-b55761e7b3af
 langcode: en
 status: true
 dependencies:
@@ -23,6 +23,6 @@ settings:
 visibility:
   request_path:
     id: request_path
+    pages: "/search/content\r\n/search/content/*\r\n/search/users\r\n/search/users/*\r\n/search/groups\r\n/search/groups/*\r\n/search/all\r\n/search/all/*"
     negate: false
     context_mapping: {  }
-    pages: "/search/content\r\n/search/content/*\r\n/search/users\r\n/search/users/*\r\n/search/groups\r\n/search/groups/*\r\n/search/all\r\n/search/all/*"

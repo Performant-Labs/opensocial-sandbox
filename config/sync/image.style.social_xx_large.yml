@@ -1,4 +1,4 @@
-uuid: afdfd00a-8eba-4c12-aead-8939589f72b8
+uuid: 6a14fc72-5979-4aed-a5c7-9f11894cd115
 langcode: en
 status: true
 dependencies:
@@ -24,9 +24,9 @@ effects:
     id: image_scale_and_crop
     weight: 2
     data:
+      anchor: center-center
       width: 1200
       height: 423
-      anchor: center-center
   fa621cfb-8201-4ac7-8dd1-a9a1f6031115:
     uuid: fa621cfb-8201-4ac7-8dd1-a9a1f6031115
     id: image_effects_auto_orient

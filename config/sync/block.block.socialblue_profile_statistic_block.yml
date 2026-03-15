@@ -1,4 +1,4 @@
-uuid: 29f9cf39-ecdf-48ca-9667-a7e70c1e92a0
+uuid: 0008862d-4b43-4a1a-a0c0-836884ccc6fc
 langcode: en
 status: true
 dependencies:
@@ -27,4 +27,4 @@ visibility:
     id: request_path
     negate: false
     context_mapping: {  }
-    pages: "/user\r\n/user/*/stream\r\n/user/*/events\r\n/user/*/topics\r\n/user/*/groups\r\n/user/*/information\r\n/user/*/discussions\r\n/user/*/ideas\r\n/user/*/challenges"
+    pages: "/user\r\n/user/*/stream\r\n/user/*/events\r\n/user/*/topics\r\n/user/*/groups\r\n/user/*/information\r\n/user/*/discussions\r\n/user/*/ideas\r\n/user/*/challenges\r\n/user/*/following/users\r\n/user/*/followers"

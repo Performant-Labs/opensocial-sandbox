@@ -1,4 +1,4 @@
-uuid: 6f363c56-1b64-49ca-aefa-1b8b373d565b
+uuid: 58e5c0ad-a6db-46a8-9e33-779bf42fb009
 langcode: en
 status: true
 dependencies:
@@ -26,6 +26,6 @@ settings:
 visibility:
   request_path:
     id: request_path
+    pages: /following
     negate: false
     context_mapping: {  }
-    pages: /following

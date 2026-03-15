@@ -1,4 +1,4 @@
-uuid: 4aad7757-93a1-450b-91c6-e17408c8ac4a
+uuid: 0aaf1a75-4140-4dee-8548-aa0f5da8e701
 langcode: en
 status: true
 dependencies:
@@ -28,6 +28,6 @@ settings:
 visibility:
   request_path:
     id: request_path
+    pages: '/user/*/stream'
     negate: false
     context_mapping: {  }
-    pages: '/user/*/stream'

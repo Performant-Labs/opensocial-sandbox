@@ -1,4 +1,4 @@
-uuid: f4fffc4c-6972-4ce3-b100-c255142b72de
+uuid: 6a4bd4b4-1cf2-4d7d-9625-ef049ab1c6dd
 langcode: en
 status: true
 dependencies:
@@ -26,6 +26,6 @@ settings:
 visibility:
   request_path:
     id: request_path
+    pages: "/search/groups\r\n/search/groups/*"
     negate: false
     context_mapping: {  }
-    pages: "/search/groups\r\n/search/groups/*"

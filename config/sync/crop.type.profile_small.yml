@@ -1,11 +1,11 @@
-uuid: a97e054d-17b2-425d-8fff-22f8fd25022e
+uuid: ab2a393b-e2fc-4a1d-9a28-c57cc78f5a03
 langcode: en
 status: true
 dependencies: {  }
 _core:
   default_config_hash: dlzhxhc9R3WQnyWJ8TkCz2Ekote8VmPbaRRfj2wNtpM
-label: 'Profile small'
 id: profile_small
+label: 'Profile small'
 description: 'Small sized profile image'
 aspect_ratio: '24:24'
 soft_limit_width: null

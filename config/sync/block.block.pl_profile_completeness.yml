@@ -1,0 +1,25 @@
+uuid: 9b687eab-0b1b-4667-9e73-2ad2d777be76
+langcode: en
+status: true
+dependencies:
+  module:
+    - pl_profile_stats
+    - system
+  theme:
+    - socialblue
+id: pl_profile_completeness
+theme: socialblue
+region: content
+weight: 51
+provider: null
+plugin: pl_profile_completeness
+settings:
+  id: pl_profile_completeness
+  label: 'Profile Completeness'
+  label_display: '0'
+  provider: pl_profile_stats
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '/user/*'

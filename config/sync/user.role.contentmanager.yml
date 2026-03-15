@@ -15,6 +15,7 @@ dependencies:
     - taxonomy.vocabulary.topic_types
   module:
     - comment
+    - content_translation
     - entity_access_by_field
     - filter
     - flag
@@ -70,6 +71,7 @@ permissions:
   - 'administer post entities'
   - 'bypass create group access'
   - 'bypass node access'
+  - 'create content translations'
   - 'create event content'
   - 'create flexible_group group'
   - 'create page content'
@@ -81,6 +83,7 @@ permissions:
   - 'delete any page content'
   - 'delete any post entities'
   - 'delete any topic content'
+  - 'delete content translations'
   - 'delete event revisions'
   - 'delete own comments'
   - 'delete own event content'
@@ -103,6 +106,8 @@ permissions:
   - 'edit profile tags'
   - 'edit terms in social_tagging'
   - 'flag follow_content'
+  - 'flag follow_term'
+  - 'flag follow_user'
   - 'flag mute_group_notifications'
   - 'flag promote_homepage'
   - 'manage all enrollments'
@@ -140,9 +145,12 @@ permissions:
   - 'select terms in topic_types'
   - 'skip comment approval'
   - 'unflag follow_content'
+  - 'unflag follow_term'
+  - 'unflag follow_user'
   - 'unflag mute_group_notifications'
   - 'unflag promote_homepage'
   - 'update any profile profile'
+  - 'update content translations'
   - 'use select2 autocomplete'
   - 'use text format full_html'
   - 'use text format mail_html'

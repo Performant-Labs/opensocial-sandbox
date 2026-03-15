@@ -1,4 +1,4 @@
-uuid: ac3fc0ae-3a31-499a-a46c-04895c739469
+uuid: f5ec6fb2-4d87-4366-abc8-29f726d405b9
 langcode: en
 status: true
 dependencies:
@@ -26,11 +26,11 @@ label: 'Create comment on post in the community'
 description: 'A user add a comment to post in the community'
 text:
   -
+    format: full_html
     value: '<p><a href="[message:author:url:absolute]">[message:author:display-name]</a> commented on a post</p>'
-    format: full_html
   -
-    value: '<p><a href="[message:author:url:absolute]">[message:author:display-name]</a> and @count others commented on a post</p>'
     format: full_html
+    value: '<p><a href="[message:author:url:absolute]">[message:author:display-name]</a> and @count others commented on a post</p>'
 settings:
   'token options':
     clear: false

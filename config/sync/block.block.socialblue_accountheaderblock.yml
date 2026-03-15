@@ -1,4 +1,4 @@
-uuid: eefcabeb-186c-4565-9d82-6677526c0539
+uuid: 65ca205b-87d0-4e56-b061-b56f604b69db
 langcode: en
 status: true
 dependencies:
@@ -25,9 +25,9 @@ settings:
 visibility:
   user_role:
     id: user_role
-    negate: false
-    context_mapping:
-      user: '@user.current_user_context:current_user'
     roles:
       authenticated: authenticated
       administrator: administrator
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'

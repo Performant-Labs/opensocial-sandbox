@@ -1,4 +1,4 @@
-uuid: 9af4021f-19c7-44d1-848d-f33830f655bd
+uuid: e238b951-241c-4e19-8185-b84002f90c21
 langcode: en
 status: true
 dependencies:
@@ -83,6 +83,21 @@ content:
     third_party_settings: {  }
     weight: 4
     region: content
+  flag_follow_user:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 10
+    region: content
+  followers:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  following:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 6
+    region: content
 hidden:
   affiliation_owned_count: true
   field_enable_other_affiliations: true
@@ -98,4 +113,5 @@ hidden:
   field_profile_show_email: true
   field_profile_summary: true
   search_api_excerpt: true
+  social_tagging: true
   user_removed_affiliations: true

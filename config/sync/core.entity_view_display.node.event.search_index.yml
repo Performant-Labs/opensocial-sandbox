@@ -1,4 +1,4 @@
-uuid: b31265a3-73ba-4bc0-90e3-02eef91794a4
+uuid: 7f12c703-5af5-4550-a83c-a73d516982ff
 langcode: en
 status: true
 dependencies:
@@ -24,7 +24,6 @@ dependencies:
     - field.field.node.event.field_event_send_confirmation
     - field.field.node.event.field_event_send_invite_by_user
     - field.field.node.event.field_event_type
-    - field.field.node.event.field_event_url
     - field.field.node.event.field_files
     - field.field.node.event.field_hide_enrollments
     - node.type.event
@@ -57,11 +56,6 @@ content:
   flag_follow_content:
     weight: 10
     region: content
-  flag_promote_homepage:
-    settings: {  }
-    third_party_settings: {  }
-    weight: 10
-    region: content
 hidden:
   field_content_visibility: true
   field_enroll_method: true
@@ -80,7 +74,6 @@ hidden:
   field_event_send_confirmation: true
   field_event_send_invite_by_user: true
   field_event_type: true
-  field_event_url: true
   field_files: true
   field_hide_enrollments: true
   groups: true
@@ -88,4 +81,3 @@ hidden:
   like_and_dislike: true
   links: true
   search_api_excerpt: true
-  social_tagging: true

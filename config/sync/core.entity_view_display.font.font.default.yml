@@ -1,4 +1,4 @@
-uuid: d79748e8-7b39-4c6f-857f-34729042491b
+uuid: 5b13567c-e1d1-447c-a6f8-f37a2a1a423b
 langcode: en
 status: true
 dependencies:
@@ -18,34 +18,33 @@ bundle: font
 mode: default
 content:
   field_fallback:
-    type: list_default
+    weight: 2
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 2
+    type: list_default
     region: content
   field_fonts:
-    type: file_default
+    weight: 1
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 1
+    type: file_default
     region: content
   name:
-    type: string
     label: above
+    type: string
+    weight: -4
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: -4
     region: content
   user_id:
-    type: author
     label: hidden
+    type: author
+    weight: 0
     settings: {  }
     third_party_settings: {  }
-    weight: 0
     region: content
 hidden:
   langcode: true
-  search_api_excerpt: true

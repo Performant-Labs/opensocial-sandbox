@@ -1,4 +1,4 @@
-uuid: 3c169b3b-a977-48e8-ae27-4756cd513ebc
+uuid: ce094995-01f6-4d0c-9085-717ea65ff639
 langcode: en
 status: true
 dependencies:
@@ -28,8 +28,8 @@ settings:
 visibility:
   'entity_bundle:node':
     id: 'entity_bundle:node'
+    bundles:
+      event: event
     negate: false
     context_mapping:
       node: '@node.node_route_context:node'
-    bundles:
-      event: event

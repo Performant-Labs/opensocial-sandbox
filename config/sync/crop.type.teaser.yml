@@ -1,11 +1,11 @@
-uuid: 913aeec2-bbb0-4f11-b3b7-11c2137ee4c4
+uuid: e6e8fd84-0560-4c93-905e-e51900614449
 langcode: en
 status: true
 dependencies: {  }
 _core:
   default_config_hash: vyCdkkefvOpkZ7JeB2BoNPPPIT2tyd8DmKJI-Zc0bro
-label: Small
 id: teaser
+label: Small
 description: 'Teaser image in overviews'
 aspect_ratio: '220:220'
 soft_limit_width: null

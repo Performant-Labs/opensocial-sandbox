@@ -1,4 +1,4 @@
-uuid: ffc39385-e887-4ad3-aba8-1f1940bcafe3
+uuid: c8d3f0b1-6572-4e67-a3f2-e6648342da9f
 langcode: en
 status: true
 dependencies:
@@ -36,12 +36,12 @@ mode: table
 content:
   field_profile_image:
     type: image
+    weight: 0
     label: hidden
     settings:
-      image_link: ''
       image_style: social_medium
+      image_link: ''
     third_party_settings: {  }
-    weight: 0
     region: content
 hidden:
   affiliation_owned_count: true

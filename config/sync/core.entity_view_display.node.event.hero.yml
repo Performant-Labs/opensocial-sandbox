@@ -1,4 +1,4 @@
-uuid: 42d6064d-74d8-4e10-878e-dfa73de238aa
+uuid: 60a78a95-abdf-4922-8d20-0c1380b84d9b
 langcode: en
 status: true
 dependencies:
@@ -23,7 +23,6 @@ dependencies:
     - field.field.node.event.field_event_send_confirmation
     - field.field.node.event.field_event_send_invite_by_user
     - field.field.node.event.field_event_type
-    - field.field.node.event.field_event_url
     - field.field.node.event.field_files
     - field.field.node.event.field_hide_enrollments
     - image.style.social_xx_large
@@ -87,11 +86,6 @@ content:
     third_party_settings: {  }
     weight: 6
     region: content
-  flag_promote_homepage:
-    settings: {  }
-    third_party_settings: {  }
-    weight: 10
-    region: content
   like_and_dislike:
     settings: {  }
     third_party_settings: {  }
@@ -122,11 +116,9 @@ hidden:
   field_event_send_confirmation: true
   field_event_send_invite_by_user: true
   field_event_type: true
-  field_event_url: true
   field_files: true
   field_hide_enrollments: true
   groups: true
   langcode: true
   links: true
   search_api_excerpt: true
-  social_tagging: true

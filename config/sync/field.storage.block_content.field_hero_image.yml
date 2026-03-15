@@ -1,4 +1,4 @@
-uuid: 7a4797ec-7979-4517-b6b1-e825009bde02
+uuid: 2141dd1f-3c92-45d9-bb8c-1d830b0a33e2
 langcode: en
 status: true
 dependencies:
@@ -13,9 +13,6 @@ field_name: field_hero_image
 entity_type: block_content
 type: image
 settings:
-  target_type: file
-  display_field: false
-  display_default: false
   uri_scheme: secret
   default_image:
     uuid: ''
@@ -23,6 +20,9 @@ settings:
     title: ''
     width: null
     height: null
+  target_type: file
+  display_field: false
+  display_default: false
 module: image
 locked: false
 cardinality: 1

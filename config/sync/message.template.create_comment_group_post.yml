@@ -1,4 +1,4 @@
-uuid: 733fe6ab-1f4d-4446-8c19-09f9c2e833d5
+uuid: de198f0b-9edf-49c9-b808-4b127b82e9cd
 langcode: en
 status: true
 dependencies:
@@ -26,11 +26,11 @@ label: 'Create comment on post in the group'
 description: 'A user add a comment to post in the group'
 text:
   -
+    format: full_html
     value: '<p><a href="[message:author:url:absolute]">[message:author:display-name]</a> commented on a post in <a href="[message:gurl]">[message:gtitle]</a></p>'
-    format: full_html
   -
-    value: '<p><a href="[message:author:url:absolute]">[message:author:display-name]</a> and @count others commented on a post in <a href="[message:gurl]">[message:gtitle]</a></p>'
     format: full_html
+    value: '<p><a href="[message:author:url:absolute]">[message:author:display-name]</a> and @count others commented on a post in <a href="[message:gurl]">[message:gtitle]</a></p>'
 settings:
   'token options':
     clear: false

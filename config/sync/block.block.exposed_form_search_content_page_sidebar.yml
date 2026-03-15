@@ -1,4 +1,4 @@
-uuid: e6555c51-a350-4474-b10a-51c0431fbe75
+uuid: c08025d7-09f6-48af-ae7b-4f68fc806fed
 langcode: en
 status: true
 dependencies:
@@ -26,6 +26,6 @@ settings:
 visibility:
   request_path:
     id: request_path
+    pages: "/search/content\r\n/search/content/*"
     negate: false
     context_mapping: {  }
-    pages: "/search/content\r\n/search/content/*"

@@ -1,4 +1,4 @@
-uuid: d673bdba-7536-4f14-8dfb-d1bb60d0257c
+uuid: 7e7a781a-6394-4063-ae65-c6e8d38a4226
 langcode: en
 status: true
 dependencies:
@@ -25,32 +25,32 @@ mode: featured
 content:
   field_post:
     type: text_default
+    weight: 2
+    region: content
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 2
-    region: content
   field_post_image:
-    type: image
+    weight: 1
     label: hidden
     settings:
-      image_link: ''
       image_style: social_post_photo
+      image_link: ''
     third_party_settings: {  }
-    weight: 1
+    type: image
     region: content
   like_and_dislike:
-    settings: {  }
-    third_party_settings: {  }
     weight: 2
     region: content
+    settings: {  }
+    third_party_settings: {  }
   user_id:
     type: author
+    weight: 0
+    region: content
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 0
-    region: content
 hidden:
   field_post_comments: true
   field_recipient_group: true

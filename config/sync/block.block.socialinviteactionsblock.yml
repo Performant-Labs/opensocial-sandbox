@@ -1,4 +1,4 @@
-uuid: 50c69424-22df-4b1c-b5dc-bba0456b9391
+uuid: 4bfcb959-61fe-4e11-9e48-1efe29d36320
 langcode: en
 status: true
 dependencies:
@@ -23,6 +23,6 @@ settings:
 visibility:
   request_path:
     id: request_path
+    pages: '/group/*/membership'
     negate: false
     context_mapping: {  }
-    pages: '/group/*/membership'

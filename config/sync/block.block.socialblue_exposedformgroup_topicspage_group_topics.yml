@@ -1,4 +1,4 @@
-uuid: 9cb7fbc6-bd51-49d7-a119-8543f83331f0
+uuid: bc0ffc4d-5ef0-4215-9eef-e17726712ef3
 langcode: en
 status: true
 dependencies:
@@ -26,6 +26,6 @@ settings:
 visibility:
   request_path:
     id: request_path
+    pages: '/group/*/topics'
     negate: false
     context_mapping: {  }
-    pages: '/group/*/topics'

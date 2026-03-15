@@ -1,4 +1,4 @@
-uuid: 0729e063-479b-46e4-b513-a3ae789bfd41
+uuid: 7b75cdcb-58f1-432c-a428-0c8a363f926a
 langcode: en
 status: true
 dependencies:
@@ -35,13 +35,13 @@ bundle: profile
 mode: compact_notification
 content:
   field_profile_image:
-    type: image
+    weight: 7
     label: hidden
     settings:
-      image_link: ''
       image_style: social_medium
+      image_link: ''
     third_party_settings: {  }
-    weight: 7
+    type: image
     region: content
 hidden:
   affiliation_owned_count: true

@@ -1,0 +1,29 @@
+uuid: 84d999f3-a22e-4f27-a1af-dbf35d8b4790
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.most_followed_tags
+    - field.field.block_content.most_followed_tags.field_terms
+  enforced:
+    module:
+      - social_follow_tag
+_core:
+  default_config_hash: KzD3_-fREOs2MNqEZTa7kmYsdk3xS8Lb8Hyobo1KLP8
+id: block_content.most_followed_tags.default
+targetEntityType: block_content
+bundle: most_followed_tags
+mode: default
+content:
+  field_terms:
+    weight: 0
+    label: hidden
+    settings:
+      view_mode: followers_count
+      link: false
+    third_party_settings: {  }
+    type: entity_reference_entity_view
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

@@ -1,4 +1,4 @@
-uuid: 517c032d-82c8-4958-8aa0-958e7c9bfcfa
+uuid: 396c54e8-606f-4c1a-8c2b-0993848c5015
 langcode: en
 status: true
 dependencies:
@@ -20,8 +20,6 @@ translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: 'default:file'
-  handler_settings: {  }
   file_directory: post
   file_extensions: 'png gif jpg jpeg'
   max_filesize: ''
@@ -37,4 +35,6 @@ settings:
     title: ''
     width: null
     height: null
+  handler: 'default:file'
+  handler_settings: {  }
 field_type: image

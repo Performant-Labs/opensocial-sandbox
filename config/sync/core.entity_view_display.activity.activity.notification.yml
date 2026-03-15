@@ -1,4 +1,4 @@
-uuid: 56c98bd2-8435-4d99-9fa8-04d41b275a92
+uuid: 41fafd83-b646-41a9-9a4a-552dfbed8e55
 langcode: en
 status: true
 dependencies:
@@ -23,18 +23,18 @@ mode: notification
 content:
   field_activity_output_text:
     type: text_default
+    weight: 0
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 0
     region: content
   name:
-    type: string
     label: above
+    type: string
+    weight: -4
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: -4
     region: content
 hidden:
   field_activity_destinations: true

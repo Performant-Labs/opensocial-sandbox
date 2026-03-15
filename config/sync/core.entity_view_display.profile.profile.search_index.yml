@@ -1,4 +1,4 @@
-uuid: 91f93832-9134-4942-8442-787b8645845c
+uuid: fe47c92a-872e-4f38-9e1b-3855a4d1b55e
 langcode: en
 status: true
 dependencies:
@@ -35,58 +35,58 @@ bundle: profile
 mode: search_index
 content:
   field_profile_address:
-    type: address_default
+    weight: 5
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 5
+    type: address_default
     region: content
   field_profile_expertise:
-    type: entity_reference_label
+    weight: 8
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    weight: 8
+    type: entity_reference_label
     region: content
   field_profile_function:
-    type: string
+    weight: 2
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 2
+    type: string
     region: content
   field_profile_interests:
-    type: entity_reference_label
+    weight: 7
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    weight: 7
+    type: entity_reference_label
     region: content
   field_profile_organization:
-    type: string
+    weight: 3
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 3
+    type: string
     region: content
   field_profile_phone_number:
-    type: string
+    weight: 4
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 4
+    type: string
     region: content
   field_profile_self_introduction:
-    type: text_default
+    weight: 6
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 6
+    type: text_default
     region: content
 hidden:
   affiliation_owned_count: true

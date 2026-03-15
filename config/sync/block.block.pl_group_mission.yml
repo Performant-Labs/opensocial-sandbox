@@ -1,0 +1,25 @@
+uuid: 2bc94596-0481-416d-9b88-fe5c5307a673
+langcode: en
+status: true
+dependencies:
+  module:
+    - pl_group_mission
+    - system
+  theme:
+    - socialblue
+id: pl_group_mission
+theme: socialblue
+region: complementary_bottom
+weight: 10
+provider: null
+plugin: pl_group_mission
+settings:
+  id: pl_group_mission
+  label: 'About this group'
+  label_display: visible
+  provider: pl_group_mission
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '/group/*'

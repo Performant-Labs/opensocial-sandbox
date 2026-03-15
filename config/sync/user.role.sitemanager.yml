@@ -18,6 +18,7 @@ dependencies:
   module:
     - block_content
     - comment
+    - content_translation
     - entity_access_by_field
     - filter
     - flag
@@ -36,6 +37,7 @@ dependencies:
     - social_event
     - social_event_an_enroll
     - social_event_managers
+    - social_follow_user
     - social_font
     - social_footer
     - social_group
@@ -92,6 +94,7 @@ permissions:
   - 'administer social swiftmail'
   - 'administer social_comment_upload settings'
   - 'administer social_event settings'
+  - 'administer social_follow_user settings'
   - 'administer social_footer_block settings'
   - 'administer social_tagging'
   - 'administer social_topic settings'
@@ -104,6 +107,7 @@ permissions:
   - 'block users'
   - 'bypass create group access'
   - 'bypass node access'
+  - 'create content translations'
   - 'create event content'
   - 'create flexible_group group'
   - 'create page content'
@@ -121,6 +125,7 @@ permissions:
   - 'delete any page content'
   - 'delete any post entities'
   - 'delete any topic content'
+  - 'delete content translations'
   - 'delete event revisions'
   - 'delete font entities'
   - 'delete own comments'
@@ -156,6 +161,8 @@ permissions:
   - 'edit terms in social_tagging'
   - 'edit terms in topic_types'
   - 'flag follow_content'
+  - 'flag follow_term'
+  - 'flag follow_user'
   - 'flag mute_group_notifications'
   - 'manage all enrollments'
   - 'manage all groups'
@@ -193,9 +200,13 @@ permissions:
   - 'set social event managers settings'
   - 'set social group settings'
   - 'skip comment approval'
+  - 'translate any entity'
   - 'unflag follow_content'
+  - 'unflag follow_term'
+  - 'unflag follow_user'
   - 'unflag mute_group_notifications'
   - 'update any profile profile'
+  - 'update content translations'
   - 'use select2 autocomplete'
   - 'use text format full_html'
   - 'use text format mail_html'

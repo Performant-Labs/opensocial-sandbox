@@ -1,8 +1,9 @@
-uuid: d4931ed3-a30f-4aec-9f7d-e3af0b6a0c2b
+uuid: 43116477-bfd8-4142-9be4-dbedfe1c4e61
 langcode: en
 status: true
 dependencies:
   config:
+    - field.field.user.user.field_allow_following
     - field.field.user.user.field_external_identifier
   module:
     - user
@@ -14,6 +15,7 @@ bundle: user
 mode: default
 content: {  }
 hidden:
+  field_allow_following: true
   field_external_identifier: true
   groups: true
   langcode: true

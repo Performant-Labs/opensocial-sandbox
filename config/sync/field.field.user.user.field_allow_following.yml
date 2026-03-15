@@ -1,0 +1,29 @@
+uuid: cb344117-4943-4761-b63e-9acba3bb8d7e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_allow_following
+  module:
+    - user
+  enforced:
+    module:
+      - social_follow_user
+_core:
+  default_config_hash: 11Ky-jqfzL5EIfDLbt--talfoolOLN8-EDEelIXT-e8
+id: user.user.field_allow_following
+field_name: field_allow_following
+entity_type: user
+bundle: user
+label: 'Allow members to follow me'
+description: 'This selection allows you to turn on the ability for members to follow your activity and receive notifications about new content you create.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

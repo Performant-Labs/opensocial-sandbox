@@ -1,4 +1,4 @@
-uuid: b1725699-8cbf-4cc6-9dd4-ee7e9779cd77
+uuid: dda60da8-cd71-491e-934f-98150aaa15c2
 langcode: en
 status: true
 dependencies:
@@ -14,12 +14,12 @@ mode: teaser
 content:
   entity_id:
     type: entity_reference_entity_view
+    weight: 0
     label: hidden
     settings:
       view_mode: teaser
       link: false
     third_party_settings: {  }
-    weight: 0
     region: content
 hidden:
   langcode: true

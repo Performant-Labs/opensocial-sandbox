@@ -1,4 +1,4 @@
-uuid: d6231066-02dd-4a87-afdf-b894823ac51e
+uuid: dfafcd38-1db6-4a7f-9b6e-932dedd967e3
 langcode: en
 status: true
 dependencies:
@@ -21,10 +21,10 @@ default_value_callback: ''
 settings:
   handler: 'default:user'
   handler_settings:
+    include_anonymous: false
+    filter:
+      type: _none
     target_bundles: null
     sort:
       field: _none
-    filter:
-      type: _none
-    include_anonymous: false
 field_type: entity_reference

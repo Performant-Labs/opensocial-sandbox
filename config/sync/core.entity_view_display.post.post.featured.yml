@@ -1,4 +1,4 @@
-uuid: 20fbdae8-8dec-4c49-a458-6f9695729112
+uuid: a4902e1b-8057-45e2-ae68-2fdafb981d8d
 langcode: en
 status: true
 dependencies:
@@ -22,22 +22,22 @@ mode: featured
 content:
   field_post:
     type: text_default
+    weight: 1
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 1
     region: content
   like_and_dislike:
-    settings: {  }
-    third_party_settings: {  }
     weight: 2
     region: content
-  user_id:
-    type: author
-    label: hidden
     settings: {  }
     third_party_settings: {  }
+  user_id:
+    label: hidden
+    type: author
     weight: 0
+    settings: {  }
+    third_party_settings: {  }
     region: content
 hidden:
   field_post_comments: true

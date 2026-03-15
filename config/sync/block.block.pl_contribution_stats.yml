@@ -1,0 +1,25 @@
+uuid: 32204df6-812a-4d9d-ae2f-5965e195cdf4
+langcode: en
+status: true
+dependencies:
+  module:
+    - pl_profile_stats
+    - system
+  theme:
+    - socialblue
+id: pl_contribution_stats
+theme: socialblue
+region: content
+weight: 50
+provider: null
+plugin: pl_contribution_stats
+settings:
+  id: pl_contribution_stats
+  label: 'Contribution Stats'
+  label_display: '0'
+  provider: pl_profile_stats
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '/user/*'

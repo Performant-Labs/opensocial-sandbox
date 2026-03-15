@@ -1,9 +1,10 @@
-uuid: 9a40eee3-0283-4a2a-8344-b7bdf4c773ac
+uuid: 999656df-0d81-4757-827e-b3fb434cc86a
 langcode: en
 status: true
 dependencies:
   config:
     - core.entity_form_mode.user.register
+    - field.field.user.user.field_allow_following
     - field.field.user.user.field_external_identifier
   module:
     - user
@@ -21,6 +22,7 @@ content:
     third_party_settings: {  }
 hidden:
   contact: true
+  field_allow_following: true
   field_external_identifier: true
   groups: true
   langcode: true

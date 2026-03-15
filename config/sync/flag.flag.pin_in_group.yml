@@ -1,4 +1,4 @@
-uuid: null
+uuid: 2c7eb720-caa8-4c84-adf3-2cc328fbbe4e
 langcode: en
 status: true
 dependencies:
@@ -6,18 +6,15 @@ dependencies:
     - node
 id: pin_in_group
 label: 'Pin in group'
-bundles:
-  - event
-  - page
-  - topic
+bundles: {  }
 entity_type: node
 global: true
 flag_short: 'Pin in group'
-flag_long: 'Pin this content to the top of the group stream'
-flag_message: 'Content pinned'
+flag_long: ''
+flag_message: ''
 unflag_short: Unpin
-unflag_long: 'Unpin this content from the group stream'
-unflag_message: 'Content unpinned'
+unflag_long: ''
+unflag_message: ''
 unflag_denied_text: ''
 weight: 0
 flag_type: 'entity:node'
@@ -27,4 +24,5 @@ flagTypeConfig:
   show_as_field: true
   show_on_form: false
   show_contextual_link: false
+  extra_permissions: {  }
 linkTypeConfig: {  }

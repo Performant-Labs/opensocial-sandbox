@@ -1,4 +1,4 @@
-uuid: e52dbfda-9a62-4225-ac2d-700b2401382f
+uuid: 359a264d-4d68-4aec-a27f-69e0a86ce892
 langcode: en
 status: true
 dependencies:
@@ -12,10 +12,10 @@ field_name: field_comment_files
 entity_type: comment
 type: file
 settings:
-  target_type: file
   display_field: false
   display_default: false
   uri_scheme: secret
+  target_type: file
 module: file
 locked: false
 cardinality: -1

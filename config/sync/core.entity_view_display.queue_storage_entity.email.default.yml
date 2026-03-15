@@ -1,4 +1,4 @@
-uuid: 27c7a9e8-9eff-489d-b0d9-e073d09b9860
+uuid: 226f900e-98fb-41ff-8c81-1d02903a4981
 langcode: en
 status: true
 dependencies:
@@ -18,43 +18,43 @@ bundle: email
 mode: default
 content:
   field_message:
-    type: text_default
+    weight: 3
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 3
+    type: text_default
     region: content
   field_reply_to:
-    type: string
+    weight: 1
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 1
+    type: string
     region: content
   field_subject:
-    type: string
+    weight: 2
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 2
+    type: string
     region: content
   name:
-    type: string
     label: above
+    type: string
+    weight: -4
+    region: content
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: -4
-    region: content
   user_id:
-    type: author
     label: hidden
-    settings: {  }
-    third_party_settings: {  }
+    type: author
     weight: 0
     region: content
+    settings: {  }
+    third_party_settings: {  }
 hidden:
   finished: true
   langcode: true

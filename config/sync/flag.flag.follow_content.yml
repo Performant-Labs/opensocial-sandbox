@@ -1,4 +1,4 @@
-uuid: 10967ba8-ff93-47d5-925e-275fb10f3dcd
+uuid: c8eb6b23-8de6-47ca-b91d-8829e04b6ad8
 langcode: en
 status: true
 dependencies:
@@ -11,6 +11,7 @@ label: 'Follow content'
 bundles: {  }
 entity_type: node
 global: false
+weight: 0
 flag_short: 'Follow content'
 flag_long: ''
 flag_message: ''
@@ -18,7 +19,6 @@ unflag_short: 'Unfollow content'
 unflag_long: ''
 unflag_message: ''
 unflag_denied_text: ''
-weight: 0
 flag_type: 'entity:node'
 link_type: ajax_link
 flagTypeConfig:

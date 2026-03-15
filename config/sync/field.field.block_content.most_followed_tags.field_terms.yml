@@ -1,0 +1,34 @@
+uuid: b4c58a02-4793-4c53-be12-50b2f619be47
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.most_followed_tags
+    - field.storage.block_content.field_terms
+    - taxonomy.vocabulary.social_tagging
+  enforced:
+    module:
+      - social_follow_tag
+_core:
+  default_config_hash: 8ACxlS79JTJnGvEv6QRU2TgF75wuB4tKN6P4A4Z-nzk
+id: block_content.most_followed_tags.field_terms
+field_name: field_terms
+entity_type: block_content
+bundle: most_followed_tags
+label: Terms
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      social_tagging: social_tagging
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

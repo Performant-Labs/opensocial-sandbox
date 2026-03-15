@@ -1,4 +1,4 @@
-uuid: d1699ab4-c090-49ce-8b50-502ee4625f8e
+uuid: 2838a58b-56be-4592-adda-757c60e7fae3
 langcode: en
 status: true
 dependencies:
@@ -13,9 +13,6 @@ field_name: field_group_image
 entity_type: group
 type: image
 settings:
-  target_type: file
-  display_field: false
-  display_default: false
   uri_scheme: secret
   default_image:
     uuid: ''
@@ -23,6 +20,9 @@ settings:
     title: ''
     width: null
     height: null
+  target_type: file
+  display_field: false
+  display_default: false
 module: image
 locked: false
 cardinality: 1

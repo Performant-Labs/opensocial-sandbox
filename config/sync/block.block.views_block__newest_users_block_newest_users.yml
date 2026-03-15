@@ -1,4 +1,4 @@
-uuid: b38ec77e-9ee8-448f-a7b8-7be8ea3a3234
+uuid: c0ba113d-9d15-44ec-886e-54a2ef2d3ee4
 langcode: en
 status: true
 dependencies:
@@ -28,6 +28,6 @@ settings:
 visibility:
   request_path:
     id: request_path
+    pages: "/stream\r\n/explore"
     negate: false
     context_mapping: {  }
-    pages: "/stream\r\n/explore"

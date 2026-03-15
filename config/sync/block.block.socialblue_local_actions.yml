@@ -1,4 +1,4 @@
-uuid: f5bcef55-8090-49d2-84e6-73e3b903725e
+uuid: bc4bbc4f-2a88-4bcc-a6f1-61bf6fcebadb
 langcode: en
 status: true
 dependencies:
@@ -22,6 +22,6 @@ settings:
 visibility:
   request_path:
     id: request_path
+    pages: "/admin/reports/*\r\n/group/*/membership\r\n/group/*/join\r\n/group/*/leave\r\n/group/*/delete\r\n/group/*/content/*\r\n/group/*/invite-members\r\n/node/*/all-enrollments\r\n/node/*/all-enrollment-requests\r\n/node/*/delete\r\n/user/*/edit"
     negate: true
     context_mapping: {  }
-    pages: "/admin/reports/*\r\n/group/*/membership\r\n/group/*/join\r\n/group/*/leave\r\n/group/*/delete\r\n/group/*/content/*\r\n/group/*/invite-members\r\n/node/*/all-enrollments\r\n/node/*/all-enrollment-requests\r\n/node/*/delete\r\n/user/*/edit"

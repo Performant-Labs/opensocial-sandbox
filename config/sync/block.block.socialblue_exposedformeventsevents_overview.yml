@@ -1,4 +1,4 @@
-uuid: ddda2434-1e68-4394-a8fa-a2fc2bf2ad5d
+uuid: 22b8f9ea-f238-47c4-983e-22923f5de34f
 langcode: en
 status: true
 dependencies:
@@ -27,13 +27,13 @@ settings:
 visibility:
   user_role:
     id: user_role
+    roles:
+      authenticated: authenticated
     negate: false
     context_mapping:
       user: '@user.current_user_context:current_user'
-    roles:
-      authenticated: authenticated
   request_path:
     id: request_path
+    pages: '/user/*/events'
     negate: false
     context_mapping: {  }
-    pages: '/user/*/events'

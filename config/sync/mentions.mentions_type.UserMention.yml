@@ -1,4 +1,4 @@
-uuid: 5399e524-42c4-4ba6-a21d-ea398b14d15e
+uuid: b8249356-841c-4eb6-a38f-d404ce479b29
 langcode: en
 status: true
 dependencies: {  }
@@ -10,9 +10,9 @@ description: 'User mentions'
 mention_type: entity
 input:
   prefix: '[~'
+  suffix: ']'
   entity_type: user
   inputvalue: name
-  suffix: ']'
 output:
   outputvalue: '[user:name]'
   renderlink: 1

@@ -1,4 +1,4 @@
-uuid: 8cd27d8c-f76d-42cd-999a-5cc21d2a30f9
+uuid: 90888873-0d2d-4a65-b731-df3903830bf8
 langcode: en
 status: true
 dependencies:
@@ -14,12 +14,12 @@ mode: activity
 content:
   entity_id:
     type: entity_reference_entity_view
+    weight: 0
     label: hidden
     settings:
       view_mode: activity
       link: false
     third_party_settings: {  }
-    weight: 0
     region: content
 hidden:
   langcode: true

@@ -1,4 +1,4 @@
-uuid: 6a7267a9-738e-4ee9-ac4b-c51842eca5e6
+uuid: c0a6f501-84eb-4db0-9946-d9a86b99be64
 langcode: en
 status: true
 dependencies:
@@ -11,6 +11,7 @@ dependencies:
     - field.field.group.flexible_group.field_group_description
     - field.field.group.flexible_group.field_group_image
     - field.field.group.flexible_group.field_group_invite_by_member
+    - field.field.group.flexible_group.field_group_language
     - field.field.group.flexible_group.field_group_location
     - field.field.group.flexible_group.field_group_posts_enabled
     - field.field.group.flexible_group.field_group_type
@@ -71,8 +72,10 @@ hidden:
   field_group_allowed_visibility: true
   field_group_description: true
   field_group_invite_by_member: true
+  field_group_language: true
   field_group_posts_enabled: true
   field_group_type: true
   langcode: true
   search_api_excerpt: true
+  social_tagging: true
   uid: true

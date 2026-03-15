@@ -1,4 +1,4 @@
-uuid: 9e5bb066-09fb-434a-9739-80573fe7bf73
+uuid: 965ef4b3-b0a5-482c-bec5-082354953992
 langcode: en
 status: true
 dependencies:
@@ -15,22 +15,22 @@ bundle: post_comment
 mode: default
 content:
   field_comment_body:
-    type: text_default
+    weight: 1
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 1
+    type: text_default
     region: content
   like_and_dislike:
-    settings: {  }
-    third_party_settings: {  }
     weight: 2
     region: content
-  links:
     settings: {  }
     third_party_settings: {  }
+  links:
     weight: 0
     region: content
+    settings: {  }
+    third_party_settings: {  }
 hidden:
   langcode: true
   search_api_excerpt: true

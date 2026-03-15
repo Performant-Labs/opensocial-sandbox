@@ -1,4 +1,4 @@
-uuid: 2ace1402-32cc-4eb4-bc6f-32152ee30b8c
+uuid: 03c84ff3-307b-4b5b-a7e4-e76c067f666f
 langcode: en
 status: true
 dependencies:
@@ -22,82 +22,82 @@ bundle: activity
 mode: default
 content:
   field_activity_destinations:
-    type: options_select
     weight: 14
-    region: content
     settings: {  }
     third_party_settings: {  }
-  field_activity_entity:
-    type: dynamic_entity_reference_default
-    weight: 11
+    type: options_select
     region: content
+  field_activity_entity:
+    weight: 11
     settings:
       match_operator: CONTAINS
       size: 40
       placeholder: ''
     third_party_settings: {  }
-  field_activity_message:
-    type: entity_reference_autocomplete
-    weight: 17
+    type: dynamic_entity_reference_default
     region: content
+  field_activity_message:
+    weight: 17
     settings:
       match_operator: CONTAINS
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  field_activity_output_text:
-    type: text_textarea
-    weight: 15
+    type: entity_reference_autocomplete
     region: content
+  field_activity_output_text:
+    weight: 15
     settings:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
+    type: text_textarea
+    region: content
   field_activity_recipient_group:
-    type: entity_reference_autocomplete
     weight: 13
-    region: content
     settings:
       match_operator: CONTAINS
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  field_activity_recipient_user:
     type: entity_reference_autocomplete
-    weight: 12
     region: content
+  field_activity_recipient_user:
+    weight: 12
     settings:
       match_operator: CONTAINS
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  field_activity_status:
-    type: options_select
-    weight: 16
+    type: entity_reference_autocomplete
     region: content
+  field_activity_status:
+    weight: 16
     settings: {  }
     third_party_settings: {  }
+    type: options_select
+    region: content
   langcode:
     type: language_select
     weight: 10
-    region: content
     settings: {  }
     third_party_settings: {  }
+    region: content
   name:
     type: string_textfield
     weight: -4
-    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+    region: content
   user_id:
     type: entity_reference_autocomplete
     weight: 5
-    region: content
     settings:
       match_operator: CONTAINS
       size: 60
       placeholder: ''
     third_party_settings: {  }
+    region: content
 hidden: {  }

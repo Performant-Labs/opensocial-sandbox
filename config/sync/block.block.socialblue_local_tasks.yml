@@ -1,4 +1,4 @@
-uuid: 27c504e5-6568-4903-ae36-b5a1077a7214
+uuid: 82cf9aed-cf9d-430e-9fdd-3aa0398adf8f
 langcode: en
 status: true
 dependencies:
@@ -25,14 +25,14 @@ settings:
 visibility:
   user_role:
     id: user_role
-    negate: false
-    context_mapping:
-      user: '@user.current_user_context:current_user'
     roles:
       anonymous: anonymous
       authenticated: authenticated
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
   request_path:
     id: request_path
+    pages: "/post/*/edit\r\n/post/*/delete\r\n/user/*/edit\r\n/user/*/profile\r\n/group/*/edit"
     negate: true
     context_mapping: {  }
-    pages: "/post/*/edit\r\n/post/*/delete\r\n/user/*/edit\r\n/user/*/profile\r\n/group/*/edit"

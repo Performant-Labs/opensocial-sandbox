@@ -6,6 +6,30 @@ url:
   source: path_prefix
   prefixes:
     en: ''
+    ca: ca
+    zh-hans: zh-hans
+    da: da
+    nl: nl
+    fr: fr
+    de: de
+    nb: nb
+    pt-br: pt-br
+    ru: ru
+    es: es
+    sv: sv
+    tr: tr
   domains:
     en: ''
+    ca: ''
+    zh-hans: ''
+    da: ''
+    nl: ''
+    fr: ''
+    de: ''
+    nb: ''
+    pt-br: ''
+    ru: ''
+    es: ''
+    sv: ''
+    tr: ''
 selected_langcode: site_default

@@ -1,4 +1,4 @@
-uuid: 3c9ee3cf-a9f0-47f3-b70f-813b5988c7da
+uuid: d68fa0bb-0cb8-44dd-9cbd-b1a128d24fb3
 langcode: en
 status: true
 dependencies:
@@ -24,40 +24,40 @@ bundle: page
 mode: default
 content:
   body:
-    type: text_default
     label: hidden
+    type: text_default
+    weight: 0
     settings: {  }
     third_party_settings: {  }
-    weight: 0
     region: content
   field_files:
-    type: file_image_default
+    weight: 1
     label: above
     settings:
-      image_link: file
       image_style: social_file_thumbnails
+      image_link: file
     third_party_settings: {  }
-    weight: 1
+    type: file_image_default
     region: content
   field_page_comments:
-    type: comment_default
+    weight: 2
     label: above
     settings:
-      view_mode: default
       pager_id: 0
+      view_mode: default
     third_party_settings: {  }
-    weight: 2
+    type: comment_default
     region: content
   flag_follow_content:
-    settings: {  }
-    third_party_settings: {  }
     weight: 10
     region: content
-  links:
     settings: {  }
     third_party_settings: {  }
+  links:
     weight: 11
     region: content
+    settings: {  }
+    third_party_settings: {  }
 hidden:
   field_content_visibility: true
   field_page_image: true

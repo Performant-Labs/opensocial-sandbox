@@ -1,4 +1,4 @@
-uuid: 508b4ecf-75c8-4718-ba3f-9888349ecf2d
+uuid: 3af5c8c4-7e4a-4714-8151-37b017fa9a28
 langcode: en
 status: true
 dependencies:
@@ -27,13 +27,13 @@ settings:
 visibility:
   user_role:
     id: user_role
+    roles:
+      authenticated: authenticated
     negate: false
     context_mapping:
       user: '@user.current_user_context:current_user'
-    roles:
-      authenticated: authenticated
   request_path:
     id: request_path
+    pages: '/user/*/topics'
     negate: false
     context_mapping: {  }
-    pages: '/user/*/topics'

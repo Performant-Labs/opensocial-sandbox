@@ -1,4 +1,4 @@
-uuid: 5ca7042d-26e4-4e02-847c-50b535f94488
+uuid: 4d33cdaf-482a-4fad-b78b-82725d69c9cf
 langcode: en
 status: true
 dependencies:
@@ -23,11 +23,11 @@ content:
       placeholder: ''
     third_party_settings: {  }
   field_topic_type_icon:
-    type: options_select
     weight: 31
-    region: content
     settings: {  }
     third_party_settings: {  }
+    type: options_select
+    region: content
   langcode:
     type: language_select
     weight: 2
@@ -45,10 +45,10 @@ content:
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 100
-    region: content
     settings:
       display_label: true
+    weight: 100
+    region: content
     third_party_settings: {  }
 hidden:
   path: true

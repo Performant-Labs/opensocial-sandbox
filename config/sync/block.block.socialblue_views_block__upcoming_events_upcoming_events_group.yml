@@ -1,4 +1,4 @@
-uuid: b1af4013-2b1a-4b1a-9cbe-c60dfe39b527
+uuid: c25ace6d-c8d5-427b-a73f-04846ddc0baa
 langcode: en
 status: true
 dependencies:
@@ -28,6 +28,6 @@ settings:
 visibility:
   request_path:
     id: request_path
+    pages: "/group/*/stream\r\n/group/*/about"
     negate: false
     context_mapping: {  }
-    pages: "/group/*/stream\r\n/group/*/about"

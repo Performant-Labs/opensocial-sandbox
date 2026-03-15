@@ -1,0 +1,23 @@
+uuid: 2b443186-164b-416f-8ad8-9d4350c4bb20
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_message_destination
+    - message.template.update_node_following_tag
+  module:
+    - options
+_core:
+  default_config_hash: znzssFiCfbD1TygRY8ULMdx6QWInWHLOmIi_hSBt2VE
+id: message.update_node_following_tag.field_message_destination
+field_name: field_message_destination
+entity_type: message
+bundle: update_node_following_tag
+label: field_message_destination
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

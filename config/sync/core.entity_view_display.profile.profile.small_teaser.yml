@@ -1,4 +1,4 @@
-uuid: 1e21c0cc-b51e-4a2d-83e8-6ae014cc171b
+uuid: 3a7d0431-0e02-4063-8e21-e71b6bc89992
 langcode: en
 status: true
 dependencies:
@@ -36,29 +36,29 @@ mode: small_teaser
 content:
   field_profile_function:
     type: string
+    weight: 1
+    region: content
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 1
-    region: content
   field_profile_image:
     type: image
+    weight: 0
     label: hidden
     settings:
-      image_link: ''
       image_style: social_medium
+      image_link: ''
     third_party_settings: {  }
-    weight: 0
     region: content
   field_profile_organization:
     type: string
+    weight: 2
+    region: content
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 2
-    region: content
 hidden:
   affiliation_owned_count: true
   field_enable_other_affiliations: true

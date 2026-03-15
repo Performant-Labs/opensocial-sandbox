@@ -1,4 +1,4 @@
-uuid: c8fd4306-e47a-449f-ac43-c6ae9e79122c
+uuid: de9ebb77-035f-447c-99fc-988f6e12f90e
 langcode: en
 status: true
 dependencies:
@@ -23,6 +23,6 @@ settings:
 visibility:
   request_path:
     id: request_path
+    pages: '/user/*/events'
     negate: false
     context_mapping: {  }
-    pages: '/user/*/events'

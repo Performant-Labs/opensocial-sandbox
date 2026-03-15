@@ -1,4 +1,4 @@
-uuid: ec43871c-9bbe-4572-aa2e-b8e8f3c6de39
+uuid: 55eb3b41-ff4d-4ca6-974c-5a06827bc4e2
 langcode: en
 status: true
 dependencies:
@@ -25,6 +25,6 @@ settings:
 visibility:
   request_path:
     id: request_path
+    pages: '*/all-enrollments'
     negate: false
     context_mapping: {  }
-    pages: '*/all-enrollments'

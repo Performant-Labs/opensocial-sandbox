@@ -1,4 +1,4 @@
-uuid: b7d81d5b-1264-417a-bcac-39884bc2a724
+uuid: 07b10238-6326-4d0c-80bf-d1be7ac0c28f
 langcode: en
 status: true
 dependencies:
@@ -29,13 +29,13 @@ settings:
 visibility:
   request_path:
     id: request_path
+    pages: /stream
     negate: false
     context_mapping: {  }
-    pages: /stream
   user_role:
     id: user_role
+    roles:
+      anonymous: anonymous
     negate: false
     context_mapping:
       user: '@user.current_user_context:current_user'
-    roles:
-      anonymous: anonymous

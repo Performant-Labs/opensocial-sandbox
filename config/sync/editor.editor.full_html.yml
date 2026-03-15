@@ -40,12 +40,57 @@ settings:
       - '|'
       - fullScreen
   plugins:
+    ckeditor5_heading:
+      enabled_headings:
+        - heading1
+        - heading2
+        - heading3
+        - heading4
+        - heading5
+        - heading6
+    ckeditor5_style:
+      styles:
+        -
+          label: 'Default link'
+          element: '<a class="btn btn-default">'
+        -
+          label: 'Primary link'
+          element: '<a class="btn btn-primary">'
+        -
+          label: 'Accent link'
+          element: '<a class="btn btn-accent">'
+        -
+          label: 'Primary badge'
+          element: '<span class="badge badge-primary">'
+        -
+          label: 'Secondary badge'
+          element: '<span class="badge badge-secondary">'
+        -
+          label: 'Pill badge'
+          element: '<span class="badge badge--pill badge-default">'
+    ckeditor5_sourceEditing:
+      allowed_tags: {  }
+    ckeditor5_list:
+      properties:
+        reversed: true
+        startIndex: true
+      multiBlock: true
     ckeditor5_alignment:
       enabled_alignments:
-        - center
-        - justify
         - left
+        - center
         - right
+        - justify
+    ckeditor5_imageResize:
+      allow_resize: true
+    editor_advanced_link_link:
+      enabled_attributes:
+        - aria-label
+        - class
+        - id
+        - rel
+        - target
+        - title
     ckeditor5_codeBlock:
       languages:
         -
@@ -90,51 +135,6 @@ settings:
         -
           label: XML
           language: xml
-    ckeditor5_heading:
-      enabled_headings:
-        - heading1
-        - heading2
-        - heading3
-        - heading4
-        - heading5
-        - heading6
-    ckeditor5_imageResize:
-      allow_resize: true
-    ckeditor5_list:
-      properties:
-        reversed: true
-        startIndex: true
-      multiBlock: true
-    ckeditor5_sourceEditing:
-      allowed_tags: {  }
-    ckeditor5_style:
-      styles:
-        -
-          label: 'Default link'
-          element: '<a class="btn btn-default">'
-        -
-          label: 'Primary link'
-          element: '<a class="btn btn-primary">'
-        -
-          label: 'Accent link'
-          element: '<a class="btn btn-accent">'
-        -
-          label: 'Primary badge'
-          element: '<span class="badge badge-primary">'
-        -
-          label: 'Secondary badge'
-          element: '<span class="badge badge-secondary">'
-        -
-          label: 'Pill badge'
-          element: '<span class="badge badge--pill badge-default">'
-    editor_advanced_link_link:
-      enabled_attributes:
-        - aria-label
-        - class
-        - id
-        - rel
-        - target
-        - title
 image_upload:
   status: true
   scheme: private

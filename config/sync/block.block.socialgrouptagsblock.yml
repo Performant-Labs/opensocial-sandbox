@@ -1,4 +1,4 @@
-uuid: 9a0f8535-d0dc-41f1-bbae-9ab640993d81
+uuid: 1166f5aa-63c6-48cd-a478-6dad3750338d
 langcode: en
 status: true
 dependencies:
@@ -26,6 +26,6 @@ settings:
 visibility:
   request_path:
     id: request_path
+    pages: '/group/*/about'
     negate: false
     context_mapping: {  }
-    pages: '/group/*/about'

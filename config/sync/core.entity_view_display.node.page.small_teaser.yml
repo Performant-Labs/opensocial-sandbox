@@ -1,4 +1,4 @@
-uuid: 93e0fc4b-6274-43bc-9388-92b6a0b2e4c0
+uuid: 31eb665f-1e83-4238-a3e0-8ad4a348313c
 langcode: en
 status: true
 dependencies:
@@ -24,19 +24,19 @@ mode: small_teaser
 content:
   field_page_image:
     type: image
-    label: hidden
-    settings:
-      image_link: content
-      image_style: social_medium
-    third_party_settings:
-      lazy:
-        lazy_image: '0'
     weight: 4
     region: content
+    label: hidden
+    settings:
+      image_style: social_medium
+      image_link: content
+    third_party_settings:
+      lazy:
+        lazy_image: 0
   links:
+    weight: 100
     settings: {  }
     third_party_settings: {  }
-    weight: 100
     region: content
 hidden:
   body: true

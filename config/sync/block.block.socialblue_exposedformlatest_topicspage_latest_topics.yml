@@ -1,4 +1,4 @@
-uuid: f4139dc9-7a78-423f-9b27-a86464928190
+uuid: 3a7218b7-fda0-417a-82c1-942a43f2c760
 langcode: en
 status: true
 dependencies:
@@ -26,6 +26,6 @@ settings:
 visibility:
   request_path:
     id: request_path
+    pages: /all-topics
     negate: false
     context_mapping: {  }
-    pages: /all-topics

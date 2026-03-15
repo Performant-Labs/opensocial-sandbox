@@ -1,4 +1,4 @@
-uuid: 44a2419b-c48d-4de9-b8e1-aed98de8b021
+uuid: 0d63c14a-9b1d-4a69-b437-25bd5393911c
 langcode: en
 status: true
 dependencies:
@@ -23,27 +23,27 @@ bundle: page
 mode: activity
 content:
   field_page_comments:
-    type: comment_node
+    weight: 3
     label: above
     settings:
       num_comments: 2
       always_show_all_comments: false
     third_party_settings: {  }
-    weight: 3
+    type: comment_node
     region: content
   field_page_image:
     type: image
+    weight: 0
     label: above
     settings:
-      image_link: content
       image_style: social_x_large
+      image_link: content
     third_party_settings: {  }
-    weight: 0
     region: content
   links:
+    weight: 2
     settings: {  }
     third_party_settings: {  }
-    weight: 2
     region: content
 hidden:
   body: true

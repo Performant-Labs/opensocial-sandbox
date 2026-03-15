@@ -1,4 +1,4 @@
-uuid: d8b7734c-4ab5-4ddf-8d1f-23794fde57b9
+uuid: dc31e0f1-03e3-4b27-b1ec-34b67014fc0d
 langcode: en
 status: true
 dependencies:
@@ -24,15 +24,15 @@ settings:
 visibility:
   'entity_bundle:node':
     id: 'entity_bundle:node'
-    negate: false
-    context_mapping:
-      node: '@node.node_route_context:node'
     bundles:
       event: event
       page: page
       topic: topic
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
   request_path:
     id: request_path
+    pages: '/node/add/*'
     negate: true
     context_mapping: {  }
-    pages: '/node/add/*'

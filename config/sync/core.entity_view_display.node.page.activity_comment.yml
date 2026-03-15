@@ -1,4 +1,4 @@
-uuid: d41f8d0d-4efa-4f7d-ae36-796da736ac8b
+uuid: 38f9d81d-518b-462f-b5e0-dc21097c02d4
 langcode: en
 status: true
 dependencies:
@@ -23,17 +23,17 @@ mode: activity_comment
 content:
   field_page_image:
     type: image
+    weight: 0
     label: above
     settings:
-      image_link: content
       image_style: social_x_large
+      image_link: content
     third_party_settings: {  }
-    weight: 0
     region: content
   links:
+    weight: 1
     settings: {  }
     third_party_settings: {  }
-    weight: 1
     region: content
 hidden:
   body: true

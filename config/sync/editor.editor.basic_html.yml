@@ -42,13 +42,6 @@ settings:
         - heading4
         - heading5
         - heading6
-    ckeditor5_imageResize:
-      allow_resize: true
-    ckeditor5_list:
-      properties:
-        reversed: false
-        startIndex: true
-      multiBlock: true
     ckeditor5_sourceEditing:
       allowed_tags:
         - '<cite>'
@@ -68,6 +61,13 @@ settings:
         - '<h6 id>'
         - '<table cellspacing cellpadding border>'
         - '<th scope>'
+    ckeditor5_list:
+      properties:
+        reversed: false
+        startIndex: true
+      multiBlock: true
+    ckeditor5_imageResize:
+      allow_resize: true
     editor_advanced_link_link:
       enabled_attributes:
         - class

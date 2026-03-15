@@ -1,6 +1,5 @@
 _core:
   default_config_hash: FtwnuCXmazPAh2H2i_gbDhMK1-eBmNy1dG4RBU4qt4o
-langcode: en
 display_denied_message: true
 access_denied_message: 'Access denied. You must log in to view this page.'
 access_denied_message_type: error
@@ -16,3 +15,4 @@ destination_parameter_override: ''
 match_noredirect_pages: ''
 match_noredirect_negate: 0
 redirect_to_destination: true
+langcode: en

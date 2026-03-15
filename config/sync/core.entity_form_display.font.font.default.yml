@@ -1,4 +1,4 @@
-uuid: 938f1a59-a590-4f1c-a46b-9bf0028c9b23
+uuid: fc05237b-197d-4306-84a1-1b1502207f60
 langcode: en
 status: true
 dependencies:
@@ -16,18 +16,18 @@ bundle: font
 mode: default
 content:
   field_fallback:
-    type: options_select
     weight: 1
-    region: content
     settings: {  }
     third_party_settings: {  }
-  field_fonts:
-    type: file_generic
-    weight: 2
+    type: options_select
     region: content
+  field_fonts:
+    weight: 2
     settings:
       progress_indicator: throbber
     third_party_settings: {  }
+    type: file_generic
+    region: content
   langcode:
     type: language_select
     weight: 2
@@ -38,10 +38,10 @@ content:
   name:
     type: string_textfield
     weight: 0
-    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+    region: content
 hidden:
   user_id: true

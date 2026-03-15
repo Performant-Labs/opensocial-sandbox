@@ -1,4 +1,4 @@
-uuid: 0aee0202-8dd8-4edf-9c2a-20b865abb821
+uuid: 3c259104-11c8-4c0b-9f02-b5c03a95024b
 langcode: en
 status: true
 dependencies:
@@ -38,13 +38,13 @@ bundle: profile
 mode: compact
 content:
   field_profile_image:
-    type: social_profile_avatar
+    weight: 0
     label: hidden
     settings:
-      image_link: owner
       image_style: social_medium
+      image_link: owner
     third_party_settings: {  }
-    weight: 0
+    type: social_profile_avatar
     region: content
 hidden:
   affiliation_owned_count: true

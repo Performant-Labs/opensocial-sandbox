@@ -1,0 +1,16 @@
+uuid: 608dc45d-fbb4-410a-97a7-06f48b1ae1ec
+langcode: en
+status: true
+dependencies:
+  module:
+    - taxonomy
+  enforced:
+    module:
+      - social_follow_tag
+_core:
+  default_config_hash: m_DreX577THeakwxoD-thh1WupAC9Z7LeVVuP0NMYnc
+id: taxonomy_term.followers_count
+label: 'Followers count'
+description: ''
+targetEntityType: taxonomy_term
+cache: true

@@ -1,8 +1,9 @@
-uuid: 9595bdaa-ccb8-4788-af16-7ff24c0d216d
+uuid: 7d387685-c4a4-4a0e-8296-b0240e9aa7f3
 langcode: en
 status: true
 dependencies:
   config:
+    - field.field.user.user.field_allow_following
     - field.field.user.user.field_external_identifier
   module:
     - field_group
@@ -22,7 +23,8 @@ third_party_settings:
         id: ''
         required_fields: true
     group_privacy:
-      children: {  }
+      children:
+        - field_allow_following
       label: Privacy
       region: content
       parent_name: ''
@@ -57,6 +59,13 @@ content:
     weight: 1
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_allow_following:
+    type: boolean_checkbox
+    weight: 3
+    region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   timezone:
     weight: 0

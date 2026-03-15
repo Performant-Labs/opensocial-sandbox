@@ -1,4 +1,4 @@
-uuid: e6335133-0b19-4f15-9c0b-75765b595568
+uuid: f11fe1f1-c583-48b5-9392-809852db77b7
 langcode: en
 status: true
 dependencies:
@@ -26,6 +26,6 @@ settings:
 visibility:
   request_path:
     id: request_path
+    pages: "/search/users\r\n/search/users/*"
     negate: false
     context_mapping: {  }
-    pages: "/search/users\r\n/search/users/*"

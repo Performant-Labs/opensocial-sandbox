@@ -1,4 +1,4 @@
-uuid: 936ebbb5-d80f-4e07-9478-62d859dcbd93
+uuid: bd8d629d-252c-4e1e-9eb6-ffaa293d610e
 langcode: en
 status: true
 dependencies:
@@ -12,8 +12,8 @@ entity_type: queue_storage_entity
 type: string
 settings:
   max_length: 255
-  case_sensitive: false
   is_ascii: false
+  case_sensitive: false
 module: core
 locked: false
 cardinality: 1

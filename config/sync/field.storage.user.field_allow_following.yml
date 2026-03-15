@@ -1,0 +1,23 @@
+uuid: c1a45dbd-513c-4557-8217-d845ab8c763a
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+  enforced:
+    module:
+      - social_follow_user
+_core:
+  default_config_hash: 3QzWfYJqmZheBcBKox951CZoDfRdJ8LR440Ffr79z7I
+id: user.field_allow_following
+field_name: field_allow_following
+entity_type: user
+type: boolean
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
